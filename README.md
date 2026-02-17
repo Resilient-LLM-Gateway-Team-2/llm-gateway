@@ -4,7 +4,38 @@
 A production-grade, unified REST API middleware designed to sit in front of multiple Large Language Models (LLMs) such as OpenAI and Anthropic. The gateway provides a resilient infrastructure for applications by handling automatic failover, semantic caching via Redis to reduce costs, and granular token usage tracking in PostgreSQL. This project focuses on backend engineering challenges like smart routing and reliability, ensuring seamless model switching without client-side code changes.
 
 **Team Members**
-<table style="width:100%" border="0" cellspacing="0" cellpadding="0"> <tr> <td align="center" valign="center"><img src="https://github.com/identicons/member1.png" width="200"><br /><b>Lead Architect</b><br />(email@pace.edu)</td> <td align="center" valign="center"><img src="https://github.com/identicons/member2.png" width="200"><br /><b>Team Coordinator</b><br />(email@pace.edu)</td> <td align="center" valign="center"><img src="https://github.com/identicons/member3.png" width="200"><br /><b>Wiki & Documentation</b><br />(email@pace.edu)</td> </tr> <tr> <td align="center" valign="center"><img src="https://github.com/identicons/member4.png" width="200"><br /><b>Visual & Presentation</b><br />(email@pace.edu)</td> <td align="center" valign="center"><img src="https://github.com/identicons/member5.png" width="200"><br /><b>QA & DevOps</b><br />(email@pace.edu)</td> <td align="center" valign="center"></td> </tr> </table>
+<table style="width:100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center" valign="center">
+      <img src="./docs/Nisarga.jpeg" width="200"><br />
+      <b>Nisarga Gowda</b><br />
+      (email@pace.edu)
+    </td>
+    <td align="center" valign="center">
+      <img src="./docs/Diya.jpeg" width="200"><br />
+      <b>Diya [Last Name]</b><br />
+      (email@pace.edu)
+    </td>
+    <td align="center" valign="center">
+      <img src="./docs/Prachi.jpeg" width="200"><br />
+      <b>Prachi [Last Name]</b><br />
+      (email@pace.edu)
+    </td>
+  </tr>
+  <tr>
+    <td align="center" valign="center">
+      <img src="./docs/Rohan.jpeg" width="200"><br />
+      <b>Rohan [Last Name]</b><br />
+      (email@pace.edu)
+    </td>
+    <td align="center" valign="center">
+      <img src="https://github.com/identicons/member5.png" width="200"><br />
+      <b>[Fifth Member Name]</b><br />
+      (email@pace.edu)
+    </td>
+    <td align="center" valign="center"></td>
+  </tr>
+</table>
 
 **Project Design**
 Our implementation follows a modular middleware architecture using an Adapter Pattern for different LLM providers. Requests are authenticated via API keys, checked against rate limits in Redis, and then routed based on prompt complexity or provider health.
