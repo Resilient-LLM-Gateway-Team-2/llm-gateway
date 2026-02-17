@@ -6,34 +6,34 @@ A production-grade, unified REST API middleware designed to sit in front of mult
 **Team Members**
 <table style="width:100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td align="center" valign="center">
+    <td align="center" valign="top" width="33%">
       <img src="./docs/Nisarga.jpeg" width="200"><br />
       <b>Nisarga Vishwamanjuswamy</b><br />
       (nv86609n@pace.edu)
     </td>
-    <td align="center" valign="center">
-      <img src="https://github.com/identicons/member5.png" width="200"><br />
+    <td align="center" valign="top" width="33%">
+      <img src="./docs/Pramodh.jpeg" width="200"><br />
       <b>Pramodh Kumar Reddy Parvath Reddy</b><br />
       (pp17587n@pace.edu)
     </td>
-    <td align="center" valign="center"></td>
-    <td align="center" valign="center">
-      <img src="./docs/Diya.jpeg" width="200"><br />
-      <b>Diya Faratake</b><br />
-      (df13729n@pace.edu)
-    </td>
-    <td align="center" valign="center">
+    <td align="center" valign="top" width="33%">
       <img src="./docs/Prachi.jpeg" width="200"><br />
       <b>Prachi Bhudhrani</b><br />
       (pb78229n@pace.edu)
     </td>
   </tr>
   <tr>
-    <td align="center" valign="center">
+    <td align="center" valign="top">
+      <img src="./docs/Diya.jpeg" width="200"><br />
+      <b>Diya Faratake</b><br />
+      (df13729n@pace.edu)
+    </td>
+    <td align="center" valign="top">
       <img src="./docs/Rohan.jpeg" width="200"><br />
       <b>Rohan Brahmbhatt</b><br />
       (rb28301n@pace.edu)
     </td>
+    <td align="center" valign="top"></td>
   </tr>
 </table>
 
