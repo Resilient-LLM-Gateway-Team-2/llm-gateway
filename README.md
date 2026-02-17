@@ -9,10 +9,6 @@ A production-grade, unified REST API middleware designed to sit in front of mult
 **Project Design**
 Our implementation follows a modular middleware architecture using an Adapter Pattern for different LLM providers. Requests are authenticated via API keys, checked against rate limits in Redis, and then routed based on prompt complexity or provider health.
 
-**Languages and Tools**
-
-<img src="https://www.google.com/search?q=https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" title="Python" alt="Python" width="80" height="80"/>  <img src="https://www.google.com/search?q=https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-original.svg" title="FastAPI" alt="FastAPI" width="80" height="80"/>  <img src="https://www.google.com/search?q=https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" title="PostgreSQL" alt="PostgreSQL" width="80" height="80"/>  <img src="https://www.google.com/search?q=https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" title="Redis" alt="Redis" width="80" height="80"/>  <img src="https://www.google.com/search?q=https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" title="Docker" alt="Docker" width="80" height="80"/> 
-
 
 **Languages and Tools**
 
