@@ -1,31 +1,44 @@
-**Resilient LLM Gateway (Team 2)**
-A high-performance, resilient middleware that abstracts multiple LLM providers (OpenAI, Anthropic, Mock) into a single, unified REST API.
+**Resilient LLM Gateway - Team 2 - Pace University Capstone Project**
 
-**🌟 Key Features**
+**Project Description**
+A production-grade, unified REST API middleware designed to sit in front of multiple Large Language Models (LLMs) such as OpenAI and Anthropic. The gateway provides a resilient infrastructure for applications by handling automatic failover, semantic caching via Redis to reduce costs, and granular token usage tracking in PostgreSQL. This project focuses on backend engineering challenges like smart routing and reliability, ensuring seamless model switching without client-side code changes.
 
-Unified Interface: A single /chat endpoint to rule them all.
-Automatic Failover: Smart routing that switches to a backup provider if the primary fails.
-Semantic Caching: Redis-backed caching that recognizes similar prompts to save costs and reduce latency.
-Cost & Token Tracking: Real-time logging of usage and spend per API key in PostgreSQL.
-Rate Limiting: Protect your upstream providers with custom per-user limits.
+**Team Members**
+<table style="width:100%" border="0" cellspacing="0" cellpadding="0"> <tr> <td align="center" valign="center"><img src="https://github.com/identicons/member1.png" width="200"><br /><b>Lead Architect</b><br />(email@pace.edu)</td> <td align="center" valign="center"><img src="https://github.com/identicons/member2.png" width="200"><br /><b>Team Coordinator</b><br />(email@pace.edu)</td> <td align="center" valign="center"><img src="https://github.com/identicons/member3.png" width="200"><br /><b>Wiki & Documentation</b><br />(email@pace.edu)</td> </tr> <tr> <td align="center" valign="center"><img src="https://github.com/identicons/member4.png" width="200"><br /><b>Visual & Presentation</b><br />(email@pace.edu)</td> <td align="center" valign="center"><img src="https://github.com/identicons/member5.png" width="200"><br /><b>QA & DevOps</b><br />(email@pace.edu)</td> <td align="center" valign="center"></td> </tr> </table>
 
-**🏗️ Architecture**
+**Project Design**
+Our implementation follows a modular middleware architecture using an Adapter Pattern for different LLM providers. Requests are authenticated via API keys, checked against rate limits in Redis, and then routed based on prompt complexity or provider health.
 
-The gateway acts as a resilient proxy layer between your application and the LLM providers.
+**Languages and Tools**
 
-**🛠️ Tech Stack**
+<img src="https://www.google.com/search?q=https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" title="Python" alt="Python" width="80" height="80"/>  <img src="https://www.google.com/search?q=https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-original.svg" title="FastAPI" alt="FastAPI" width="80" height="80"/>  <img src="https://www.google.com/search?q=https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" title="PostgreSQL" alt="PostgreSQL" width="80" height="80"/>  <img src="https://www.google.com/search?q=https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" title="Redis" alt="Redis" width="80" height="80"/>  <img src="https://www.google.com/search?q=https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" title="Docker" alt="Docker" width="80" height="80"/> 
 
-Framework: FastAPI
-Database: PostgreSQL (Usage Logs)
-Cache: Redis (Semantic & Exact Match)
-Async Client: HTTPX
-Containerization: Docker & Docker Compose
 
-**🚀 Quick Start (Sprint 0)**
-Currently, we are in Sprint 0. Our foundation is being laid.
+**Languages and Tools**
 
-1. Clone the repo:
-Bash
-**git clone https://github.com/Resilient-LLM-Gateway-Team-2/llm-gateway.git**
+<p align="left"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" title="Python" alt="Python" width="60" height="60"/>&nbsp; <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-original.svg" title="FastAPI" alt="FastAPI" width="60" height="60"/>&nbsp; <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" title="PostgreSQL" alt="PostgreSQL" width="60" height="60"/>&nbsp; <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" title="Redis" alt="Redis" width="60" height="60"/>&nbsp; <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" title="Docker" alt="Docker" width="60" height="60"/>&nbsp; <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" title="GitHub" alt="GitHub" width="60" height="60"/>&nbsp; <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlalchemy/sqlalchemy-original.svg" title="SQLAlchemy" alt="SQLAlchemy" width="60" height="60"/>&nbsp; </p>
 
-2. View Documentation: Check out our GitHub Wiki for the full project description and roadmap.
+
+**CS691 - Spring 2026 Deliverables
+Presentations (Sprint Reviews)**
+
+Watch Deliverable 1 Presentation Video (Sprint 0) <br />1a. View Deliverable 1 Presentation Slides as PDF <br />1b. <a id="raw-url" href="./docs/sprint0_slides.pptx">Download Deliverable 1 Presentation Slides as PowerPoint</a>
+
+Sprint Burndown Charts and Completed Tasks
+
+Deliverable 1 Completed Tasks (Sprint 0)
+
+Team Working Agreement
+
+Team Working Agreement as PDF | <a id="raw-url" href="./docs/team_agreement.docx">Download Team Working Agreement as Word Document</a>
+
+**Additional Project Artifacts**
+**Product Personas**
+
+Persona 1 - The Cost-Conscious Developer
+
+
+Persona 2 - The Enterprise Architect
+
+
+Persona 3 - The AI Startup Founder
