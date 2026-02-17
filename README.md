@@ -8,32 +8,32 @@ A production-grade, unified REST API middleware designed to sit in front of mult
   <tr>
     <td align="center" valign="center">
       <img src="./docs/Nisarga.jpeg" width="200"><br />
-      <b>Nisarga Gowda</b><br />
-      (email@pace.edu)
+      <b>Nisarga Vishwamanjuswamy</b><br />
+      (nv86609n@pace.edu)
     </td>
     <td align="center" valign="center">
+      <img src="https://github.com/identicons/member5.png" width="200"><br />
+      <b>Pramodh Kumar Reddy Parvath Reddy</b><br />
+      (pp17587n@pace.edu)
+    </td>
+    <td align="center" valign="center"></td>
+    <td align="center" valign="center">
       <img src="./docs/Diya.jpeg" width="200"><br />
-      <b>Diya [Last Name]</b><br />
-      (email@pace.edu)
+      <b>Diya Faratake</b><br />
+      (df13729n@pace.edu)
     </td>
     <td align="center" valign="center">
       <img src="./docs/Prachi.jpeg" width="200"><br />
-      <b>Prachi [Last Name]</b><br />
-      (email@pace.edu)
+      <b>Prachi Bhudhrani</b><br />
+      (pb78229n@pace.edu)
     </td>
   </tr>
   <tr>
     <td align="center" valign="center">
       <img src="./docs/Rohan.jpeg" width="200"><br />
-      <b>Rohan [Last Name]</b><br />
-      (email@pace.edu)
+      <b>Rohan Brahmbhatt</b><br />
+      (rb28301n@pace.edu)
     </td>
-    <td align="center" valign="center">
-      <img src="https://github.com/identicons/member5.png" width="200"><br />
-      <b>[Fifth Member Name]</b><br />
-      (email@pace.edu)
-    </td>
-    <td align="center" valign="center"></td>
   </tr>
 </table>
 
