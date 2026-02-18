@@ -54,7 +54,12 @@ Our implementation follows a modular middleware architecture using an Adapter Pa
 **CS691 - Spring 2026 Deliverables
 Presentations (Sprint Reviews)**
 
-Watch Deliverable 1 Presentation Video (Sprint 0) <br />1a. View Deliverable 1 Presentation Slides as PDF <br />1b. <a id="raw-url" href="./docs/sprint0_slides.pptx">Download Deliverable 1 Presentation Slides as PowerPoint</a>
+Watch Deliverable 1 Presentation Video (Sprint 0) <br />
+
+1a. <a href="./docs/Team-2_Sprint-0_Resilient LLM Gateway API Platform.pdf" target="_blank">View Deliverable 1 Slides (PDF)</a> <br />
+
+1b. <a href="./docs/sprint0_slides.pptx">Download Deliverable 1 Slides (PowerPoint)</a>
+
 
 Sprint Burndown Charts and Completed Tasks
 
