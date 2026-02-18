@@ -4,33 +4,39 @@
 A production-grade, unified REST API middleware designed to sit in front of multiple Large Language Models (LLMs) such as OpenAI and Anthropic. The gateway provides a resilient infrastructure for applications by handling automatic failover, semantic caching via Redis to reduce costs, and granular token usage tracking in PostgreSQL. This project focuses on backend engineering challenges like smart routing and reliability, ensuring seamless model switching without client-side code changes.
 
 **Team Members**
+**Team Members**
 <table style="width:100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td align="center" valign="top" width="33%">
       <img src="./docs/Nisarga.jpeg" width="200"><br />
       <b>Nisarga Vishwamanjuswamy</b><br />
+      <i>Project Manager & Developer</i><br />
       (nv86609n@pace.edu)
     </td>
     <td align="center" valign="top" width="33%">
-      <img src="./docs/Pramodh.jpeg" width="200"><br />
-      <b>Pramodh Kumar Reddy Parvath Reddy</b><br />
-      (pp17587n@pace.edu)
+      <img src="./docs/Prachi.jpeg" width="200"><br />
+      <b>Prachi Budhrani</b><br />
+      <i>Data & Observability Engineer & Developer</i><br />
+      (pb78229n@pace.edu)
     </td>
     <td align="center" valign="top" width="33%">
-      <img src="./docs/Prachi.jpeg" width="200"><br />
-      <b>Prachi Bhudhrani</b><br />
-      (pb78229n@pace.edu)
+      <img src="./docs/Diya.jpeg" width="200"><br />
+      <b>Diya Farakte</b><br />
+      <i>Business Analyst & Developer</i><br />
+      (df13729n@pace.edu)
     </td>
   </tr>
   <tr>
     <td align="center" valign="top">
-      <img src="./docs/Diya.jpeg" width="200"><br />
-      <b>Diya Faratake</b><br />
-      (df13729n@pace.edu)
+      <img src="https://github.com/identicons/Pramodh.png" width="200"><br />
+      <b>Pramod Kumar Reddy Parvath Reddy</b><br />
+      <i>LLM Integration Engineer & Developer</i><br />
+      (pp17587n@pace.edu)
     </td>
     <td align="center" valign="top">
       <img src="./docs/Rohan.jpeg" width="200"><br />
       <b>Rohan Brahmbhatt</b><br />
+      <i>Performance Engineer & Developer</i><br />
       (rb28301n@pace.edu)
     </td>
     <td align="center" valign="top"></td>
