@@ -27,7 +27,7 @@ A production-grade, unified REST API middleware designed to sit in front of mult
   </tr>
   <tr>
     <td align="center" valign="top">
-      <img src="./docs/Pramodh.png" width="200"><br />
+      <img src="./docs/Pramodh.jpeg" width="200"><br />
       <b>Pramodh Kumar Reddy Parvath Reddy</b><br />
       <i>LLM Integration Engineer & Developer</i><br />
       (pp17587n@pace.edu)
