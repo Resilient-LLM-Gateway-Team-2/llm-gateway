@@ -62,15 +62,16 @@ Deliverable 1 Completed Tasks (Sprint 0)
 
 Team Working Agreement
 
-Team Working Agreement as PDF | <a id="raw-url" href="./docs/team_agreement.docx">Download Team Working Agreement as Word Document</a>
+Team Working Agreement as PDF | <a id="raw-url" href="./docs/Team_Working_Agreement.docx">Download Team Working Agreement as Word Document</a>
 
 **Additional Project Artifacts**
 **Product Personas**
 
-Persona 1 - The Cost-Conscious Developer
+### Persona 1 – Backend / Platform Engineer
+Needs reliable and vendor-agnostic LLM integration without modifying client-side code. Benefits from automatic routing, failover, and structured logging.
 
+### Persona 2 – Engineering Manager / Platform Owner
+Focused on cost control, governance, and scalability. Uses token tracking, rate limiting, and cost aggregation to manage AI spending.
 
-Persona 2 - The Enterprise Architect
-
-
-Persona 3 - The AI Startup Founder
+### Persona 3 – AI Product Engineer
+Requires flexible experimentation across models without infrastructure overhead. Benefits from standardized APIs and seamless provider switching.
