@@ -4,7 +4,6 @@
 A production-grade, unified REST API middleware designed to sit in front of multiple Large Language Models (LLMs) such as OpenAI and Anthropic. The gateway provides a resilient infrastructure for applications by handling automatic failover, semantic caching via Redis to reduce costs, and granular token usage tracking in PostgreSQL. This project focuses on backend engineering challenges like smart routing and reliability, ensuring seamless model switching without client-side code changes.
 
 **Team Members**
-**Team Members**
 <table style="width:100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td align="center" valign="top" width="33%">
@@ -28,7 +27,7 @@ A production-grade, unified REST API middleware designed to sit in front of mult
   </tr>
   <tr>
     <td align="center" valign="top">
-      <img src="https://github.com/identicons/Pramodh.png" width="200"><br />
+      <img src="./docs/Pramodh.png" width="200"><br />
       <b>Pramodh Kumar Reddy Parvath Reddy</b><br />
       <i>LLM Integration Engineer & Developer</i><br />
       (pp17587n@pace.edu)
