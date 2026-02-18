@@ -29,7 +29,7 @@ A production-grade, unified REST API middleware designed to sit in front of mult
   <tr>
     <td align="center" valign="top">
       <img src="https://github.com/identicons/Pramodh.png" width="200"><br />
-      <b>Pramod Kumar Reddy Parvath Reddy</b><br />
+      <b>Pramodh Kumar Reddy Parvath Reddy</b><br />
       <i>LLM Integration Engineer & Developer</i><br />
       (pp17587n@pace.edu)
     </td>
