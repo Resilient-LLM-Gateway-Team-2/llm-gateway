@@ -58,7 +58,7 @@ Watch Deliverable 1 Presentation Video (Sprint 0) <br />
 
 1a. <a href="./docs/Team-2_Sprint-0_Resilient LLM Gateway API Platform.pdf" target="_blank">View Deliverable 1 Slides (PDF)</a> <br />
 
-1b. <a href="./docs/sprint0_slides.pptx">Download Deliverable 1 Slides (PowerPoint)</a>
+1b. <a href="./docs/Team-2_Sprint-0_Resilient LLM Gateway API Platform.pptx">Download Deliverable 1 Slides (PowerPoint)</a>
 
 
 Sprint Burndown Charts and Completed Tasks
