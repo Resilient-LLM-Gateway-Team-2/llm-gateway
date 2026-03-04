@@ -22,6 +22,8 @@ services:
     environment:
       DATABASE_URL: postgresql://gateway:gatewaypass@postgres:5432/gatewaydb
       REDIS_URL: redis://redis:6379/0
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
     depends_on:
       - postgres
       - redis

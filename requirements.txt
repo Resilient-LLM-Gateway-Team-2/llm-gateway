@@ -8,3 +8,6 @@ pytest
 httpx
 requests
 alembic
+openai
+google-generativeai
+pydantic
