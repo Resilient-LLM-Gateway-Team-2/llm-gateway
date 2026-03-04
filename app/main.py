@@ -1,12 +1,19 @@
 import os
 import time
+import logging
 from typing import Optional
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, create_engine, func
 from sqlalchemy.orm import Session, declarative_base, sessionmaker
 
-app = FastAPI(title="Resilient LLM Gateway - Sprint 1")
+from app.schemas import ChatRequest, ChatResponse
+from app.providers import ProviderError
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+app = FastAPI(title="Resilient LLM Gateway - Sprint 2")
 
 # ---------- DB setup ----------
 DATABASE_URL = os.getenv(
@@ -43,6 +50,17 @@ class RequestLog(Base):
     created_at = Column(DateTime, server_default=func.now())
 
 
+# ---------- DB dependency ----------
+def get_db():
+    """Yield a SQLAlchemy session; ensures close after request."""
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+# ---------- Request logger ----------
 def log_request(
     *,
     endpoint: str,
@@ -52,7 +70,7 @@ def log_request(
     model: Optional[str] = None,
     api_key_id: Optional[int] = None,
 ) -> None:
-    """Minimal request logger for Sprint 1."""
+    """Write an observability record to the requests table."""
     db: Session = SessionLocal()
     try:
         row = RequestLog(
@@ -72,20 +90,73 @@ def log_request(
         db.close()
 
 
+# ---------- Auth helper (inline to avoid circular import) ----------
+def verify_api_key(
+    x_api_key: str = Header(None, alias="X-API-Key"),
+    db: Session = Depends(get_db),
+) -> ApiKey:
+    """Validate X-API-Key header against the api_keys table."""
+    if x_api_key is None:
+        raise HTTPException(status_code=403, detail="Missing X-API-Key header")
+
+    api_key = db.query(ApiKey).filter(ApiKey.key == x_api_key).first()
+    if api_key is None:
+        raise HTTPException(status_code=403, detail="Invalid API key")
+
+    return api_key
+
+
 # ---------- Routes ----------
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
 
 
-@app.post("/chat")
-def chat():
+@app.post("/chat", response_model=ChatResponse)
+def chat(
+    body: ChatRequest,
+    api_key: ApiKey = Depends(verify_api_key),
+):
+    """
+    Main chat endpoint.
+
+    1. Pydantic validates the request body automatically
+    2. verify_api_key enforces auth via the X-API-Key header
+    3. route_request tries OpenAI, falls back to Gemini
+    4. log_request captures observability data to PostgreSQL
+    5. Returns a standardised ChatResponse
+    """
+    # Lazy import to avoid circular dependency at module load time
+    from app.router import route_request
+
     start = time.perf_counter()
 
-    # Sprint 1 placeholder response
-    response = {"reply": "Mock response from gateway"}
+    try:
+        response: ChatResponse = route_request(body)
+        status_code = 200
+    except ProviderError as exc:
+        latency_ms = int((time.perf_counter() - start) * 1000)
+        log_request(
+            endpoint="/chat",
+            status_code=502,
+            latency_ms=latency_ms,
+            provider=exc.provider,
+            model=body.model,
+            api_key_id=api_key.id,
+        )
+        logger.error("All providers failed: %s", exc)
+        raise HTTPException(status_code=502, detail="All LLM providers failed") from exc
 
     latency_ms = int((time.perf_counter() - start) * 1000)
-    log_request(endpoint="/chat", status_code=200, latency_ms=latency_ms)
+
+    # Log the successful request
+    log_request(
+        endpoint="/chat",
+        status_code=status_code,
+        latency_ms=latency_ms,
+        provider=response.provider,
+        model=response.model,
+        api_key_id=api_key.id,
+    )
 
     return response
