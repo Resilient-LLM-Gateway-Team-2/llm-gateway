@@ -18,7 +18,7 @@ app = FastAPI(title="Resilient LLM Gateway - Sprint 2")
 # ---------- DB setup ----------
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://gateway:gatewaypass@postgres:5432/gatewaydb",  # docker-compose default
+    "postgresql://gateway:gatewaypass@postgres:5432/gatewaydb",  # docker-compose default connects via internal docker network port 5432
 )
 
 engine = create_engine(DATABASE_URL, pool_pre_ping=True)

@@ -3,13 +3,16 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.egg-info/
 
 # Pytest
 .pytest_cache/
 
 # Virtual env
 venv/
+.venv/
 .env/
+.env
 
 # OS / IDE
 .DS_Store
