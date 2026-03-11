@@ -128,12 +128,38 @@ def chat(
     """
     # Lazy import to avoid circular dependency at module load time
     from app.router import route_request
+    from app.cache import get_cached_response, set_cached_response
+    import hashlib
 
     start = time.perf_counter()
+
+    # Create a unique cache key based on the api_key and message content
+    prompt_text = "".join([m.content for m in body.messages])
+    prompt_hash = hashlib.sha256(prompt_text.encode('utf-8')).hexdigest()
+    prompt_key = f"session:{api_key.id}:{prompt_hash}"
+
+    # Check the Redis Cache first
+    cached_data = get_cached_response(prompt_key)
+    if cached_data:
+        response = ChatResponse(**cached_data)
+        latency_ms = int((time.perf_counter() - start) * 1000)
+        log_request(
+            endpoint="/chat",
+            status_code=200,
+            latency_ms=latency_ms,
+            provider="redis_cache",
+            model=response.model,
+            api_key_id=api_key.id,
+        )
+        return response
 
     try:
         response: ChatResponse = route_request(body)
         status_code = 200
+        
+        # Cache the successful response
+        response_dict = response.model_dump() if hasattr(response, 'model_dump') else response.dict()
+        set_cached_response(prompt_key, response_dict)
     except ProviderError as exc:
         latency_ms = int((time.perf_counter() - start) * 1000)
         log_request(

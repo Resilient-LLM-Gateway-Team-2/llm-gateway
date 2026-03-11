@@ -14,8 +14,27 @@ import openai
 import google.generativeai as genai
 
 from app.schemas import ChatRequest, ChatResponse, UsageStats
+from abc import ABC, abstractmethod
 
 logger = logging.getLogger(__name__)
+
+class BaseProvider(ABC):
+    """Interface for LLM Providers"""
+    
+    @abstractmethod
+    def call(self, request: ChatRequest) -> ChatResponse:
+        pass
+
+class MockProvider(BaseProvider):
+    """A mock provider that simulates a response when real models fail or for testing."""
+    
+    def call(self, request: ChatRequest) -> ChatResponse:
+        return ChatResponse(
+            content="This is a simulated response from the MockProvider. The real providers (OpenAI/Gemini) were unavailable or out of quota.",
+            provider="mock",
+            model="mock-model",
+            usage=UsageStats(prompt_tokens=10, completion_tokens=15, total_tokens=25)
+        )
 
 # ---------------------------------------------------------------------------
 # Configuration
