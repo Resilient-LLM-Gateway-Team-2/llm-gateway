@@ -11,7 +11,7 @@ fallback provider and returns its response instead.
 import logging
 
 from app.schemas import ChatRequest, ChatResponse
-from app.providers import call_openai, call_gemini, ProviderError
+from app.providers import call_openai, call_gemini, ProviderError, MockProvider
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ def route_request(request: ChatRequest) -> ChatResponse:
 
     1. Try OpenAI (primary)
     2. On failure, fall back to Gemini (secondary)
-    3. If both fail, raise the last ProviderError
+    3. If both fail, fall back to MockProvider
     """
 
     # --- Primary: OpenAI ---
@@ -37,5 +37,12 @@ def route_request(request: ChatRequest) -> ChatResponse:
         logger.info("Routing to fallback provider: gemini")
         return call_gemini(request)
     except ProviderError as exc:
-        logger.error("Fallback provider also failed: %s", exc)
-        raise
+        logger.warning("Fallback provider also failed: %s — switching to mock provider", exc)
+        
+    # --- Final Fallback: Mock ---
+    try:
+        logger.info("Routing to mock provider")
+        return MockProvider().call(request)
+    except Exception as exc:
+        logger.error("Mock provider failed: %s", exc)
+        raise ProviderError("mock", str(exc))
