@@ -4,6 +4,7 @@ import logging
 from typing import Optional
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
+from fastapi.responses import HTMLResponse
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, create_engine, func
 from sqlalchemy.orm import Session, declarative_base, sessionmaker
 
@@ -107,6 +108,16 @@ def verify_api_key(
 
 
 # ---------- Routes ----------
+@app.get("/", response_class=HTMLResponse)
+async def serve_dashboard():
+    """Serve the frontend dashboard UI."""
+    try:
+        with open("app/dashboard.html", "r") as f:
+            return HTMLResponse(content=f.read())
+    except Exception as e:
+        logger.error("Failed to load dashboard: %s", e)
+        raise HTTPException(status_code=500, detail="Dashboard not found")
+
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
