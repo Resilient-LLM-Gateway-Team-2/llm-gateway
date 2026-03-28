@@ -84,9 +84,9 @@ def log_request(
         )
         db.add(row)
         db.commit()
-    except Exception:
+    except Exception as exc:
         db.rollback()
-        raise
+        logger.error("Failed to log request: %s", exc)
     finally:
         db.close()
 
@@ -123,6 +123,32 @@ def health_check():
     return {"status": "ok"}
 
 
+@app.get("/health/detailed")
+def health_detailed():
+    """Return connectivity status for API, PostgreSQL, and Redis."""
+    result = {"api": "ok", "postgres": "error", "redis": "error"}
+
+    # Check PostgreSQL
+    try:
+        from sqlalchemy import text
+        db = SessionLocal()
+        db.execute(text("SELECT 1"))
+        db.close()
+        result["postgres"] = "ok"
+    except Exception:
+        pass
+
+    # Check Redis
+    try:
+        from app.cache import redis_client
+        redis_client.ping()
+        result["redis"] = "ok"
+    except Exception:
+        pass
+
+    return result
+
+
 @app.post("/chat", response_model=ChatResponse)
 def chat(
     body: ChatRequest,
@@ -144,13 +170,28 @@ def chat(
 
     start = time.perf_counter()
 
-    # Create a unique cache key based on the api_key and message content
-    prompt_text = "".join([m.content for m in body.messages])
-    prompt_hash = hashlib.sha256(prompt_text.encode('utf-8')).hexdigest()
-    prompt_key = f"session:{api_key.id}:{prompt_hash}"
+    # --- Two-layer cache key strategy ---
+    import json
 
-    # Check the Redis Cache first
-    cached_data = get_cached_response(prompt_key)
+    # Layer 1: Exact conversation state (full messages array)
+    messages_serialized = json.dumps(
+        [{"role": m.role, "content": m.content} for m in body.messages],
+        sort_keys=True,
+    )
+    exact_hash = hashlib.sha256(messages_serialized.encode("utf-8")).hexdigest()
+    exact_key = f"chat:{api_key.id}:{exact_hash}"
+
+    # Layer 2: Last user message only (for repeat-question cache hits)
+    last_user_msg = ""
+    for m in reversed(body.messages):
+        if m.role == "user":
+            last_user_msg = m.content
+            break
+    prompt_hash = hashlib.sha256(last_user_msg.encode("utf-8")).hexdigest()
+    prompt_key = f"prompt:{api_key.id}:{prompt_hash}"
+
+    # Check cache — exact match first, then prompt-level match
+    cached_data = get_cached_response(exact_key) or get_cached_response(prompt_key)
     if cached_data:
         response = ChatResponse(**cached_data)
         latency_ms = int((time.perf_counter() - start) * 1000)
@@ -167,9 +208,11 @@ def chat(
     try:
         response: ChatResponse = route_request(body)
         status_code = 200
+
         
-        # Cache the successful response
+        # Cache the successful response under both keys
         response_dict = response.model_dump() if hasattr(response, 'model_dump') else response.dict()
+        set_cached_response(exact_key, response_dict)
         set_cached_response(prompt_key, response_dict)
     except ProviderError as exc:
         latency_ms = int((time.perf_counter() - start) * 1000)
