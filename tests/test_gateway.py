@@ -190,14 +190,17 @@ class TestChat:
         assert data["content"] == "Hello from Gemini!"
 
     @patch("app.main.log_request")
+    @patch("app.router.MockProvider")
     @patch("app.router.call_gemini")
     @patch("app.router.call_openai")
-    def test_both_providers_fail_returns_502(self, mock_openai, mock_gemini, mock_log):
-        """When both providers fail, return 502."""
+    def test_both_providers_fail_returns_502(self, mock_openai, mock_gemini, mock_mock_provider, mock_log):
+        """When all providers fail, return 502."""
         from app.providers import ProviderError
 
         mock_openai.side_effect = ProviderError("openai", "All 3 attempts failed")
         mock_gemini.side_effect = ProviderError("gemini", "All 3 attempts failed")
+        mock_instance = mock_mock_provider.return_value
+        mock_instance.call.side_effect = Exception("Mock provider also failed")
 
         client = TestClient(app)
         r = client.post(
@@ -207,3 +210,4 @@ class TestChat:
         )
         assert r.status_code == 502
         assert "All LLM providers failed" in r.json()["detail"]
+
