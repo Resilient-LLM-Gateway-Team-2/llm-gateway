@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+from typing import Optional
 import redis
 
 logger = logging.getLogger(__name__)
@@ -8,7 +9,7 @@ logger = logging.getLogger(__name__)
 REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
 redis_client = redis.from_url(REDIS_URL, decode_responses=True)
 
-def get_cached_response(prompt_key: str) -> dict | None:
+def get_cached_response(prompt_key: str) -> Optional[dict]:
     try:
         data = redis_client.get(prompt_key)
         if data:

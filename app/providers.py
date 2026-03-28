@@ -8,7 +8,7 @@ Retries use exponential backoff: 1 s → 2 s → 4 s (3 attempts total).
 import os
 import time
 import logging
-from typing import Callable
+from typing import Callable, Optional
 
 import openai
 import google.generativeai as genai
@@ -57,7 +57,7 @@ class ProviderError(Exception):
 
 def _retry(fn: Callable, provider_name: str):
     """Execute *fn* with up to MAX_RETRIES attempts and exponential backoff."""
-    last_exc: Exception | None = None
+    last_exc: Optional[Exception] = None
     for attempt in range(1, MAX_RETRIES + 1):
         try:
             return fn()
