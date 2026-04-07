@@ -11,3 +11,4 @@ alembic
 openai
 google-generativeai
 pydantic
+python-multipart

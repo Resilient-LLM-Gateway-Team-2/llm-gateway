@@ -1,3 +1,8 @@
+"""
+LLM Gateway Setup Configuration
+Repository: https://github.com/Resilient-LLM-Gateway-Team-2/llm-gateway
+Author: Resilient LLM Gateway Team
+"""
 from setuptools import setup, find_packages
 
 setup(

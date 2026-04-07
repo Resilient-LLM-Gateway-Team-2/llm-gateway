@@ -10,13 +10,23 @@ import time
 import logging
 from typing import Callable, Optional
 
-import openai
-import google.generativeai as genai
-
 from app.schemas import ChatRequest, ChatResponse, UsageStats
 from abc import ABC, abstractmethod
 
 logger = logging.getLogger(__name__)
+
+
+def _estimate_tokens_from_text(text: str) -> int:
+    """Rough token estimate for providers that don't return usage metadata."""
+    if not text:
+        return 0
+    # A practical approximation for English text is ~4 chars/token.
+    return max(1, len(text) // 4)
+
+
+def _estimate_prompt_tokens(request: ChatRequest) -> int:
+    prompt_text = "\n".join(m.content for m in request.messages)
+    return _estimate_tokens_from_text(prompt_text)
 
 class BaseProvider(ABC):
     """Interface for LLM Providers"""
@@ -29,11 +39,21 @@ class MockProvider(BaseProvider):
     """A mock provider that simulates a response when real models fail or for testing."""
     
     def call(self, request: ChatRequest) -> ChatResponse:
+        content = (
+            "This is a simulated response from the MockProvider. "
+            "The real providers (OpenAI/Gemini) were unavailable or out of quota."
+        )
+        prompt_tokens = _estimate_prompt_tokens(request)
+        completion_tokens = _estimate_tokens_from_text(content)
         return ChatResponse(
-            content="This is a simulated response from the MockProvider. The real providers (OpenAI/Gemini) were unavailable or out of quota.",
+            content=content,
             provider="mock",
             model="mock-model",
-            usage=UsageStats(prompt_tokens=10, completion_tokens=15, total_tokens=25)
+            usage=UsageStats(
+                prompt_tokens=prompt_tokens,
+                completion_tokens=completion_tokens,
+                total_tokens=prompt_tokens + completion_tokens,
+            )
         )
 
 # ---------------------------------------------------------------------------
@@ -85,6 +105,11 @@ def _retry(fn: Callable, provider_name: str):
 def call_openai(request: ChatRequest) -> ChatResponse:
     """Call the OpenAI Chat Completions API and return a normalised response."""
 
+    try:
+        import openai
+    except ImportError as exc:
+        raise ProviderError("openai", f"OpenAI client is not available: {exc}") from exc
+
     client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     def _call():
@@ -117,10 +142,15 @@ def call_openai(request: ChatRequest) -> ChatResponse:
 def call_gemini(request: ChatRequest) -> ChatResponse:
     """Call the Google Gemini API and return a normalised response."""
 
+    try:
+        import google.generativeai as genai
+    except ImportError as exc:
+        raise ProviderError("gemini", f"Gemini client is not available: {exc}") from exc
+
     genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
     # Map the requested model to a Gemini model name
-    gemini_model = request.model if request.model.startswith("gemini") else "gemini-2.0-flash"
+    gemini_model = request.model if request.model.startswith("gemini") else "gemini-2.5-flash"
 
     def _call():
         model = genai.GenerativeModel(gemini_model)
@@ -142,9 +172,9 @@ def call_gemini(request: ChatRequest) -> ChatResponse:
 
         text = response.text or ""
 
-        # Estimate token counts from Gemini metadata when available
-        prompt_tokens = 0
-        completion_tokens = 0
+        # Prefer provider usage metadata; fallback to text-based estimate.
+        prompt_tokens = _estimate_prompt_tokens(request)
+        completion_tokens = _estimate_tokens_from_text(text)
         if hasattr(response, "usage_metadata") and response.usage_metadata:
             prompt_tokens = getattr(response.usage_metadata, "prompt_token_count", 0) or 0
             completion_tokens = getattr(response.usage_metadata, "candidates_token_count", 0) or 0

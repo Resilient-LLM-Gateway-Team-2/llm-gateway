@@ -9,29 +9,40 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0a0a0f;
-            --panel-bg: #12121a;
-            --card-bg: #1a1a28;
-            --border-color: rgba(255,255,255,0.06);
-            --border-hover: rgba(255,255,255,0.12);
-            --text-main: #e8e8f0;
-            --text-muted: #6b6b80;
-            --text-dim: #45455a;
+            --bg-color: #080810;
+            --panel-bg: #0f0f17;
+            --card-bg: #16161f;
+            --border-color: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.15);
+            --text-main: #f0f0f8;
+            --text-muted: #7a7a8e;
+            --text-dim: #4a4a5e;
             --accent: #a78bfa;
-            --accent-glow: rgba(167,139,250,0.15);
-            --user-msg: #6d28d9;
-            --user-msg-hover: #7c3aed;
-            --bot-msg: #1e1e2e;
-            --success: #34d399;
-            --success-dim: rgba(52,211,153,0.12);
-            --warning: #fbbf24;
-            --warning-dim: rgba(251,191,36,0.12);
-            --error: #f87171;
-            --error-dim: rgba(248,113,113,0.12);
+            --accent-glow: rgba(167,139,250,0.2);
+            --accent-bright: #c4b5fd;
+            --user-msg: #7c3aed;
+            --user-msg-hover: #8b5cf6;
+            --bot-msg: #1f1f2e;
+            --success: #10b981;
+            --success-glow: rgba(16,185,129,0.2);
+            --success-dim: rgba(16,185,129,0.12);
+            --warning: #f59e0b;
+            --warning-glow: rgba(245,158,11,0.2);
+            --warning-dim: rgba(245,158,11,0.12);
+            --error: #ef4444;
+            --error-glow: rgba(239,68,68,0.2);
+            --error-dim: rgba(239,68,68,0.12);
+            --info: #06b6d4;
+            --info-glow: rgba(6,182,212,0.2);
+            --info-dim: rgba(6,182,212,0.12);
             --openai-color: #10a37f;
             --gemini-color: #8ab4f8;
             --mock-color: #f87171;
             --cache-color: #34d399;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+            --shadow-xl: 0 16px 48px rgba(0,0,0,0.6);
         }
 
         * {
@@ -55,39 +66,56 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 14px 24px;
-            background: linear-gradient(180deg, rgba(18,18,26,0.98) 0%, rgba(18,18,26,0.92) 100%);
-            border-bottom: 1px solid var(--border-color);
+            padding: 12px 28px;
+            background: linear-gradient(180deg, rgba(18,18,26,0.99) 0%, rgba(20,20,30,0.95) 100%);
+            border-bottom: 1px solid rgba(167,139,250,0.15);
             backdrop-filter: blur(20px);
+            box-shadow: 0 4px 32px rgba(0,0,0,0.4);
             z-index: 10;
             flex-shrink: 0;
         }
 
-        .top-bar-left {
+        .logo-link {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .logo-link:hover {
+            opacity: 0.9;
         }
 
         .logo-icon {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, var(--accent), #6d28d9);
-            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
-            font-weight: 700;
             color: white;
-            box-shadow: 0 2px 12px var(--accent-glow);
+            box-shadow: 0 4px 16px var(--accent-glow);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            flex-shrink: 0;
+        }
+
+        .logo-icon:hover {
+            transform: scale(1.08) translateY(-2px);
+            box-shadow: 0 6px 24px var(--accent-glow);
         }
 
         .top-bar h1 {
-            font-size: 1.05rem;
-            font-weight: 600;
+            font-size: 1.1rem;
+            font-weight: 700;
             letter-spacing: -0.01em;
             color: var(--text-main);
+            background: linear-gradient(135deg, var(--text-main), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .top-bar h1 span {
@@ -97,60 +125,137 @@
         .top-bar-right {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 20px;
         }
 
         .health-indicators {
             display: flex;
-            gap: 10px;
+            gap: 14px;
             align-items: center;
+            padding: 8px 14px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .health-indicators:hover {
+            background: rgba(0,0,0,0.4);
+            border-color: rgba(255,255,255,0.12);
         }
 
         .health-dot {
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-size: 0.72rem;
-            font-weight: 500;
+            gap: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.4px;
+            transition: color 0.3s ease;
+        }
+
+        .health-dot:hover {
+            color: var(--text-main);
         }
 
         .health-dot .dot {
-            width: 7px;
-            height: 7px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background-color: var(--text-dim);
-            transition: background-color 0.5s, box-shadow 0.5s;
+            transition: background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s ease;
         }
 
         .health-dot .dot.ok {
             background-color: var(--success);
-            box-shadow: 0 0 6px rgba(52,211,153,0.5);
+            box-shadow: 0 0 10px rgba(52,211,153,0.7);
+            animation: statusPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
 
         .health-dot .dot.err {
             background-color: var(--error);
-            box-shadow: 0 0 6px rgba(248,113,113,0.5);
+            box-shadow: 0 0 10px rgba(248,113,113,0.7);
+        }
+
+        .api-key-wrapper {
+            display: flex;
+            gap: 8px;
+            align-items: center;
         }
 
         .api-key-input {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
+            background: linear-gradient(135deg, rgba(26,26,40,0.8), rgba(26,26,40,0.6));
+            border: 1px solid rgba(167,139,250,0.2);
             color: var(--text-main);
-            padding: 7px 14px;
-            border-radius: 8px;
+            padding: 8px 14px;
+            border-radius: 10px;
             font-size: 0.82rem;
             font-family: inherit;
-            width: 220px;
+            width: 240px;
             outline: none;
-            transition: border-color 0.25s, box-shadow 0.25s;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .api-key-input:hover {
+            background: linear-gradient(135deg, rgba(26,26,40,0.9), rgba(26,26,40,0.7));
+            border-color: rgba(167,139,250,0.3);
         }
 
         .api-key-input:focus {
             border-color: var(--accent);
+            background: linear-gradient(135deg, rgba(26,26,40,1), rgba(26,26,40,0.8));
             box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .copy-btn {
+            padding: 8px 12px;
+            background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.1));
+            border: 1px solid rgba(16,185,129,0.3);
+            color: var(--success);
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+        }
+
+        .copy-btn:hover {
+            background: linear-gradient(135deg, rgba(16,185,129,0.25), rgba(16,185,129,0.15));
+            border-color: rgba(16,185,129,0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16,185,129,0.2);
+        }
+
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+
+        .logout-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, rgba(167,139,250,0.15), rgba(139,92,246,0.1));
+            border: 1px solid rgba(167,139,250,0.3);
+            color: var(--accent);
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: inherit;
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, rgba(167,139,250,0.25), rgba(139,92,246,0.15));
+            border-color: rgba(167,139,250,0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(167,139,250,0.2);
+        }
+
+        .logout-btn:active {
+            transform: translateY(0);
         }
 
         /* ═══════════ SESSION STATS BAR ═══════════ */
@@ -189,6 +294,7 @@
             font-weight: 600;
             color: var(--text-main);
             font-variant-numeric: tabular-nums;
+            transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .stat-value.accent { color: var(--accent); }
@@ -217,15 +323,17 @@
             display: flex;
             flex-direction: column;
             gap: 14px;
+            scroll-behavior: smooth;
         }
 
         .message {
             max-width: 75%;
-            padding: 12px 18px;
-            border-radius: 16px;
+            padding: 12px 16px;
+            border-radius: 14px;
             line-height: 1.6;
             font-size: 0.92rem;
             animation: msgIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(8px);
         }
 
         @keyframes msgIn {
@@ -235,70 +343,243 @@
 
         .user-message {
             align-self: flex-end;
-            background: linear-gradient(135deg, var(--user-msg), var(--user-msg-hover));
+            background: linear-gradient(135deg, var(--user-msg) 0%, var(--user-msg-hover) 100%);
             color: white;
             border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+        }
+
+        .user-message:hover {
+            box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4);
         }
 
         .bot-message {
             align-self: flex-start;
-            background-color: var(--bot-msg);
+            background: linear-gradient(135deg, rgba(31, 31, 46, 0.8) 0%, rgba(28, 28, 40, 0.6) 100%);
             border: 1px solid var(--border-color);
             border-bottom-left-radius: 4px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .bot-message:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-md);
         }
 
         .bot-message.error-msg {
-            border-color: rgba(248,113,113,0.3);
-            background: rgba(248,113,113,0.06);
+            border-color: rgba(239, 68, 68, 0.4);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(183, 28, 28, 0.05) 100%);
+        }
+
+        /* Message Content Formatting */
+        .message-content {
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .message-content code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #a78bfa;
+        }
+
+        .message-content pre {
+            background: linear-gradient(135deg, rgba(15, 15, 23, 0.8) 0%, rgba(12, 12, 20, 0.6) 100%);
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin: 8px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #d1d5db;
+            position: relative;
+        }
+
+        .message-content pre code {
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            color: inherit;
+            font-size: 0.9em;
+        }
+
+        .code-block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(167, 139, 250, 0.15);
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 0;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .code-copy-btn {
+            background: transparent;
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            color: var(--accent);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .code-copy-btn:hover {
+            background: rgba(167, 139, 250, 0.15);
+            border-color: var(--accent);
+        }
+
+        .code-copy-btn.copied {
+            color: var(--success);
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.15);
+        }
+
+        .message-content strong {
+            font-weight: 700;
+            color: var(--accent-bright);
+        }
+
+        .message-content em {
+            font-style: italic;
+            color: #cbd5e1;
+        }
+
+        .message-content ul,
+        .message-content ol {
+            margin: 8px 0 8px 20px;
+            padding: 0;
+        }
+
+        .message-content li {
+            margin: 4px 0;
+            line-height: 1.6;
+        }
+
+        .message-content ul li::marker {
+            color: var(--accent);
+        }
+
+        .message-content ol li::marker {
+            color: var(--accent);
+        }
+
+        .message-content blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: 12px;
+            margin: 8px 0;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .message-content h1,
+        .message-content h2,
+        .message-content h3,
+        .message-content h4 {
+            margin: 10px 0 8px 0;
+            color: var(--accent-bright);
+            font-weight: 700;
+        }
+
+        .message-content h1 { font-size: 1.4em; }
+        .message-content h2 { font-size: 1.3em; }
+        .message-content h3 { font-size: 1.2em; }
+        .message-content h4 { font-size: 1.1em; }
+
+        .message-content a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(167, 139, 250, 0.3);
+            transition: all 0.2s;
+        }
+
+        .message-content a:hover {
+            color: var(--accent-bright);
+            border-bottom-color: var(--accent-bright);
+        }
+
+        .message-content hr {
+            border: none;
+            border-top: 1px solid rgba(167, 139, 250, 0.2);
+            margin: 12px 0;
         }
 
         .input-area {
             padding: 18px 24px;
-            background-color: var(--panel-bg);
+            background: linear-gradient(180deg, rgba(17, 17, 26, 0.8) 0%, rgba(15, 15, 23, 0.6) 100%);
             border-top: 1px solid var(--border-color);
             display: flex;
             gap: 10px;
+            backdrop-filter: blur(10px);
         }
 
         .chat-input {
             flex: 1;
-            background-color: var(--card-bg);
+            background: linear-gradient(135deg, rgba(22, 22, 31, 0.6) 0%, rgba(20, 20, 30, 0.4) 100%);
             border: 1px solid var(--border-color);
             color: var(--text-main);
-            padding: 13px 18px;
-            border-radius: 12px;
+            padding: 14px 18px;
+            border-radius: 10px;
             font-size: 0.95rem;
             font-family: inherit;
             outline: none;
-            transition: border-color 0.25s, box-shadow 0.25s;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(10px);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .chat-input::placeholder {
+            color: var(--text-dim);
         }
 
         .chat-input:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-glow);
+            box-shadow: 0 0 0 3px var(--accent-glow), inset 0 1px 3px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, rgba(25, 25, 35, 0.8) 0%, rgba(23, 23, 33, 0.6) 100%);
         }
 
         .btn {
             border: none;
             padding: 0 22px;
-            border-radius: 12px;
+            border-radius: 10px;
             font-weight: 600;
             font-family: inherit;
             font-size: 0.88rem;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            background: linear-gradient(135deg, var(--accent-bright) 0%, var(--accent) 50%, #8b5cf6 100%);
             color: white;
-            box-shadow: 0 2px 12px var(--accent-glow);
+            box-shadow: 0 4px 16px var(--accent-glow), inset 1px 1px 0 rgba(255,255,255,0.2);
+            font-weight: 700;
+            letter-spacing: 0.3px;
         }
 
-        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
-        .btn-primary:active { transform: scale(0.98) translateY(0); }
+        .btn-primary:hover {
+            opacity: 0.95;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--accent-glow), inset 1px 1px 0 rgba(255,255,255,0.2);
+        }
+
+        .btn-primary:active { transform: scale(0.97) translateY(0); }
         .btn-primary:disabled {
-            background: #333;
+            background: linear-gradient(135deg, #333 0%, #222 100%);
             color: #666;
             cursor: not-allowed;
             transform: none;
@@ -310,12 +591,15 @@
             color: var(--text-muted);
             border: 1px solid var(--border-color);
             padding: 0 16px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .btn-ghost:hover {
             color: var(--text-main);
-            border-color: var(--border-hover);
-            background: rgba(255,255,255,0.03);
+            border-color: var(--accent);
+            background: rgba(167, 139, 250, 0.08);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
         }
 
         /* ═══════════ OBSERVABILITY PANEL ═══════════ */
@@ -347,37 +631,46 @@
             display: flex;
             gap: 0;
             border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(90deg, rgba(22, 22, 31, 0.4) 0%, rgba(22, 22, 31, 0.2) 100%);
+            padding: 0 2px;
         }
 
         .obs-tab {
             flex: 1;
-            padding: 10px;
+            padding: 12px 10px;
             text-align: center;
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.6px;
             color: var(--text-muted);
             cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             background: none;
             border-top: none;
             border-left: none;
             border-right: none;
             font-family: inherit;
+            position: relative;
         }
 
-        .obs-tab:hover { color: var(--text-main); }
+        .obs-tab:hover {
+            color: var(--text-main);
+            background: rgba(167, 139, 250, 0.05);
+        }
+
         .obs-tab.active {
-            color: var(--accent);
+            color: var(--accent-bright);
             border-bottom-color: var(--accent);
+            box-shadow: inset 0 -3px 0 0 var(--accent);
         }
 
         .obs-content {
             flex: 1;
             overflow-y: auto;
             padding: 16px;
+            background: linear-gradient(180deg, rgba(15, 15, 23, 0.4) 0%, rgba(12, 12, 20, 0.2) 100%);
         }
 
         .tab-panel { display: none; }
@@ -388,56 +681,261 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .metric-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 14px 16px;
+            background: linear-gradient(135deg, rgba(22, 22, 31, 0.8) 0%, rgba(20, 20, 30, 0.6) 100%);
+            border: 1px solid rgba(167, 139, 250, 0.15);
+            border-left: 4px solid var(--accent);
+            border-radius: 12px;
+            padding: 16px 18px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            transition: border-color 0.2s;
+            gap: 8px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), inset 1px 1px 0 rgba(255, 255, 255, 0.08);
+            position: relative;
+            overflow: hidden;
         }
 
-        .metric-card:hover { border-color: var(--border-hover); }
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at top-right, rgba(167, 139, 250, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 0;
+        }
+
+        .metric-card:hover {
+            border-color: rgba(167, 139, 250, 0.3);
+            border-left-color: var(--accent-bright);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px rgba(167, 139, 250, 0.15), inset 1px 1px 0 rgba(255, 255, 255, 0.12);
+            background: linear-gradient(135deg, rgba(25, 25, 35, 0.9) 0%, rgba(23, 23, 33, 0.7) 100%);
+        }
+
+        .metric-card:hover::before {
+            opacity: 1;
+        }
+
+        .metric-card > * { position: relative; z-index: 1; }
 
         .metric-label {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 500;
+            letter-spacing: 0.7px;
+            font-weight: 700;
+            transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .metric-value {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--text-main);
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--accent-bright);
             font-variant-numeric: tabular-nums;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            letter-spacing: -0.02em;
+        }
+
+        .metric-card:hover .metric-label {
+            color: var(--accent-bright);
+        }
+
+        .metric-card:hover .metric-value {
+            transform: scale(1.05);
+            text-shadow: 0 0 16px rgba(167, 139, 250, 0.6);
         }
 
         .provider-badge {
             display: inline-block;
-            padding: 4px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.6px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
         }
 
-        .provider-openai { background: rgba(16,163,127,0.12); color: var(--openai-color); border: 1px solid rgba(16,163,127,0.3); }
-        .provider-gemini { background: rgba(138,180,248,0.12); color: var(--gemini-color); border: 1px solid rgba(138,180,248,0.3); }
-        .provider-mock { background: rgba(248,113,113,0.12); color: var(--mock-color); border: 1px solid rgba(248,113,113,0.3); }
-        .provider-cache { background: rgba(52,211,153,0.12); color: var(--cache-color); border: 1px solid rgba(52,211,153,0.3); }
+        .provider-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at right, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+
+        .provider-badge:hover::before {
+            left: 100%;
+        }
+
+        .provider-openai { 
+            background: rgba(16, 163, 127, 0.18); 
+            color: var(--openai-color); 
+            border: 1px solid rgba(16, 163, 127, 0.4);
+            box-shadow: 0 2px 8px rgba(16, 163, 127, 0.15);
+        }
+
+        .provider-openai:hover {
+            background: rgba(16, 163, 127, 0.28);
+            box-shadow: 0 4px 12px rgba(16, 163, 127, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .provider-gemini { 
+            background: rgba(138, 180, 248, 0.18); 
+            color: var(--gemini-color); 
+            border: 1px solid rgba(138, 180, 248, 0.4);
+            box-shadow: 0 2px 8px rgba(138, 180, 248, 0.15);
+        }
+
+        .provider-gemini:hover {
+            background: rgba(138, 180, 248, 0.28);
+            box-shadow: 0 4px 12px rgba(138, 180, 248, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .provider-mock { 
+            background: rgba(248, 113, 113, 0.18); 
+            color: var(--mock-color); 
+            border: 1px solid rgba(248, 113, 113, 0.4);
+            box-shadow: 0 2px 8px rgba(248, 113, 113, 0.15);
+        }
+
+        .provider-mock:hover {
+            background: rgba(248, 113, 113, 0.28);
+            box-shadow: 0 4px 12px rgba(248, 113, 113, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .provider-cache { 
+            background: rgba(52, 211, 153, 0.18); 
+            color: var(--cache-color); 
+            border: 1px solid rgba(52, 211, 153, 0.4);
+            box-shadow: 0 2px 8px rgba(52, 211, 153, 0.15);
+        }
+
+        .provider-cache:hover {
+            background: rgba(52, 211, 153, 0.28);
+            box-shadow: 0 4px 12px rgba(52, 211, 153, 0.25);
+            transform: translateY(-2px);
+        }
 
         .latency-fast { color: var(--success); }
         .latency-medium { color: var(--warning); }
         .latency-slow { color: var(--error); }
 
         /* Request History */
+        .history-filter-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 16px;
+            background: linear-gradient(135deg, rgba(22, 22, 31, 0.6) 0%, rgba(20, 20, 30, 0.4) 100%);
+            border: 1px solid rgba(167, 139, 250, 0.12);
+            border-radius: 10px;
+            margin-bottom: 16px;
+            animation: fadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-input,
+        .filter-select {
+            padding: 10px 14px;
+            background: linear-gradient(135deg, rgba(15, 15, 23, 0.6) 0%, rgba(12, 12, 20, 0.4) 100%);
+            border: 1px solid rgba(167, 139, 250, 0.15);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: 140px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: inherit;
+            backdrop-filter: blur(8px);
+        }
+
+        .filter-input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .filter-input:focus,
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.08) 0%, rgba(59, 130, 246, 0.04) 100%);
+            box-shadow: 0 0 12px rgba(167, 139, 250, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.05);
+        }
+
+        .filter-select {
+            cursor: pointer;
+        }
+
+        .filter-btn {
+            padding: 10px 18px;
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.2) 0%, rgba(167, 139, 250, 0.1) 100%);
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            border-radius: 8px;
+            color: var(--accent-bright);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .filter-btn:hover {
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.35) 0%, rgba(167, 139, 250, 0.2) 100%);
+            border-color: var(--accent-bright);
+            box-shadow: 0 4px 12px rgba(167, 139, 250, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .filter-btn:active {
+            transform: translateY(0);
+        }
+
+        .filter-info {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: none;
+        }
+
+        .filter-info.active {
+            display: block;
+            padding: 10px 14px;
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.15) 0%, rgba(16, 185, 129, 0.08) 100%);
+            border-left: 3px solid var(--success);
+            border-radius: 8px;
+            color: var(--cache-color);
+            font-weight: 500;
+            animation: slideInLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
         .history-list {
             display: flex;
             flex-direction: column;
@@ -446,46 +944,282 @@
 
         .history-item {
             display: grid;
-            grid-template-columns: 70px 1fr 70px 50px;
+            grid-template-columns: auto 1fr;
             gap: 8px;
-            align-items: center;
-            padding: 10px 12px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(22, 22, 31, 0.6) 0%, rgba(20, 20, 30, 0.4) 100%);
+            border: 1px solid rgba(167, 139, 250, 0.12);
             border-radius: 8px;
-            font-size: 0.78rem;
-            animation: msgIn 0.3s ease;
+            font-size: 0.75rem;
+            animation: slideInLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .history-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+
+        .history-item:hover {
+            border-color: rgba(167, 139, 250, 0.3);
+            background: linear-gradient(135deg, rgba(25, 25, 35, 0.8) 0%, rgba(23, 23, 33, 0.6) 100%);
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(167, 139, 250, 0.1);
+        }
+
+        .history-item:hover::before {
+            left: 100%;
         }
 
         .history-time {
             color: var(--text-muted);
             font-variant-numeric: tabular-nums;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            grid-column: 1;
         }
 
         .history-provider {
             font-weight: 600;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            grid-column: 1;
         }
 
         .history-latency {
-            text-align: right;
             font-weight: 600;
             font-variant-numeric: tabular-nums;
-            font-size: 0.76rem;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            grid-column: 2;
+            text-align: right;
         }
 
         .history-tokens {
-            text-align: right;
             color: var(--text-muted);
             font-variant-numeric: tabular-nums;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            grid-column: 2;
+            text-align: right;
         }
 
         .history-empty {
             text-align: center;
             color: var(--text-dim);
             padding: 40px 20px;
+            font-size: 0.85rem;
+        }
+
+        /* Budget Management */
+        .budget-section {
+            margin-bottom: 20px;
+            padding: 18px;
+            background: linear-gradient(135deg, rgba(22, 22, 31, 0.6) 0%, rgba(20, 20, 30, 0.4) 100%);
+            border: 1px solid rgba(167, 139, 250, 0.12);
+            border-radius: 10px;
+            animation: fadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .budget-section:hover {
+            border-color: rgba(167, 139, 250, 0.2);
+            box-shadow: 0 4px 12px rgba(167, 139, 250, 0.08);
+        }
+
+        .budget-section h3 {
+            margin: 0 0 12px 0;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .budget-form {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .budget-input {
+            padding: 10px 14px;
+            background: linear-gradient(135deg, rgba(15, 15, 23, 0.6) 0%, rgba(12, 12, 20, 0.4) 100%);
+            border: 1px solid rgba(167, 139, 250, 0.15);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: 120px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: inherit;
+            backdrop-filter: blur(8px);
+        }
+
+        .budget-input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .budget-input:focus {
+            outline: none;
+            border-color: var(--success);
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
+            box-shadow: 0 0 12px rgba(52, 211, 153, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.05);
+        }
+
+        .budget-btn {
+            padding: 10px 18px;
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.2) 0%, rgba(52, 211, 153, 0.1) 100%);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            border-radius: 8px;
+            color: var(--cache-color);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .budget-btn:hover {
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.35) 0%, rgba(52, 211, 153, 0.2) 100%);
+            border-color: var(--cache-color);
+            box-shadow: 0 4px 12px rgba(52, 211, 153, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .budget-btn:active {
+            transform: translateY(0);
+        }
+
+        .budget-status-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .budget-card {
+            padding: 14px;
+            background: linear-gradient(135deg, rgba(22, 22, 31, 0.7) 0%, rgba(20, 20, 30, 0.5) 100%);
+            border: 1px solid rgba(167, 139, 250, 0.12);
+            border-radius: 10px;
+            animation: fadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .budget-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(167, 139, 250, 0.3), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .budget-card:hover {
+            border-color: rgba(167, 139, 250, 0.25);
+            background: linear-gradient(135deg, rgba(25, 25, 35, 0.8) 0%, rgba(23, 23, 33, 0.6) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(167, 139, 250, 0.1);
+        }
+
+        .budget-card:hover::before {
+            opacity: 1;
+        }
+
+        .budget-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            gap: 8px;
+        }
+
+        .budget-card-provider {
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .budget-card-status {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .budget-card-status.ok {
+            background: rgba(52, 211, 153, 0.15);
+            color: var(--success);
+        }
+
+        .budget-card-status.warning {
+            background: rgba(251, 146, 60, 0.15);
+            color: #fb923c;
+        }
+
+        .budget-card-status.critical {
+            background: rgba(248, 113, 113, 0.15);
+            color: var(--error);
+        }
+
+        .budget-progress-bar {
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, rgba(52, 211, 153, 0.2) 0%, rgba(52, 211, 153, 0.05) 100%);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 8px;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .budget-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success) 0%, #34d399 100%);
+            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 0 12px rgba(52, 211, 153, 0.4);
+            position: relative;
+        }
+
+        .budget-progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .budget-card-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .budget-empty {
+            text-align: center;
+            color: var(--text-dim);
+            padding: 30px 20px;
             font-size: 0.85rem;
         }
 
@@ -517,6 +1251,64 @@
             40% { transform: scale(1); }
         }
 
+        /* ═══════════ MCP ANIMATIONS ═══════════ */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { 
+                box-shadow: 0 0 0 0 currentColor;
+            }
+            50% { 
+                box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.2);
+            }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        @keyframes routeStepIn {
+            from {
+                opacity: 0;
+                transform: translateX(-4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
         /* Scrollbars */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -539,24 +1331,153 @@
             font-size: 2rem;
             margin-bottom: 4px;
         }
+
+        /* ═══════════ TOAST NOTIFICATIONS ═══════════ */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 400px;
+            pointer-events: none;
+        }
+
+        .toast {
+            padding: 16px 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: all;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .toast:hover {
+            transform: translateX(-4px);
+        }
+
+        .toast.success {
+            background: linear-gradient(135deg, rgba(16,185,129,0.15) 0%, rgba(16,185,129,0.08) 100%);
+            color: #10b981;
+            border-color: rgba(16,185,129,0.3);
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(239,68,68,0.08) 100%);
+            color: #ef4444;
+            border-color: rgba(239,68,68,0.3);
+        }
+
+        .toast.info {
+            background: linear-gradient(135deg, rgba(6,182,212,0.15) 0%, rgba(6,182,212,0.08) 100%);
+            color: #06b6d4;
+            border-color: rgba(6,182,212,0.3);
+        }
+
+        .toast-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .toast-message {
+            flex: 1;
+            line-height: 1.5;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+            flex-shrink: 0;
+        }
+
+        .toast-close:hover {
+            opacity: 1;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(24px);
+            }
+        }
+
+        .toast.removing {
+            animation: slideOutRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
     </style>
 </head>
 <body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
 
     <!-- ═══════════ TOP NAV BAR ═══════════ -->
     <header class="top-bar">
-        <div class="top-bar-left">
-            <div class="logo-icon">⚡</div>
+        <a href="/" class="logo-link">
+            <div class="logo-icon">
+                <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Left node -->
+                    <circle cx="6" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
+                    <!-- Center node -->
+                    <circle cx="16" cy="16" r="3" fill="currentColor"/>
+                    <!-- Right node -->
+                    <circle cx="26" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
+                    <!-- Connecting lines -->
+                    <line x1="8.5" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
+                    <line x1="19" y1="16" x2="23.5" y2="16" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
+                    <!-- Radiating paths (top) -->
+                    <line x1="16" y1="13" x2="16" y2="8" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+                    <!-- Radiating paths (bottom) -->
+                    <line x1="16" y1="19" x2="16" y2="24" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+                    <!-- Diagonal paths -->
+                    <line x1="20.5" y1="11.5" x2="24" y2="8" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+                    <line x1="20.5" y1="20.5" x2="24" y2="24" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+                </svg>
+            </div>
             <h1>Resilient <span>LLM Gateway</span></h1>
-        </div>
+        </a>
         <div class="top-bar-right">
             <div class="health-indicators" id="healthIndicators">
                 <div class="health-dot"><span class="dot" id="healthApi"></span> API</div>
                 <div class="health-dot"><span class="dot" id="healthPostgres"></span> Postgres</div>
                 <div class="health-dot"><span class="dot" id="healthRedis"></span> Redis</div>
             </div>
-            <input type="password" id="apiKey" class="api-key-input"
-                   placeholder="Enter X-API-Key" value="test_key">
+            <div class="api-key-wrapper">
+                <input type="password" id="apiKey" class="api-key-input"
+                       placeholder="Enter X-API-Key" value="test_key">
+                <button id="copyKeyBtn" class="copy-btn" title="Copy API Key">📋 Copy</button>
+            </div>
+            <button id="logoutBtn" class="logout-btn">Sign Out</button>
         </div>
     </header>
 
@@ -615,6 +1536,7 @@
             <div class="obs-tabs">
                 <button class="obs-tab active" onclick="switchTab('latest')">Latest</button>
                 <button class="obs-tab" onclick="switchTab('history')">History</button>
+                <button class="obs-tab" onclick="switchTab('budget')">💰 Budget</button>
             </div>
             <div class="obs-content">
                 <!-- Latest Tab -->
@@ -627,8 +1549,64 @@
                 </div>
                 <!-- History Tab -->
                 <div class="tab-panel" id="tabHistory">
+                    <!-- Filter Panel -->
+                    <div class="history-filter-panel">
+                        <div class="filter-row">
+                            <input 
+                                type="text" 
+                                id="historySearchInput" 
+                                class="filter-input" 
+                                placeholder="🔍 Search by content..."
+                                onchange="updateHistoryDisplay()"
+                                oninput="updateHistoryDisplay()"
+                            />
+                        </div>
+                        <div class="filter-row">
+                            <select id="filterProvider" class="filter-select" onchange="updateHistoryDisplay()">
+                                <option value="">All Providers</option>
+                                <option value="openai">OpenAI</option>
+                                <option value="gemini">Gemini</option>
+                                <option value="mock">Mock</option>
+                                <option value="cache">Cache</option>
+                            </select>
+                            <select id="filterModel" class="filter-select" onchange="updateHistoryDisplay()">
+                                <option value="">All Models</option>
+                            </select>
+                            <select id="filterStatus" class="filter-select" onchange="updateHistoryDisplay()">
+                                <option value="">All Status</option>
+                                <option value="success">Success ✓</option>
+                                <option value="error">Failed ✗</option>
+                            </select>
+                            <button class="filter-btn" onclick="clearHistoryFilters()">Clear Filters</button>
+                        </div>
+                        <div class="filter-info" id="filterInfo"></div>
+                    </div>
+
+                    <!-- History List -->
                     <div class="history-list" id="historyList">
                         <div class="history-empty">No requests yet</div>
+                    </div>
+                </div>
+                <!-- Budget Tab -->
+                <div class="tab-panel" id="tabBudget">
+                    <div class="budget-section">
+                        <h3>Budget Configuration</h3>
+                        <div class="budget-form">
+                            <select id="budgetProvider" class="budget-input">
+                                <option value="openai">OpenAI</option>
+                                <option value="gemini">Gemini</option>
+                                <option value="all">All Providers</option>
+                            </select>
+                            <input type="number" id="budgetAmount" class="budget-input" placeholder="Monthly Budget (USD)" min="0.01" step="0.01" />
+                            <input type="number" id="warningThreshold" class="budget-input" placeholder="Warning Threshold (%)" min="0" max="100" value="80" />
+                            <button class="budget-btn" onclick="saveBudget()">Set Budget</button>
+                        </div>
+                    </div>
+                    <div class="budget-section">
+                        <h3>Current Usage</h3>
+                        <div class="budget-status-list" id="budgetStatusList">
+                            <div class="budget-empty">No budgets configured</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -636,15 +1614,96 @@
     </div>
 
     <script>
+        // ═══════════ TOAST NOTIFICATION SYSTEM ═══════════
+        function showToast(message, type = 'info', duration = 4000) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icons = {
+                success: '✓',
+                error: '✕',
+                info: 'ℹ'
+            };
+            
+            toast.innerHTML = `
+                <span class="toast-icon">${icons[type]}</span>
+                <span class="toast-message">${message}</span>
+                <button class="toast-close" onclick="this.parentElement.remove();">×</button>
+            `;
+            
+            container.appendChild(toast);
+            
+            if (duration > 0) {
+                setTimeout(() => {
+                    toast.classList.add('removing');
+                    setTimeout(() => toast.remove(), 300);
+                }, duration);
+            }
+        }
+
         // ═══════════ DOM REFS ═══════════
         const chatBox = document.getElementById('chatBox');
         const messageInput = document.getElementById('messageInput');
         const apiKeyInput = document.getElementById('apiKey');
+        const copyKeyBtn = document.getElementById('copyKeyBtn');
         const sendBtn = document.getElementById('sendBtn');
         const loadingIndicator = document.getElementById('loadingIndicator');
         const metricsGrid = document.getElementById('metricsGrid');
         const metricsEmpty = document.getElementById('metricsEmpty');
         const historyList = document.getElementById('historyList');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // ═══════════ COPY API KEY HANDLER ═══════════
+        if (copyKeyBtn) {
+            copyKeyBtn.addEventListener('click', async () => {
+                try {
+                    const apiKey = apiKeyInput.value.trim();
+                    if (!apiKey) {
+                        showToast('No API key to copy', 'error', 3000);
+                        return;
+                    }
+                    
+                    await navigator.clipboard.writeText(apiKey);
+                    showToast('✓ API key copied to clipboard!', 'success', 3000);
+                    
+                    // Visual feedback on button
+                    const originalText = copyKeyBtn.textContent;
+                    copyKeyBtn.textContent = '✓ Copied!';
+                    copyKeyBtn.style.background = 'linear-gradient(135deg, rgba(16,185,129,0.25), rgba(16,185,129,0.15))';
+                    
+                    setTimeout(() => {
+                        copyKeyBtn.textContent = originalText;
+                        copyKeyBtn.style.background = '';
+                    }, 2000);
+                } catch (err) {
+                    showToast('Failed to copy to clipboard', 'error', 3000);
+                }
+            });
+        }
+
+        // ═══════════ LOGOUT HANDLER ═══════════
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', async () => {
+                try {
+                    const response = await fetch('/logout', {
+                        method: 'POST',
+                    });
+                    if (response.ok) {
+                        // Show logout toast with delay before redirect
+                        showToast('👋 Signed out successfully!', 'success', 2000);
+                        setTimeout(() => {
+                            window.location.href = '/login';
+                        }, 800);
+                    } else {
+                        showToast('❌ Logout failed. Please try again.', 'error', 4000);
+                    }
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    showToast('❌ Logout error: ' + error.message, 'error', 4000);
+                }
+            });
+        }
 
         // ═══════════ SESSION STATE ═══════════
         let chatHistory = [];
@@ -696,9 +1755,13 @@
             if (tab === 'latest') {
                 document.querySelectorAll('.obs-tab')[0].classList.add('active');
                 document.getElementById('tabLatest').classList.add('active');
-            } else {
+            } else if (tab === 'history') {
                 document.querySelectorAll('.obs-tab')[1].classList.add('active');
                 document.getElementById('tabHistory').classList.add('active');
+            } else if (tab === 'budget') {
+                document.querySelectorAll('.obs-tab')[2].classList.add('active');
+                document.getElementById('tabBudget').classList.add('active');
+                loadBudgetStatus(); // Load budget data when tab opens
             }
         }
 
@@ -730,12 +1793,114 @@
         }
 
         // ═══════════ CHAT HELPERS ═══════════
+        function formatMessage(content) {
+            // Escape HTML special characters but preserve formatting
+            let formatted = content;
+            
+            // Process code blocks first (```language code ```)
+            formatted = formatted.replace(/```([\s\S]*?)```/g, (match, code) => {
+                const lines = code.trim().split('\n');
+                const firstLine = lines[0].trim();
+                const isLanguage = firstLine && !firstLine.includes(' ') && firstLine.length < 20;
+                const language = isLanguage ? firstLine : '';
+                const actualCode = isLanguage ? lines.slice(1).join('\n') : code.trim();
+                
+                // Escape code content
+                let escapedCode = actualCode
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
+                
+                return `<div class="code-block-header">${language || 'code'}<button class="code-copy-btn" onclick="copyCode(this)">📋 Copy</button></div><pre><code>${escapedCode}</code></pre>`;
+            });
+            
+            // Process inline code (single backticks)
+            formatted = formatted.replace(/`([^`]+)`/g, '<code>$1</code>');
+            
+            // Process bold (**text** or __text__)
+            formatted = formatted.replace(/\*\*([^\*]+)\*\*/g, '<strong>$1</strong>');
+            formatted = formatted.replace(/__([^_]+)__/g, '<strong>$1</strong>');
+            
+            // Process italic (*text* or _text_)
+            formatted = formatted.replace(/\*([^\*]+)\*/g, '<em>$1</em>');
+            formatted = formatted.replace(/_([^_]+)_/g, '<em>$1</em>');
+            
+            // Process headings (# ## ### #### on new lines)
+            formatted = formatted.replace(/^#### (.*?)$/gm, '<h4>$1</h4>');
+            formatted = formatted.replace(/^### (.*?)$/gm, '<h3>$1</h3>');
+            formatted = formatted.replace(/^## (.*?)$/gm, '<h2>$1</h2>');
+            formatted = formatted.replace(/^# (.*?)$/gm, '<h1>$1</h1>');
+            
+            // Process unordered lists (- item or * item)
+            formatted = formatted.replace(/(?:^|\n)((?:[\s]*[-*] .+(?:\n|$))+)/gm, (match) => {
+                const items = match.trim().split('\n').filter(l => l.trim());
+                const listItems = items.map(item => {
+                    const content = item.replace(/^[\s]*[-*]\s+/, '').trim();
+                    return `<li>${content}</li>`;
+                }).join('');
+                return `<ul>${listItems}</ul>`;
+            });
+            
+            // Process ordered lists (1. 2. 3. etc)
+            formatted = formatted.replace(/(?:^|\n)((?:[\s]*\d+\. .+(?:\n|$))+)/gm, (match) => {
+                const items = match.trim().split('\n').filter(l => l.trim());
+                const listItems = items.map(item => {
+                    const content = item.replace(/^[\s]*\d+\.\s+/, '').trim();
+                    return `<li>${content}</li>`;
+                }).join('');
+                return `<ol>${listItems}</ol>`;
+            });
+            
+            // Process blockquotes (> text)
+            formatted = formatted.replace(/(?:^|\n)(?:> (.+?)(?:\n|$))+/gm, (match) => {
+                const lines = match.split('\n').filter(l => l.trim());
+                const quotes = lines.map(line => line.replace(/^>\s+/, '').trim()).join('\n');
+                return `<blockquote>${quotes}</blockquote>`;
+            });
+            
+            // Process horizontal rules (---, ***, ___)
+            formatted = formatted.replace(/(?:^|\n)(?:---|\*\*\*|___)(?:\n|$)/g, '<hr>');
+            
+            // Process line breaks (preserve new lines)
+            formatted = formatted.replace(/\n\n+/g, '</p><p>');
+            
+            return `<div class="message-content"><p>${formatted}</p></div>`;
+        }
+
+        function copyCode(btn) {
+            const pre = btn.closest('.code-block-header').nextElementSibling;
+            if (!pre || pre.tagName !== 'PRE') return;
+            
+            const code = pre.querySelector('code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(() => {
+                showToast('Failed to copy code', 'error', 2000);
+            });
+        }
+
         function appendMessage(role, content, isError) {
             const div = document.createElement('div');
             let classes = `message ${role}-message`;
             if (isError) classes += ' error-msg';
             div.className = classes;
-            div.textContent = content;
+            
+            // Format content for bot messages
+            if (role === 'bot' && !isError) {
+                div.innerHTML = formatMessage(content);
+            } else {
+                // User messages and errors displayed as plain text
+                div.textContent = content;
+            }
+            
             chatBox.appendChild(div);
             chatBox.scrollTop = chatBox.scrollHeight;
         }
@@ -750,7 +1915,7 @@
         }
 
         // ═══════════ UPDATE METRICS ═══════════
-        function updateMetrics(provider, latency, tokens, model, error) {
+        function updateMetrics(provider, latency, tokens, model, error, routePath, costEstimate) {
             metricsEmpty.style.display = 'none';
             metricsGrid.style.display = 'flex';
 
@@ -766,6 +1931,112 @@
             }
 
             const latClass = getLatencyClass(latency);
+            
+            // Build route visualization (MCP-style)
+            let routeHTML = '';
+            if (routePath && routePath.length > 0) {
+                const successStep = routePath.find(s => s.status === 'success');
+                routeHTML = `
+                    <div class="metric-card" style="grid-column: 1/-1; padding: 16px;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                            <span style="font-size: 1.2rem;">🛣️</span>
+                            <span class="metric-label" style="margin: 0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">Route Path</span>
+                        </div>
+                        <div style="margin-top: 12px;">
+                            ${successStep ? `<div style="color: var(--success); font-weight: 600; margin-bottom: 12px; font-size: 0.9rem; letter-spacing: 0.3px;">✓ Resolved via ${successStep.provider.toUpperCase()}</div>` : ''}
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                `;
+                
+                routePath.forEach((step, idx) => {
+                    const statusColor = step.status === 'success' ? 'var(--success)' : 'var(--error)';
+                    const statusIcon = step.status === 'success' ? '✓' : '✗';
+                    routeHTML += `
+                        <div style="padding: 10px 12px; background: rgba(255,255,255,0.03); border-left: 3px solid ${statusColor}; border-radius: 6px; font-size: 0.88rem;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                                <span style="font-weight: 600; letter-spacing: 0.3px;">${step.provider.toUpperCase()} <span style="font-weight: 400; color: var(--text-muted);">(Attempt ${idx + 1})</span></span>
+                                <span style="color: ${statusColor}; font-weight: 700; font-size: 1rem;">${statusIcon}</span>
+                            </div>
+                            <div style="color: var(--text-muted); font-size: 0.8rem; font-variant-numeric: tabular-nums;">Req: <span style="color: var(--text-main);">${step.requested_model}</span> → Res: <span style="color: var(--text-main);">${step.resolved_model || 'N/A'}</span></div>
+                        </div>
+                    `;
+                });
+                
+                routeHTML += `</div></div></div>`;
+            }
+            
+            // Build cost visualization (MCP-style with enhanced styling)
+            let costHTML = '';
+            if (costEstimate) {
+                const formatCost = (val) => val < 0.000001 ? '<0.000001' : val.toFixed(7);
+                
+                // Calculate savings
+                const openaiCost = costEstimate.openai_usd;
+                const geminiCost = costEstimate.gemini_usd;
+                const usedCost = costEstimate.provider_used_usd;
+                const maxAlternative = Math.max(openaiCost, geminiCost);
+                const savings = maxAlternative - usedCost;
+                const savingsPercent = maxAlternative > 0 ? ((savings / maxAlternative) * 100).toFixed(1) : 0;
+                
+                costHTML = `
+                    <div class="metric-card" style="grid-column: 1/-1; padding: 0; overflow: hidden; background: linear-gradient(135deg, rgba(52,211,153,0.05), rgba(167,139,250,0.05)); border: 1px solid rgba(52,211,153,0.2);">
+                        <!-- Header -->
+                        <div style="padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.2);">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
+                                    <span style="font-size: 1.2rem; flex-shrink: 0;">💰</span>
+                                    <div style="min-width: 0;">
+                                        <span class="metric-label" style="margin: 0; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.4px;">Cost Estimate</span>
+                                        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 1px; white-space: nowrap;">Est. pricing comparison</div>
+                                    </div>
+                                </div>
+                                ${savings > 0 ? `<div style="background: rgba(52,211,153,0.2); border: 1px solid rgba(52,211,153,0.4); padding: 5px 10px; border-radius: 16px; font-size: 0.7rem; font-weight: 700; color: var(--success); white-space: nowrap; flex-shrink: 0;">Save ${savingsPercent}%</div>` : ''}
+                            </div>
+                        </div>
+                        
+                        <!-- Cost Cards Grid -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0;">
+                            <!-- OpenAI Card -->
+                            <div style="padding: 14px; border-right: 1px solid rgba(255,255,255,0.05); transition: all 0.3s ease; min-width: 0;">
+                                <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 6px; min-width: 0;">
+                                    <span style="font-size: 0.95rem; flex-shrink: 0;">🤖</span>
+                                    <div style="color: var(--text-muted); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.2px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">OpenAI</div>
+                                </div>
+                                <div style="font-weight: 700; font-size: 0.95rem; color: var(--openai-color); font-family: 'Courier New', monospace; letter-spacing: 0.02em; word-break: break-all;">$${formatCost(openaiCost)}</div>
+                                <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">gpt-3.5-turbo</div>
+                            </div>
+                            
+                            <!-- Gemini Card -->
+                            <div style="padding: 14px; border-right: 1px solid rgba(255,255,255,0.05); transition: all 0.3s ease; min-width: 0;">
+                                <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 6px; min-width: 0;">
+                                    <span style="font-size: 0.95rem; flex-shrink: 0;">✨</span>
+                                    <div style="color: var(--text-muted); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.2px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Gemini</div>
+                                </div>
+                                <div style="font-weight: 700; font-size: 0.95rem; color: var(--gemini-color); font-family: 'Courier New', monospace; letter-spacing: 0.02em; word-break: break-all;">$${formatCost(geminiCost)}</div>
+                                <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">gemini-2.0-flash</div>
+                            </div>
+                            
+                            <!-- Used Card (Highlighted) -->
+                            <div style="padding: 14px; background: linear-gradient(135deg, rgba(52,211,153,0.08), rgba(52,211,153,0.03)); position: relative; min-width: 0;">
+                                <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--success), transparent);">
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 6px; min-width: 0;">
+                                    <span style="font-size: 0.95rem; flex-shrink: 0;">✓</span>
+                                    <div style="color: var(--success); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.2px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Active</div>
+                                </div>
+                                <div style="font-weight: 700; font-size: 0.95rem; color: var(--success); font-family: 'Courier New', monospace; letter-spacing: 0.02em; word-break: break-all;">$${formatCost(usedCost)}</div>
+                                <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="selectedProvider">—</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Cost Breakdown Footer -->
+                        <div style="padding: 10px 14px; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; font-size: 0.7rem; gap: 8px; flex-wrap: wrap;">
+                            <div style="color: var(--text-muted);">Cost per request</div>
+                            ${savings > 0 ? `<div style="color: var(--success); font-weight: 700; white-space: nowrap;">💚 Save $${savings.toFixed(7)}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
             metricsGrid.innerHTML = `
                 <div class="metric-card">
                     <span class="metric-label">Resolved Provider</span>
@@ -783,14 +2054,55 @@
                     <span class="metric-label">Token Usage</span>
                     <span class="metric-value">${tokens}</span>
                 </div>
+                ${routeHTML}
+                ${costHTML}
             `;
+
+            // Update selected provider display in cost card
+            setTimeout(() => {
+                const selectedProviderEl = document.getElementById('selectedProvider');
+                if (selectedProviderEl && provider) {
+                    const providerNames = {
+                        'openai': 'gpt-3.5-turbo',
+                        'gemini': 'gemini-2.0-flash',
+                        'mock': 'mock-model'
+                    };
+                    selectedProviderEl.textContent = providerNames[provider.toLowerCase()] || provider;
+                }
+            }, 50);
         }
 
         // ═══════════ UPDATE HISTORY ═══════════
-        function addHistoryEntry(provider, latency, tokens, status) {
+        function addHistoryEntry(provider, latency, tokens, status, routePath, costEstimate) {
             const now = new Date();
             const time = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
             const p = (provider || 'unknown').toLowerCase();
+
+            // Extract model from route_path or fallback to unknown
+            let model = 'unknown';
+            if (routePath && routePath.length > 0) {
+                const successStep = routePath.find(s => s.status === 'success');
+                if (successStep && successStep.resolved_model) {
+                    model = successStep.resolved_model;
+                } else if (routePath[0].requested_model) {
+                    model = routePath[0].requested_model;
+                }
+            }
+
+            // Store complete history entry
+            const historyEntry = {
+                timestamp: now,
+                provider: provider,
+                model: model,
+                latency: latency,
+                tokens: tokens,
+                status: status,
+                success: status === 200,
+                routePath: routePath,
+                costEstimate: costEstimate
+            };
+            
+            sessionStats.history.unshift(historyEntry); // Add to front
 
             let provClass = 'color:var(--mock-color)';
             if (p.includes('openai')) provClass = 'color:var(--openai-color)';
@@ -801,13 +2113,25 @@
             const statusIcon = status === 200 ? '✓' : '✗';
             const statusColor = status === 200 ? 'var(--success)' : 'var(--error)';
 
+            // Build detailed history entry with expandable route/cost
             const entry = document.createElement('div');
             entry.className = 'history-item';
+            
+            const routeSummary = routePath && routePath.length > 0 
+                ? `${routePath.length} step${routePath.length > 1 ? 's' : ''}`
+                : 'N/A';
+            const costSummary = costEstimate 
+                ? `$${costEstimate.provider_used_usd.toFixed(7)}`
+                : 'N/A';
+            
             entry.innerHTML = `
                 <span class="history-time">${time}</span>
                 <span class="history-provider" style="${provClass}">${(provider || 'unknown').toUpperCase()}</span>
-                <span class="history-latency ${latClass}">${latency.toLocaleString()} ms</span>
-                <span class="history-tokens">${tokens} tok</span>
+                <span style="font-size: 0.7rem; color: var(--text-muted); grid-column: 1 / -1; overflow: hidden; text-overflow: ellipsis;">${model}</span>
+                <span class="history-latency ${latClass}">${latency} ms</span>
+                <span class="history-tokens" style="grid-column: 2; text-align: right;">${tokens}t</span>
+                <span style="font-size: 0.7rem; color: var(--success); grid-column: 1;">📍 ${routeSummary}</span>
+                <span style="font-size: 0.7rem; color: var(--accent); grid-column: 2; text-align: right;">💰 ${costSummary}</span>
             `;
 
             // Replace empty state or prepend
@@ -815,6 +2139,141 @@
                 historyList.innerHTML = '';
             }
             historyList.prepend(entry);
+            
+            // Update model dropdown
+            updateModelDropdown();
+            
+            // Apply current filters
+            updateHistoryDisplay();
+        }
+
+        // ═══════════ UPDATE MODEL DROPDOWN ═══════════
+        function updateModelDropdown() {
+            const models = new Set();
+            sessionStats.history.forEach(entry => {
+                if (entry.model && entry.model !== 'unknown') {
+                    models.add(entry.model);
+                }
+            });
+
+            const filterModel = document.getElementById('filterModel');
+            const currentValue = filterModel.value;
+            const options = Array.from(models).sort();
+
+            // Clear existing options (except the first "All Models")
+            while (filterModel.options.length > 1) {
+                filterModel.remove(1);
+            }
+
+            // Add new options
+            options.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model.toLowerCase();
+                option.textContent = model;
+                filterModel.appendChild(option);
+            });
+
+            // Restore previous value if still exists
+            if (currentValue && filterModel.querySelector(`option[value="${currentValue}"]`)) {
+                filterModel.value = currentValue;
+            }
+        }
+
+        // ═══════════ UPDATE HISTORY DISPLAY (WITH FILTERING) ═══════════
+        function updateHistoryDisplay() {
+            const searchTerm = document.getElementById('historySearchInput').value.toLowerCase();
+            const filterProvider = document.getElementById('filterProvider').value.toLowerCase();
+            const filterModel = document.getElementById('filterModel').value.toLowerCase();
+            const filterStatus = document.getElementById('filterStatus').value.toLowerCase();
+            const filterInfo = document.getElementById('filterInfo');
+
+            // Filter the history
+            let filtered = sessionStats.history.filter(entry => {
+                // Provider filter
+                if (filterProvider && !entry.provider.toLowerCase().includes(filterProvider)) {
+                    return false;
+                }
+
+                // Model filter
+                if (filterModel && entry.model.toLowerCase() !== filterModel) {
+                    return false;
+                }
+
+                // Status filter
+                if (filterStatus === 'success' && !entry.success) {
+                    return false;
+                }
+                if (filterStatus === 'error' && entry.success) {
+                    return false;
+                }
+
+                // Search filter (search in provider, model, and route path info)
+                if (searchTerm) {
+                    const searchText = `${entry.provider} ${entry.model}`.toLowerCase();
+                    if (!searchText.includes(searchTerm)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+
+            // Update filter info
+            const hasActiveFilters = filterProvider || filterModel || filterStatus || searchTerm;
+            if (hasActiveFilters) {
+                filterInfo.classList.add('active');
+                filterInfo.textContent = `Showing ${filtered.length} of ${sessionStats.history.length} requests`;
+            } else {
+                filterInfo.classList.remove('active');
+            }
+
+            // Render filtered history
+            historyList.innerHTML = '';
+
+            if (filtered.length === 0) {
+                historyList.innerHTML = `<div class="history-empty">${hasActiveFilters ? 'No matching requests' : 'No requests yet'}</div>`;
+                return;
+            }
+
+            filtered.forEach(entry => {
+                const time = entry.timestamp.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                const p = (entry.provider || 'unknown').toLowerCase();
+
+                let provClass = 'color:var(--mock-color)';
+                if (p.includes('openai')) provClass = 'color:var(--openai-color)';
+                else if (p.includes('gemini')) provClass = 'color:var(--gemini-color)';
+                else if (p.includes('cache') || p.includes('redis')) provClass = 'color:var(--cache-color)';
+
+                const latClass = getLatencyClass(entry.latency);
+                const routeSummary = entry.routePath && entry.routePath.length > 0
+                    ? `${entry.routePath.length} step${entry.routePath.length > 1 ? 's' : ''}`
+                    : 'N/A';
+                const costSummary = entry.costEstimate
+                    ? `$${entry.costEstimate.provider_used_usd.toFixed(7)}`
+                    : 'N/A';
+
+                const entryEl = document.createElement('div');
+                entryEl.className = 'history-item';
+                entryEl.innerHTML = `
+                    <span class="history-time">${time}</span>
+                    <span class="history-provider" style="${provClass}">${(entry.provider || 'unknown').toUpperCase()}</span>
+                    <span style="font-size: 0.7rem; color: var(--text-muted); grid-column: 1 / -1; overflow: hidden; text-overflow: ellipsis;">${entry.model}</span>
+                    <span class="history-latency ${latClass}">${entry.latency} ms</span>
+                    <span class="history-tokens" style="grid-column: 2; text-align: right;">${entry.tokens}t</span>
+                    <span style="font-size: 0.7rem; color: var(--success); grid-column: 1;">📍 ${routeSummary}</span>
+                    <span style="font-size: 0.7rem; color: var(--accent); grid-column: 2; text-align: right;">💰 ${costSummary}</span>
+                `;
+                historyList.appendChild(entryEl);
+            });
+        }
+
+        // ═══════════ CLEAR FILTERS ═══════════
+        function clearHistoryFilters() {
+            document.getElementById('historySearchInput').value = '';
+            document.getElementById('filterProvider').value = '';
+            document.getElementById('filterModel').value = '';
+            document.getElementById('filterStatus').value = '';
+            updateHistoryDisplay();
         }
 
         // ═══════════ CLEAR CHAT ═══════════
@@ -835,7 +2294,118 @@
 
             metricsGrid.style.display = 'none';
             metricsEmpty.style.display = 'flex';
+            
+            // Clear filters and history display
+            clearHistoryFilters();
             historyList.innerHTML = '<div class="history-empty">No requests yet</div>';
+        }
+
+        // ═══════════ BUDGET MANAGEMENT ═══════════
+        async function saveBudget() {
+            const provider = document.getElementById('budgetProvider').value;
+            const amount = parseFloat(document.getElementById('budgetAmount').value);
+            const threshold = parseFloat(document.getElementById('warningThreshold').value) || 80;
+            const apiKey = apiKeyInput.value.trim();
+
+            if (!amount || amount <= 0) {
+                showToast('❌ Please enter a valid budget amount', 'error', 4000);
+                return;
+            }
+
+            if (!apiKey) {
+                showToast('❌ Please enter your X-API-Key', 'error', 4000);
+                return;
+            }
+
+            try {
+                // Build query string for POST request
+                const params = new URLSearchParams({
+                    provider: provider,
+                    monthly_budget_usd: amount,
+                    warning_threshold_percent: threshold,
+                });
+
+                const response = await fetch(`/budget?${params.toString()}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-API-Key': apiKey,
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(await response.text());
+                }
+
+                const data = await response.json();
+                console.log('Budget saved:', data);
+                
+                // Clear form
+                document.getElementById('budgetAmount').value = '';
+                document.getElementById('warningThreshold').value = '80';
+                
+                // Reload budget status
+                await loadBudgetStatus();
+                showToast(`✓ Budget set for ${provider}: $${amount.toFixed(2)}/month`, 'success', 4000);
+            } catch (err) {
+                console.error('Error saving budget:', err);
+                showToast(`❌ Error saving budget: ${err.message}`, 'error', 4000);
+            }
+        }
+
+        async function loadBudgetStatus() {
+            const apiKey = apiKeyInput.value.trim();
+            if (!apiKey) return;
+
+            try {
+                const response = await fetch('/budget/status', {
+                    headers: {
+                        'X-API-Key': apiKey,
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(await response.text());
+                }
+
+                const data = await response.json();
+                const statusList = document.getElementById('budgetStatusList');
+                
+                const status = data.status || {};
+                if (Object.keys(status).length === 0) {
+                    statusList.innerHTML = '<div class="budget-empty">No budgets configured. Set a budget above to start tracking costs.</div>';
+                    return;
+                }
+
+                let html = '';
+                for (const [provider, info] of Object.entries(status)) {
+                    const percent = info.percent;
+                    const statusClass = info.status;
+                    const statusText = statusClass === 'critical' ? '🚨 CRITICAL' : (statusClass === 'warning' ? '⚠️  WARNING' : '✓ OK');
+                    
+                    html += `
+                        <div class="budget-card">
+                            <div class="budget-card-header">
+                                <span class="budget-card-provider">${provider.toUpperCase()}</span>
+                                <span class="budget-card-status ${statusClass}">${statusText}</span>
+                            </div>
+                            <div class="budget-progress-bar">
+                                <div class="budget-progress-fill" style="width: ${Math.min(percent, 100)}%; background: ${
+                                    statusClass === 'critical' ? 'var(--error)' : (statusClass === 'warning' ? '#fb923c' : 'var(--success)')
+                                };"></div>
+                            </div>
+                            <div class="budget-card-stats">
+                                <span>$${info.spent.toFixed(8)} / $${info.budget.toFixed(2)}</span>
+                                <span>${info.percent.toFixed(1)}%</span>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                statusList.innerHTML = html;
+            } catch (err) {
+                console.error('Error loading budget status:', err);
+                document.getElementById('budgetStatusList').innerHTML = '<div class="budget-empty">Error loading budget status</div>';
+            }
         }
 
         // ═══════════ SEND MESSAGE ═══════════
@@ -845,7 +2415,7 @@
 
             if (!content) return;
             if (!apiKey) {
-                alert("Please enter your X-API-Key");
+                showToast('❌ Please enter your X-API-Key', 'error', 4000);
                 apiKeyInput.focus();
                 return;
             }
@@ -881,18 +2451,40 @@
                 loadingIndicator.style.display = 'none';
 
                 if (!response.ok) {
-                    appendMessage('bot', `Error: ${data.detail || 'Unknown server error'}`, true);
-                    updateMetrics(null, latency, 0, null, data.detail);
+                    const errorMsg = data.detail || 'Unknown server error';
+                    appendMessage('bot', `Error: ${errorMsg}`, true);
+                    updateMetrics(null, latency, 0, null, errorMsg);
                     addHistoryEntry('error', latency, 0, response.status);
                     updateSessionStats(latency, 0, 'error');
                     chatHistory.pop();
+                    showToast(`❌ ${errorMsg}`, 'error', 4000);
                 } else {
                     appendMessage('bot', data.content);
                     chatHistory.push({ role: "assistant", content: data.content });
 
                     const totalTokens = data.usage ? data.usage.total_tokens : 0;
-                    updateMetrics(data.provider, latency, totalTokens, data.model);
-                    addHistoryEntry(data.provider, latency, totalTokens, 200);
+                    
+                    // Pass route_path and cost_estimate to updateMetrics
+                    updateMetrics(
+                        data.provider, 
+                        latency, 
+                        totalTokens, 
+                        data.model,
+                        null,
+                        data.route_path,
+                        data.cost_estimate
+                    );
+                    
+                    // Pass route_path and cost_estimate to addHistoryEntry
+                    addHistoryEntry(
+                        data.provider, 
+                        latency, 
+                        totalTokens, 
+                        200,
+                        data.route_path,
+                        data.cost_estimate
+                    );
+                    
                     updateSessionStats(latency, totalTokens, data.provider);
                 }
 
@@ -901,6 +2493,7 @@
                 appendMessage('bot', `Connection Error: ${err.message}`, true);
                 updateMetrics(null, 0, 0, null, err.message);
                 chatHistory.pop();
+                showToast(`❌ Connection error: ${err.message}`, 'error', 4000);
             }
 
             // Re-enable UI

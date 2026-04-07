@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - Resilient LLM Gateway</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #080810;
+            --panel-bg: #0f0f17;
+            --card-bg: #16161f;
+            --border-color: rgba(255,255,255,0.08);
+            --text-main: #f0f0f8;
+            --text-muted: #7a7a8e;
+            --text-dim: #4a4a5e;
+            --accent: #a78bfa;
+            --accent-bright: #c4b5fd;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 60px;
+            background: linear-gradient(180deg, rgba(8,8,16,0.95) 0%, rgba(15,15,23,0.8) 100%);
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.3s;
+        }
+
+        .nav-brand:hover {
+            opacity: 0.8;
+            transform: translateY(-2px);
+        }
+
+        .nav-brand-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: 0 4px 16px rgba(167,139,250,0.25);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-bright));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .last-updated {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 40px;
+        }
+
+        .content {
+            line-height: 1.8;
+            color: var(--text-main);
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            margin-top: 40px;
+            margin-bottom: 16px;
+            color: var(--text-main);
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            color: var(--accent);
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: var(--text-muted);
+        }
+
+        ul, ol {
+            margin-left: 24px;
+            margin-bottom: 16px;
+            color: var(--text-muted);
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        a:hover {
+            color: var(--accent-bright);
+            text-decoration: underline;
+        }
+
+        footer {
+            background: linear-gradient(180deg, rgba(15,15,23,0.8) 0%, rgba(8,8,16,1) 100%);
+            border-top: 1px solid var(--border-color);
+            padding: 60px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .footer-section li {
+            margin-bottom: 12px;
+        }
+
+        .footer-section a {
+            color: var(--text-muted);
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        .footer-brand {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .footer-logo svg {
+            width: 100%;
+            height: 100%;
+            color: white;
+        }
+
+        .footer-divider {
+            border-top: 1px solid var(--border-color);
+            padding-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .footer-copy {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 16px 24px;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .container {
+                padding: 40px 24px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+
+            footer {
+                padding: 40px 24px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .footer-divider {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="nav-brand">
+            <div class="nav-brand-icon">
+                <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="6" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
+                    <circle cx="16" cy="16" r="3" fill="currentColor"/>
+                    <circle cx="26" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
+                    <line x1="8.5" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
+                    <line x1="19" y1="16" x2="23.5" y2="16" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
+                    <line x1="16" y1="13" x2="16" y2="8" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+                    <line x1="16" y1="19" x2="16" y2="24" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+                    <line x1="20.5" y1="11.5" x2="24" y2="8" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+                    <line x1="20.5" y1="20.5" x2="24" y2="24" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+                </svg>
+            </div>
+            <span>LLM Gateway</span>
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/features">Features</a>
+            <a href="/api-docs">API Docs</a>
+            <a href="/contact">Contact</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Terms of Service</h1>
+        <p class="last-updated">Last Updated: April 4, 2026</p>
+
+        <div class="content">
+            <h2>1. Acceptance of Terms</h2>
+            <p>By accessing and using Resilient LLM Gateway ("Service"), you accept and agree to be bound by the terms and conditions of this agreement. If you do not agree to abide by the above, please do not use this service.</p>
+
+            <h2>2. Use License</h2>
+            <p>Permission is granted to temporarily download one copy of the materials (information or software) on Resilient LLM Gateway for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:</p>
+            <ul>
+                <li>Modify or copy the materials</li>
+                <li>Use the materials for any commercial purpose or for any public display</li>
+                <li>Attempt to decompile or reverse engineer any software contained on the site</li>
+                <li>Remove any copyright or other proprietary notations from the materials</li>
+                <li>Transmit the materials to another person or "mirror" the materials on any other server</li>
+            </ul>
+
+            <h2>3. Service Availability</h2>
+            <p>We provide the Service on an "as-is" basis. While we strive for continuous availability, the Service may occasionally be unavailable for maintenance, upgrades, or other reasons. We do not guarantee uninterrupted service.</p>
+
+            <h2>4. Account Responsibility</h2>
+            <p>You are responsible for maintaining the confidentiality of your account credentials and API keys. You agree to accept responsibility for all activities that occur under your account. You must notify us immediately of any unauthorized use of your account.</p>
+
+            <h2>5. Acceptable Use</h2>
+            <p>You agree not to use the Service:</p>
+            <ul>
+                <li>For any illegal or unauthorized purpose</li>
+                <li>To transmit malware, viruses, or other harmful code</li>
+                <li>To engage in harassment or abuse</li>
+                <li>To infringe on intellectual property rights</li>
+                <li>To overwhelm or damage our infrastructure</li>
+            </ul>
+
+            <h2>6. Rate Limiting and Usage Restrictions</h2>
+            <p>Your use of the Service is subject to applicable rate limits and quotas. Excessive usage or attempts to bypass rate limits may result in service suspension. We reserve the right to implement additional usage restrictions at our discretion.</p>
+
+            <h2>7. Payment and Billing</h2>
+            <p>If you use a paid tier of our Service, you agree to pay all applicable fees and charges. Billing information is processed securely, and charges will appear on your billing statement. We reserve the right to change pricing with notice.</p>
+
+            <h2>8. Limitation of Liability</h2>
+            <p>In no event shall Resilient LLM Gateway or its affiliates be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use or inability to use the Service, even if we have been advised of the possibility of such damages.</p>
+
+            <h2>9. Warranty Disclaimer</h2>
+            <p>The Service is provided on an "as-is" and "as-available" basis. We make no warranties, expressed or implied, regarding the Service. We do not warrant that the Service will be uninterrupted, error-free, or completely secure.</p>
+
+            <h2>10. Modifications to Terms</h2>
+            <p>We reserve the right to modify these terms at any time. Changes will be posted on this page, and your continued use of the Service constitutes acceptance of the new terms.</p>
+
+            <h2>11. Termination</h2>
+            <p>We may suspend or terminate your account if you violate these Terms or engage in prohibited activities. Upon termination, your access to the Service will be immediately revoked.</p>
+
+            <h2>12. Governing Law</h2>
+            <p>These Terms are governed by and construed in accordance with the laws of the jurisdiction in which Resilient LLM Gateway operates, without regard to its conflict of law provisions.</p>
+
+            <h2>13. Contact Information</h2>
+            <p>If you have questions about these Terms, please contact us at <a href="mailto:poornacd24@gmail.com">poornacd24@gmail.com</a></p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section footer-brand">
+                <div class="footer-logo">
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="6" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
+                        <circle cx="16" cy="16" r="3" fill="currentColor"/>
+                        <circle cx="26" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
+                        <line x1="8.5" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
+                        <line x1="19" y1="16" x2="23.5" y2="16" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
+                        <line x1="16" y1="13" x2="16" y2="8" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+                        <line x1="16" y1="19" x2="16" y2="24" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+                        <line x1="20.5" y1="11.5" x2="24" y2="8" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+                        <line x1="20.5" y1="20.5" x2="24" y2="24" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+                    </svg>
+                </div>
+                <div class="footer-brand-text">LLM Gateway</div>
+            </div>
+            <div class="footer-section">
+                <h3>Product</h3>
+                <ul>
+                    <li><a href="/features">Features</a></li>
+                    <li><a href="/providers">Providers</a></li>
+                    <li><a href="/api-docs">API Docs</a></li>
+                    <li><a href="/resources">Resources</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="/status">Status Page</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms of Service</a></li>
+                    <li><a href="/contact">Contact & Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Developers</h3>
+                <ul>
+                    <li><a href="https://github.com/Resilient-LLM-Gateway-Team-2/llm-gateway" target="_blank">GitHub Repository</a></li>
+                    <li><a href="https://github.com/Resilient-LLM-Gateway-Team-2/llm-gateway/issues" target="_blank">Issues & Bugs</a></li>
+                    <li><a href="https://github.com/Resilient-LLM-Gateway-Team-2/llm-gateway/pulls" target="_blank">Pull Requests</a></li>
+                    <li><a href="https://github.com/Resilient-LLM-Gateway-Team-2/llm-gateway/discussions" target="_blank">Discussions</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-divider">
+            <div class="footer-copy">© 2026 Resilient LLM Gateway. All rights reserved.</div>
+        </div>
+    </footer>
+</body>
+</html>

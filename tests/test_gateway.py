@@ -34,7 +34,7 @@ MOCK_RESPONSE = ChatResponse(
 MOCK_GEMINI_RESPONSE = ChatResponse(
     content="Hello from Gemini!",
     provider="gemini",
-    model="gemini-2.0-flash",
+    model="gemini-1.5-flash",
     usage=UsageStats(prompt_tokens=10, completion_tokens=6, total_tokens=16),
 )
 
@@ -118,7 +118,7 @@ class TestValidation:
 
     def test_empty_body_returns_422(self):
         client = TestClient(app)
-        r = client.post("/chat", json={}, headers={"X-API-Key": "test-key-123"})
+        r = client.post("/chat", json={}, headers={"X-API-Key": "test_key"})
         assert r.status_code == 422
 
     def test_missing_messages_returns_422(self):
@@ -126,14 +126,14 @@ class TestValidation:
         r = client.post(
             "/chat",
             json={"model": "gpt-4"},
-            headers={"X-API-Key": "test-key-123"},
+            headers={"X-API-Key": "test_key"},
         )
         assert r.status_code == 422
 
     def test_invalid_temperature_returns_422(self):
         client = TestClient(app)
         body = {**VALID_BODY, "temperature": 5.0}
-        r = client.post("/chat", json=body, headers={"X-API-Key": "test-key-123"})
+        r = client.post("/chat", json=body, headers={"X-API-Key": "test_key"})
         assert r.status_code == 422
 
 
@@ -158,7 +158,7 @@ class TestChat:
         r = client.post(
             "/chat",
             json=VALID_BODY,
-            headers={"X-API-Key": "test-key-123"},
+            headers={"X-API-Key": "test_key"},
         )
         assert r.status_code == 200
         data = r.json()
@@ -167,6 +167,68 @@ class TestChat:
         assert data["usage"]["total_tokens"] == 18
         mock_openai.assert_called_once()
         mock_log.assert_called_once()
+
+    @patch("app.main.log_request")
+    @patch("app.router.call_openai")
+    @patch("app.router.call_gemini", return_value=MOCK_GEMINI_RESPONSE)
+    def test_gemini_model_routes_to_gemini_first(self, mock_gemini, mock_openai, mock_log):
+        client = TestClient(app)
+        body = {**VALID_BODY, "model": "gemini-2.0-flash"}
+
+        r = client.post(
+            "/chat",
+            json=body,
+            headers={"X-API-Key": "test_key"},
+        )
+        assert r.status_code == 200
+        data = r.json()
+        assert data["provider"] == "gemini"
+        mock_gemini.assert_called_once()
+        mock_openai.assert_not_called()
+
+    @patch("app.main.log_request")
+    @patch("app.router.call_openai")
+    @patch("app.router.call_gemini", return_value=MOCK_GEMINI_RESPONSE)
+    def test_summary_prompt_routes_to_gemini_first(self, mock_gemini, mock_openai, mock_log):
+        client = TestClient(app)
+        body = {
+            **VALID_BODY,
+            "model": "custom-model",
+            "messages": [{"role": "user", "content": "Summarize this paragraph in one line"}],
+        }
+
+        r = client.post(
+            "/chat",
+            json=body,
+            headers={"X-API-Key": "test_key"},
+        )
+        assert r.status_code == 200
+        data = r.json()
+        assert data["provider"] == "gemini"
+        mock_gemini.assert_called_once()
+        mock_openai.assert_not_called()
+
+    @patch("app.main.log_request")
+    @patch("app.router.call_openai")
+    @patch("app.router.call_gemini", return_value=MOCK_GEMINI_RESPONSE)
+    def test_gemini_intent_prompt_overrides_gpt_model_priority(self, mock_gemini, mock_openai, mock_log):
+        client = TestClient(app)
+        body = {
+            **VALID_BODY,
+            "model": "gpt-3.5-turbo",
+            "messages": [{"role": "user", "content": "Answer this using gemini please"}],
+        }
+
+        r = client.post(
+            "/chat",
+            json=body,
+            headers={"X-API-Key": "test_key"},
+        )
+        assert r.status_code == 200
+        data = r.json()
+        assert data["provider"] == "gemini"
+        mock_gemini.assert_called_once()
+        mock_openai.assert_not_called()
 
     @patch("app.main.log_request")
     @patch("app.router.call_gemini", return_value=MOCK_GEMINI_RESPONSE)
@@ -182,7 +244,7 @@ class TestChat:
         r = client.post(
             "/chat",
             json=VALID_BODY,
-            headers={"X-API-Key": "test-key-123"},
+            headers={"X-API-Key": "test_key"},
         )
         assert r.status_code == 200
         data = r.json()
@@ -206,7 +268,7 @@ class TestChat:
         r = client.post(
             "/chat",
             json=VALID_BODY,
-            headers={"X-API-Key": "test-key-123"},
+            headers={"X-API-Key": "test_key"},
         )
         assert r.status_code == 502
         assert "All LLM providers failed" in r.json()["detail"]

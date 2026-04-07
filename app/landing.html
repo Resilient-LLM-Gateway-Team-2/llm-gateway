@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resilient LLM Gateway - Multi-Provider LLM Routing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #080810;
+            --panel-bg: #0f0f17;
+            --card-bg: #16161f;
+            --border-color: rgba(255,255,255,0.08);
+            --text-main: #f0f0f8;
+            --text-muted: #7a7a8e;
+            --text-dim: #4a4a5e;
+            --accent: #a78bfa;
+            --accent-glow: rgba(167,139,250,0.2);
+            --accent-bright: #c4b5fd;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* ═══════════ NAVIGATION ═══════════ */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 60px;
+            background: linear-gradient(180deg, rgba(8,8,16,0.95) 0%, rgba(15,15,23,0.8) 100%);
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.3s;
+        }
+
+        .nav-brand:hover {
+            opacity: 0.8;
+            transform: translateY(-2px);
+        }
+
+        .nav-brand-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: 0 4px 16px rgba(167,139,250,0.25);
+            transition: all 0.3s;
+        }
+
+        .nav-brand:hover .nav-brand-icon {
+            box-shadow: 0 6px 24px rgba(167,139,250,0.4);
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-btn {
+            padding: 10px 24px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(167,139,250,0.3);
+        }
+
+        /* ═══════════ HERO SECTION ═══════════ */
+        .hero {
+            padding: 120px 60px;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(8,8,16,1) 0%, rgba(15,15,23,0.9) 50%, rgba(22,22,40,0.5) 100%);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(167,139,250,0.1);
+            border: 1px solid rgba(167,139,250,0.3);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--accent);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.2;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--accent-bright), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 60px;
+        }
+
+        .btn-primary {
+            padding: 14px 32px;
+            background: linear-gradient(135deg, var(--accent-bright), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(167,139,250,0.4);
+        }
+
+        .btn-secondary {
+            padding: 14px 32px;
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(167,139,250,0.1);
+            transform: translateY(-2px);
+        }
+
+        .hero-image {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(167,139,250,0.08) 0%, rgba(59,130,246,0.03) 100%);
+            border: 1px solid rgba(167,139,250,0.2);
+            border-radius: 20px;
+            min-height: 450px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ═══════════ ANIMATED FLOW DIAGRAM ═══════════ */
+        .flow-diagram {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(167,139,250,0.4), inset 0 0 10px rgba(167,139,250,0.1);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(167,139,250,0.8), inset 0 0 15px rgba(167,139,250,0.2);
+            }
+        }
+
+        @keyframes arrow-flow {
+            0% {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+        }
+
+        @keyframes rotate-providers {
+            0% {
+                transform: scale(1) rotate(0deg);
+            }
+            50% {
+                transform: scale(1.1) rotate(5deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        .flow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            animation: slideDown 0.6s ease-out forwards;
+        }
+
+        .flow-step:nth-child(1) { animation-delay: 0s; }
+        .flow-step:nth-child(2) { animation-delay: 0.1s; }
+        .flow-step:nth-child(3) { animation-delay: 0.2s; }
+        .flow-step:nth-child(4) { animation-delay: 0.3s; }
+        .flow-step:nth-child(5) { animation-delay: 0.4s; }
+
+        .flow-node {
+            width: 100px;
+            height: 50px;
+            background: linear-gradient(135deg, rgba(167,139,250,0.2) 0%, rgba(139,92,246,0.15) 100%);
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--accent-bright);
+            animation: pulse-glow 3s ease-in-out infinite;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .flow-node.active {
+            animation: pulse-glow 1.5s ease-in-out infinite;
+        }
+
+        .flow-arrow {
+            font-size: 1.5rem;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: arrow-flow 2s ease-in-out infinite;
+            color: var(--accent);
+        }
+
+        .provider-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 15px 0;
+            width: 100%;
+        }
+
+        .provider-node {
+            width: 90px;
+            height: 50px;
+            background: linear-gradient(135deg, rgba(16,185,129,0.15) 0%, rgba(16,185,129,0.08) 100%);
+            border: 2px solid var(--success);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--success);
+            animation: rotate-providers 3s ease-in-out infinite;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .provider-node:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .provider-node:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .provider-node:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        .provider-node:hover {
+            background: linear-gradient(135deg, rgba(16,185,129,0.25) 0%, rgba(16,185,129,0.15) 100%);
+            box-shadow: 0 0 15px rgba(16,185,129,0.3);
+        }
+
+        .flow-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        /* ═══════════ TECHNOLOGY STACK SECTION ═══════════ */
+        .tech-stack-container {
+            background: linear-gradient(180deg, rgba(167,139,250,0.05) 0%, rgba(59,130,246,0.03) 100%);
+            border-top: 1px solid rgba(167,139,250,0.1);
+            border-bottom: 1px solid rgba(167,139,250,0.1);
+            overflow: hidden;
+        }
+
+        .tech-stack-section {
+            padding: 80px 60px;
+        }
+
+        .tech-stack-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 60px;
+            color: var(--text-main);
+        }
+
+        .tech-scroll-container {
+            position: relative;
+            overflow: hidden;
+            margin: 60px 0;
+        }
+
+        .tech-scroll-track {
+            display: flex;
+            gap: 30px;
+            animation: scroll-left 25s linear infinite;
+            width: fit-content;
+            padding: 20px 0;
+        }
+
+        .tech-scroll-track:hover {
+            animation-play-state: paused;
+        }
+
+        /* Clone the animation */
+        .tech-scroll-track-clone {
+            display: flex;
+            gap: 30px;
+            animation: scroll-left 25s linear infinite;
+            width: fit-content;
+            padding: 20px 0;
+        }
+
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        @keyframes scroll-right {
+            0% {
+                transform: translateX(-50%);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .tech-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, rgba(22,22,31,0.8) 0%, rgba(20,20,30,0.6) 100%);
+            border: 1px solid rgba(167,139,250,0.2);
+            border-radius: 16px;
+            white-space: nowrap;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            min-width: 160px;
+            flex-shrink: 0;
+        }
+
+        .tech-item:hover {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, rgba(25,25,35,0.9) 0%, rgba(23,23,33,0.7) 100%);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(167,139,250,0.2);
+        }
+
+        .tech-icon {
+            font-size: 2.5rem;
+            transition: transform 0.3s;
+        }
+
+        .tech-item:hover .tech-icon {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        .tech-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-main);
+            text-align: center;
+        }
+
+        .tech-category {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tech-scroll-row {
+            margin: 30px 0;
+            display: none;
+        }
+
+        .tech-scroll-row:nth-child(odd) .tech-scroll-track {
+            animation-direction: normal;
+        }
+
+        .tech-scroll-row:nth-child(even) .tech-scroll-track {
+            animation-direction: reverse;
+        }
+
+        .tech-scroll-row:nth-child(even) .tech-scroll-track-clone {
+            animation-direction: reverse;
+        }
+
+        .tech-fade-left {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 100px;
+            background: linear-gradient(90deg, var(--bg-color) 0%, transparent 100%);
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .tech-fade-right {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 100px;
+            background: linear-gradient(90deg, transparent 0%, var(--bg-color) 100%);
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .tech-scroll-wrapper {
+            position: relative;
+        }
+
+        /* ═══════════ FEATURES SECTION ═══════════ */
+        .section {
+            padding: 100px 60px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 60px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(22,22,31,0.8) 0%, rgba(20,20,30,0.6) 100%);
+            border: 1px solid rgba(167,139,250,0.15);
+            border-radius: 16px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .feature-card:hover {
+            border-color: rgba(167,139,250,0.3);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(167,139,250,0.15);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* ═══════════ HOW IT WORKS ═══════════ */
+        .how-it-works {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .step {
+            position: relative;
+            padding: 30px;
+            background: rgba(22,22,31,0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 50%;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .step h3 {
+            margin-bottom: 12px;
+        }
+
+        .step p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ═══════════ PROVIDERS SECTION ═══════════ */
+        .providers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .provider-card {
+            padding: 24px;
+            background: rgba(22,22,31,0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .provider-card:hover {
+            border-color: var(--accent);
+            background: rgba(22,22,31,0.8);
+        }
+
+        .provider-icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .provider-card h3 {
+            margin-bottom: 8px;
+        }
+
+        .provider-card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ═══════════ RESOURCES SECTION ═══════════ */
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .resource-card {
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(22,22,31,0.8) 0%, rgba(20,20,30,0.6) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+        }
+
+        .resource-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+        }
+
+        .resource-item {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.9rem;
+        }
+
+        .resource-item:last-child {
+            border-bottom: none;
+        }
+
+        .resource-item a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .resource-item a:hover {
+            color: var(--accent-bright);
+        }
+
+        /* ═══════════ CTA SECTION ═══════════ */
+        .cta-section {
+            text-align: center;
+            padding: 80px 60px;
+        }
+
+        .cta-section h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+
+        /* ═══════════ FOOTER ═══════════ */
+        footer {
+            background: linear-gradient(180deg, rgba(15,15,23,0.8) 0%, rgba(8,8,16,1) 100%);
+            border-top: 1px solid var(--border-color);
+            padding: 60px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 12px;
+        }
+
+        .footer-section a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        .footer-brand {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .footer-logo svg {
+            width: 100%;
+            height: 100%;
+            color: white;
+            stroke: currentColor;
+        }
+
+        .footer-brand-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .footer-brand-desc {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .footer-divider {
+            border-top: 1px solid var(--border-color);
+            padding-top: 24px;
+            margin-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-copy {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        .footer-status {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @media (max-width: 1024px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            footer {
+                padding: 40px 24px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-status {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 16px 24px;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .nav-links {
+                gap: 20px;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero, .section {
+                padding: 60px 24px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="/" class="nav-brand">
+            <div class="nav-brand-icon">
+                <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Left node -->
+                    <circle cx="6" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
+                    <!-- Center node -->
+                    <circle cx="16" cy="16" r="3" fill="currentColor"/>
+                    <!-- Right node -->
+                    <circle cx="26" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
+                    <!-- Connecting lines -->
+                    <line x1="8.5" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
+                    <line x1="19" y1="16" x2="23.5" y2="16" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
+                    <!-- Radiating paths (top) -->
+                    <line x1="16" y1="13" x2="16" y2="8" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+                    <!-- Radiating paths (bottom) -->
+                    <line x1="16" y1="19" x2="16" y2="24" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+                    <!-- Diagonal paths -->
+                    <line x1="20.5" y1="11.5" x2="24" y2="8" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+                    <line x1="20.5" y1="20.5" x2="24" y2="24" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+                </svg>
+            </div>
+            <span>LLM Gateway</span>
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/features">Features</a>
+            <a href="/providers">Providers</a>
+            <a href="/resources">Resources</a>
+            <a href="/api-docs">API Docs</a>
+            <a href="/login" class="nav-btn">Sign In</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-badge">The modern LLM platform</div>
+        <h1>Intelligent <span>multi-provider</span> LLM routing</h1>
+        <p>Ship AI applications with automatic failover, cost optimization, and built-in intelligence. Route requests across OpenAI, Gemini, and fallback providers seamlessly.</p>
+        <div class="hero-cta">
+            <a href="/login" class="btn-primary">Get Started</a>
+            <a href="#features" class="btn-secondary">Learn More</a>
+        </div>
+        <div class="hero-image">
+            <div class="flow-diagram">
+                <!-- Step 1: User Request -->
+                <div class="flow-step">
+                    <div class="flow-node">📨 Request</div>
+                    <div class="flow-label">Your LLM Query</div>
+                </div>
+
+                <!-- Arrow -->
+                <div class="flow-arrow">↓</div>
+
+                <!-- Step 2: Cache Check -->
+                <div class="flow-step">
+                    <div class="flow-node">💾 Cache Check</div>
+                    <div class="flow-label">Redis (2-layer)</div>
+                </div>
+
+                <!-- Arrow -->
+                <div class="flow-arrow">↓</div>
+
+                <!-- Step 3: Provider Selection -->
+                <div class="flow-step">
+                    <div class="flow-node">🔀 Route Query</div>
+                    <div class="flow-label">Smart Selection</div>
+                </div>
+
+                <!-- Provider Options -->
+                <div class="provider-group">
+                    <div class="provider-node">🤖 OpenAI</div>
+                    <div class="provider-node">G Gemini</div>
+                    <div class="provider-node">🎭 Fallback</div>
+                </div>
+
+                <!-- Arrow -->
+                <div class="flow-arrow">↓</div>
+
+                <!-- Step 4: Response -->
+                <div class="flow-step">
+                    <div class="flow-node">✨ Response</div>
+                    <div class="flow-label">+ Cost & Stats</div>
+                </div>
+
+                <!-- Arrow -->
+                <div class="flow-arrow">↓</div>
+
+                <!-- Step 5: Logging -->
+                <div class="flow-step">
+                    <div class="flow-node">📊 Log Data</div>
+                    <div class="flow-label">PostgreSQL</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section" id="features">
+        <h2 class="section-title">Our Complete Platform</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔀</div>
+                <h3>Smart Routing</h3>
+                <p>Intelligent provider selection based on task type, cost, and provider health. Automatic failover when primary provider fails.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Cost Optimization</h3>
+                <p>Real-time cost estimation across all providers. Monitor spending with detailed cost breakdowns and budget controls.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Request Caching</h3>
+                <p>Two-layer caching system: exact match and prompt-level. Reduce latency and costs through intelligent cache hits.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Observability</h3>
+                <p>Complete request tracking, health monitoring, and analytics. Understand provider performance and costs in real-time.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3>Budget Management</h3>
+                <p>Set monthly budgets per provider with warning thresholds. Prevent unexpected costs with hard limits and alerts.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔑</div>
+                <h3>API Key Management</h3>
+                <p>Secure authentication with API keys. Track usage per key and manage access control at the application level.</p>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 50px;">
+            <a href="/features" class="btn-secondary">Explore All Features →</a>
+        </div>
+    </section>
+
+    <!-- Technology Stack Section -->
+    <div class="tech-stack-container">
+        <section class="tech-stack-section">
+            <h2 class="tech-stack-title">Technology Stack</h2>
+            
+            <div class="tech-scroll-wrapper">
+                <div class="tech-fade-left"></div>
+                <div class="tech-scroll-container">
+                    <div class="tech-scroll-track">
+                        <div class="tech-item">
+                            <div class="tech-icon">🐍</div>
+                            <div class="tech-name">FastAPI</div>
+                            <div class="tech-category">Backend</div>
+                        </div>
+                        <div class="tech-item">
+                            <div class="tech-icon">🗄️</div>
+                            <div class="tech-name">PostgreSQL</div>
+                            <div class="tech-category">Data</div>
+                        </div>
+                        <div class="tech-item">
+                            <div class="tech-icon">⚡</div>
+                            <div class="tech-name">Redis</div>
+                            <div class="tech-category">Caching</div>
+                        </div>
+                        <div class="tech-item">
+                            <div class="tech-icon">🐳</div>
+                            <div class="tech-name">Docker Compose</div>
+                            <div class="tech-category">Hosting</div>
+                        </div>
+                        <div class="tech-item">
+                            <div class="tech-icon">💻</div>
+                            <div class="tech-name">HTML/CSS/JS</div>
+                            <div class="tech-category">Frontend</div>
+                        </div>
+                        <div class="tech-item">
+                            <div class="tech-icon">🔐</div>
+                            <div class="tech-name">JWT Auth</div>
+                            <div class="tech-category">Security</div>
+                        </div>
+                        <!-- Duplicated for seamless scroll -->
+                        <div class="tech-item">
+                            <div class="tech-icon">🐍</div>
+                            <div class="tech-name">FastAPI</div>
+                            <div class="tech-category">Backend</div>
+                        </div>
+                        <div class="tech-item">
+                            <div class="tech-icon">🗄️</div>
+                            <div class="tech-name">PostgreSQL</div>
+                            <div class="tech-category">Data</div>
+                        </div>
+                        <div class="tech-item">
+                            <div class="tech-icon">⚡</div>
+                            <div class="tech-name">Redis</div>
+                            <div class="tech-category">Caching</div>
+                        </div>
+                        <div class="tech-item">
+                            <div class="tech-icon">🐳</div>
+                            <div class="tech-name">Docker Compose</div>
+                            <div class="tech-category">Hosting</div>
+                        </div>
+                        <div class="tech-item">
+                            <div class="tech-icon">💻</div>
+                            <div class="tech-name">HTML/CSS/JS</div>
+                            <div class="tech-category">Frontend</div>
+                        </div>
+                        <div class="tech-item">
+                            <div class="tech-icon">🔐</div>
+                            <div class="tech-name">JWT Auth</div>
+                            <div class="tech-category">Security</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tech-fade-right"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- How It Works Section -->
+    <section class="section">
+        <h2 class="section-title">How It Works</h2>
+        <div class="how-it-works">
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Send Request</h3>
+                    <p>Send your LLM request with your API key. Specify model, temperature, and other parameters.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Smart Analysis</h3>
+                    <p>System analyzes request type, cost implications, and provider availability to select optimal route.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Route Request</h3>
+                    <p>Request routed through primary provider. Automatic failover to secondary/fallback providers if needed.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Get Response</h3>
+                    <p>Receive response with cost estimate, route path, and usage statistics. Cached for future identical requests.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Providers Section -->
+    <section class="section" id="providers">
+        <h2 class="section-title">Multi-Provider Support</h2>
+        <div class="providers-grid">
+            <div class="provider-card">
+                <div class="provider-icon">🤖</div>
+                <h3>OpenAI</h3>
+                <p>GPT-4, GPT-3.5, and other models. Excellent for reasoning and code generation.</p>
+            </div>
+            <div class="provider-card">
+                <div class="provider-icon">G</div>
+                <h3>Google Gemini</h3>
+                <p>Gemini 2.0 Flash. Great for content generation and translations. ~70% cheaper than OpenAI.</p>
+            </div>
+            <div class="provider-card">
+                <div class="provider-icon">🎭</div>
+                <h3>Failover Providers</h3>
+                <p>Mock provider and custom fallbacks. Ensures reliability even when primary providers are unavailable.</p>
+            </div>
+            <div class="provider-card">
+                <div class="provider-icon">💾</div>
+                <h3>Redis Cache</h3>
+                <p>Two-layer caching for zero-latency responses. Reduce costs and improve performance automatically.</p>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 50px;">
+            <a href="/providers" class="btn-secondary">View Provider Details →</a>
+        </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section class="section" id="resources">
+        <h2 class="section-title">Project Resources</h2>
+        <div class="resources-grid">
+            <div class="resource-card">
+                <h3>Core Features</h3>
+                <div class="resource-item">✓ Multi-provider routing</div>
+                <div class="resource-item">✓ Automatic failover (3-level)</div>
+                <div class="resource-item">✓ Request retry with backoff</div>
+                <div class="resource-item">✓ Real-time cost estimation</div>
+                <div class="resource-item">✓ Two-layer request caching</div>
+                <div class="resource-item">✓ Budget management & limits</div>
+            </div>
+            <div class="resource-card">
+                <h3>Observability</h3>
+                <div class="resource-item">✓ Request logging to PostgreSQL</div>
+                <div class="resource-item">✓ Cost tracking per request</div>
+                <div class="resource-item">✓ Route path visualization</div>
+                <div class="resource-item">✓ Health checks (API, DB, Cache)</div>
+                <div class="resource-item">✓ Request latency tracking</div>
+                <div class="resource-item">✓ Token usage statistics</div>
+            </div>
+            <div class="resource-card">
+                <h3>Technology Stack</h3>
+                <div class="resource-item">🐍 FastAPI (Backend)</div>
+                <div class="resource-item">🗄️ PostgreSQL (Data)</div>
+                <div class="resource-item">⚡ Redis (Caching)</div>
+                <div class="resource-item">🐳 Docker Compose (Hosting)</div>
+                <div class="resource-item">💻 HTML/CSS/JS (Frontend)</div>
+                <div class="resource-item">🔐 JWT Auth (Security)</div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 50px;">
+            <a href="/resources" class="btn-secondary">View Complete Resources →</a>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>Ready to optimize your LLM workloads?</h2>
+        <p>Get started with intelligent multi-provider routing today</p>
+        <a href="/login" class="btn-primary">Launch Dashboard</a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <!-- Brand Section -->
+            <div class="footer-section footer-brand">
+                <div class="footer-logo">
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="6" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
+                        <circle cx="16" cy="16" r="3" fill="currentColor"/>
+                        <circle cx="26" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
+                        <line x1="8.5" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
+                        <line x1="19" y1="16" x2="23.5" y2="16" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
+                        <line x1="16" y1="13" x2="16" y2="8" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+                        <line x1="16" y1="19" x2="16" y2="24" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+                        <line x1="20.5" y1="11.5" x2="24" y2="8" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+                        <line x1="20.5" y1="20.5" x2="24" y2="24" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+                    </svg>
+                </div>
+                <div class="footer-brand-text">LLM Gateway</div>
+                <div class="footer-brand-desc">Intelligent routing, cost optimization, and resilient failover for your LLM workloads.</div>
+            </div>
+
+            <!-- Product Links -->
+            <div class="footer-section">
+                <h3>Product</h3>
+                <ul>
+                    <li><a href="/features">Features</a></li>
+                    <li><a href="/providers">Providers</a></li>
+                    <li><a href="/api-docs">API Docs</a></li>
+                    <li><a href="/resources">Resources</a></li>
+                </ul>
+            </div>
+
+            <!-- Company Links -->
+            <div class="footer-section">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="/status">Status Page</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms of Service</a></li>
+                    <li><a href="/contact">Contact & Support</a></li>
+                </ul>
+            </div>
+
+            <!-- Developers Links -->
+            <div class="footer-section">
+                <h3>Developers</h3>
+                <ul>
+                    <li><a href="https://github.com/Resilient-LLM-Gateway-Team-2/llm-gateway" target="_blank">GitHub Repository</a></li>
+                    <li><a href="https://github.com/Resilient-LLM-Gateway-Team-2/llm-gateway/issues" target="_blank">Report Issues</a></li>
+                    <li><a href="https://github.com/Resilient-LLM-Gateway-Team-2/llm-gateway/pulls" target="_blank">Pull Requests</a></li>
+                    <li><a href="https://github.com/Resilient-LLM-Gateway-Team-2/llm-gateway/discussions" target="_blank">Discussions</a></li>
+                    <li><a href="/api-docs">API Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-divider"></div>
+
+        <div class="footer-bottom">
+            <div class="footer-copy">
+                © 2026 Resilient LLM Gateway. All rights reserved.
+            </div>
+            <div class="footer-status">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <a href="/status" style="text-decoration: none; color: var(--text-muted); transition: color 0.3s;" onmouseover="this.style.color='var(--success)'" onmouseout="this.style.color='var(--text-muted)'">All systems operational</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

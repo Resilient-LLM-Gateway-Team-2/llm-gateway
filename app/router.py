@@ -22,12 +22,14 @@ logger = logging.getLogger(__name__)
 GEMINI_SPECIALTIES = {
     "summarize", "summary", "rewrite", "rephrase", "translate", "paraphrase", 
     "shorten", "tone", "grammar", "improve", "simplify", "explain", "generate",
-    "write", "create", "compose", "describe", "content", "poetry", "story"
+    "poetry", "story", "essay", "article"
 }
 
 OPENAI_SPECIALTIES = {
     "code", "debug", "sql", "algorithm", "logic", "analyze", "reason", "python",
-    "javascript", "typescript", "java", "problem-solving", "chess", "math", "prove"
+    "javascript", "typescript", "java", "problem-solving", "chess", "math", "prove",
+    "app", "function", "build", "create app", "write code", "implement", "refactor",
+    "todo", "api", "server", "client", "database", "backend", "frontend"
 }
 
 # Cost optimization: Gemini is ~70% cheaper than OpenAI

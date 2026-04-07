@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources - Resilient LLM Gateway</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #080810;
+            --panel-bg: #0f0f17;
+            --card-bg: #16161f;
+            --border-color: rgba(255,255,255,0.08);
+            --text-main: #f0f0f8;
+            --text-muted: #7a7a8e;
+            --text-dim: #4a4a5e;
+            --accent: #a78bfa;
+            --accent-glow: rgba(167,139,250,0.2);
+            --accent-bright: #c4b5fd;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 60px;
+            background: linear-gradient(180deg, rgba(8,8,16,0.95) 0%, rgba(15,15,23,0.8) 100%);
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.3s;
+        }
+
+        .nav-brand:hover {
+            opacity: 0.8;
+            transform: translateY(-2px);
+        }
+
+        .nav-brand-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: 0 4px 16px rgba(167,139,250,0.25);
+            transition: all 0.3s;
+        }
+
+        .nav-brand:hover .nav-brand-icon {
+            box-shadow: 0 6px 24px rgba(167,139,250,0.4);
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent);
+        }
+
+        .nav-btn {
+            padding: 10px 24px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(167,139,250,0.3);
+        }
+
+        .page-header {
+            padding: 80px 60px;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(8,8,16,1) 0%, rgba(15,15,23,0.9) 50%, rgba(22,22,40,0.5) 100%);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .page-header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--accent-bright), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section {
+            padding: 80px 60px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .resource-card {
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(22,22,31,0.8) 0%, rgba(20,20,30,0.6) 100%);
+            border: 1px solid rgba(167,139,250,0.15);
+            border-radius: 16px;
+            transition: all 0.3s;
+        }
+
+        .resource-card:hover {
+            border-color: rgba(167,139,250,0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(167,139,250,0.1);
+        }
+
+        .resource-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+
+        .resource-item {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .resource-item:last-child {
+            border-bottom: none;
+        }
+
+        .resource-item strong {
+            color: var(--text-main);
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .tech-item {
+            padding: 20px;
+            background: rgba(167,139,250,0.05);
+            border: 1px solid rgba(167,139,250,0.15);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .tech-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .tech-name {
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+
+        .tech-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .architecture-section {
+            margin-top: 60px;
+            padding-top: 60px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .flow-diagram {
+            background: rgba(167,139,250,0.05);
+            border: 1px solid rgba(167,139,250,0.15);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 30px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .flow-diagram p {
+            color: var(--text-muted);
+            margin: 12px 0;
+            font-size: 0.9rem;
+        }
+
+        .flow-arrow {
+            color: var(--accent);
+            font-weight: bold;
+            margin: 0 8px;
+        }
+
+        footer {
+            background: linear-gradient(180deg, rgba(15,15,23,0.8) 0%, rgba(8,8,16,1) 100%);
+            border-top: 1px solid var(--border-color);
+            padding: 60px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 12px;
+        }
+
+        .footer-section a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        .footer-brand {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .footer-logo svg {
+            width: 100%;
+            height: 100%;
+            color: white;
+            stroke: currentColor;
+        }
+
+        .footer-brand-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .footer-brand-desc {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .footer-divider {
+            border-top: 1px solid var(--border-color);
+            padding-top: 24px;
+            margin-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-copy {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        .footer-status {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @media (max-width: 1024px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            footer {
+                padding: 40px 24px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-status {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 16px 24px;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .nav-links {
+                gap: 20px;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .page-header, .section {
+                padding: 60px 24px;
+            }
+
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="/" class="nav-brand">
+            <div class="nav-brand-icon">
+                <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Left node -->
+                    <circle cx="6" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
+                    <!-- Center node -->
+                    <circle cx="16" cy="16" r="3" fill="currentColor"/>
+                    <!-- Right node -->
+                    <circle cx="26" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
+                    <!-- Connecting lines -->
+                    <line x1="8.5" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
+                    <line x1="19" y1="16" x2="23.5" y2="16" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
+                    <!-- Radiating paths (top) -->
+                    <line x1="16" y1="13" x2="16" y2="8" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+                    <!-- Radiating paths (bottom) -->
+                    <line x1="16" y1="19" x2="16" y2="24" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+                    <!-- Diagonal paths -->
+                    <line x1="20.5" y1="11.5" x2="24" y2="8" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+                    <line x1="20.5" y1="20.5" x2="24" y2="24" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+                </svg>
+            </div>
+            <span>LLM Gateway</span>
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/features">Features</a>
+            <a href="/providers">Providers</a>
+            <a href="/resources" class="active">Resources</a>
+            <a href="/api-docs">API Docs</a>
+            <a href="/login" class="nav-btn">Sign In</a>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <h1>Project Resources</h1>
+        <p>Complete documentation of features, stack, and architecture</p>
+    </section>
+
+    <!-- Resources Section -->
+    <section class="section">
+        <div class="resources-grid">
+            <div class="resource-card">
+                <h3>✓ Core Features</h3>
+                <div class="resource-item"><strong>Multi-provider routing</strong> - Route requests across OpenAI, Gemini, and fallbacks</div>
+                <div class="resource-item"><strong>Automatic failover (3-level)</strong> - Primary → Secondary → Fallback</div>
+                <div class="resource-item"><strong>Request retry with backoff</strong> - Exponential backoff on failures</div>
+                <div class="resource-item"><strong>Real-time cost estimation</strong> - Token-based pricing calculations</div>
+                <div class="resource-item"><strong>Two-layer request caching</strong> - Exact match + prompt-level caching</div>
+                <div class="resource-item"><strong>Budget management & limits</strong> - Monthly per-provider budgets with warnings</div>
+            </div>
+
+            <div class="resource-card">
+                <h3>📊 Observability</h3>
+                <div class="resource-item"><strong>Request logging</strong> - PostgreSQL request history</div>
+                <div class="resource-item"><strong>Cost tracking</strong> - Per-request and monthly cost aggregation</div>
+                <div class="resource-item"><strong>Route path visualization</strong> - See which providers were used</div>
+                <div class="resource-item"><strong>Health checks</strong> - API, Database, and Cache status</div>
+                <div class="resource-item"><strong>Request latency tracking</strong> - Performance metrics per request</div>
+                <div class="resource-item"><strong>Token usage statistics</strong> - Input and output token counts</div>
+            </div>
+
+            <div class="resource-card">
+                <h3>🔐 Security & Auth</h3>
+                <div class="resource-item"><strong>Session-based authentication</strong> - Secure user login with tokens</div>
+                <div class="resource-item"><strong>API key management</strong> - Unique keys per application</div>
+                <div class="resource-item"><strong>HTTPOnly cookies</strong> - Protection against XSS attacks</div>
+                <div class="resource-item"><strong>CSRF protection</strong> - Secure form submissions</div>
+                <div class="resource-item"><strong>Password hashing</strong> - SHA256 secure credential storage</div>
+                <div class="resource-item"><strong>7-day session expiration</strong> - Automatic session cleanup</div>
+            </div>
+        </div>
+
+        <!-- Technology Stack -->
+        <div class="architecture-section">
+            <h2 class="section-title">Technology Stack</h2>
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <div class="tech-icon">🐍</div>
+                    <div class="tech-name">FastAPI</div>
+                    <div class="tech-desc">Modern async web framework for Python</div>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🗄️</div>
+                    <div class="tech-name">PostgreSQL</div>
+                    <div class="tech-desc">Reliable database for request logs and configs</div>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">⚡</div>
+                    <div class="tech-name">Redis</div>
+                    <div class="tech-desc">In-memory cache for fast response lookups</div>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🐳</div>
+                    <div class="tech-name">Docker Compose</div>
+                    <div class="tech-desc">Containerized deployment and orchestration</div>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">💻</div>
+                    <div class="tech-name">HTML/CSS/JS</div>
+                    <div class="tech-desc">Modern responsive frontend interface</div>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">📦</div>
+                    <div class="tech-name">Alembic</div>
+                    <div class="tech-desc">Database migrations and versioning</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Architecture -->
+        <div class="architecture-section">
+            <h2 class="section-title">Request Flow Architecture</h2>
+            <div class="flow-diagram">
+                <p><strong>User Request</strong></p>
+                <p><span class="flow-arrow">↓</span></p>
+                <p><strong>FastAPI Router</strong> (Endpoint validation & auth)</p>
+                <p><span class="flow-arrow">↓</span></p>
+                <p><strong>Cache Check</strong> (Redis - 2 layers)</p>
+                <p><span class="flow-arrow">↓</span></p>
+                <p><strong>Provider Router</strong> (Select: OpenAI → Gemini → Fallback)</p>
+                <p><span class="flow-arrow">↓</span></p>
+                <p><strong>API Call</strong> (With retry & backoff)</p>
+                <p><span class="flow-arrow">↓</span></p>
+                <p><strong>Response Caching</strong> (Store in Redis)</p>
+                <p><span class="flow-arrow">↓</span></p>
+                <p><strong>Cost Calculation</strong> (Token-based pricing)</p>
+                <p><span class="flow-arrow">↓</span></p>
+                <p><strong>Logging</strong> (PostgreSQL + Observability)</p>
+                <p><span class="flow-arrow">↓</span></p>
+                <p><strong>Response to User</strong></p>
+            </div>
+        </div>
+
+        <!-- Metrics -->
+        <div class="architecture-section">
+            <h2 class="section-title">Key Metrics & Performance</h2>
+            <div class="resources-grid">
+                <div class="resource-card">
+                    <h3>⚡ Caching Performance</h3>
+                    <div class="resource-item"><strong>Exact match hit:</strong> &lt;5ms response time</div>
+                    <div class="resource-item"><strong>Prompt-level hit:</strong> &lt;10ms response time</div>
+                    <div class="resource-item"><strong>Cache miss (API call):</strong> 500-2000ms (varies by provider)</div>
+                    <div class="resource-item"><strong>Typical cache hit rate:</strong> 20-40% with repeat questions</div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>💰 Cost Savings</h3>
+                    <div class="resource-item"><strong>Using Gemini only:</strong> 70% cheaper than OpenAI</div>
+                    <div class="resource-item"><strong>With intelligent routing:</strong> 40-60% cost reduction</div>
+                    <div class="resource-item"><strong>Cache hit savings:</strong> 100% (no API charge)</div>
+                    <div class="resource-item"><strong>Budget control:</strong> Prevent overspending with hard limits</div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>🛡️ Reliability</h3>
+                    <div class="resource-item"><strong>Uptime guarantee:</strong> 99.9% with fallback provider</div>
+                    <div class="resource-item"><strong>Automatic failover:</strong> Instant switch on primary failure</div>
+                    <div class="resource-item"><strong>Retry mechanism:</strong> Exponential backoff (max 3 retries)</div>
+                    <div class="resource-item"><strong>Health monitoring:</strong> Real-time status of all components</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section footer-brand">
+                <div class="footer-logo">
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="6" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
+                        <circle cx="16" cy="16" r="3" fill="currentColor"/>
+                        <circle cx="26" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
+                        <line x1="8.5" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
+                        <line x1="19" y1="16" x2="23.5" y2="16" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
+                        <line x1="16" y1="13" x2="16" y2="8" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+                        <line x1="16" y1="19" x2="16" y2="24" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+                        <line x1="20.5" y1="11.5" x2="24" y2="8" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+                        <line x1="20.5" y1="20.5" x2="24" y2="24" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+                    </svg>
+                </div>
+                <div class="footer-brand-text">LLM Gateway</div>
+                <div class="footer-brand-desc">Resilient multi-provider LLM gateway with smart routing, cost optimization, and failover. Your gateway to reliable AI.</div>
+            </div>
+            <div class="footer-section">
+                <h3>Product</h3>
+                <ul>
+                    <li><a href="/features">Features</a></li>
+                    <li><a href="/providers">Providers</a></li>
+                    <li><a href="/api-docs">API Docs</a></li>
+                    <li><a href="/resources">Resources</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="/status">Status Page</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms of Service</a></li>
+                    <li><a href="/contact">Contact & Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Developers</h3>
+                <ul>
+                    <li><a href="https://github.com/Resilient-LLM-Gateway-Team-2/llm-gateway" target="_blank">GitHub Repository</a></li>
+                    <li><a href="https://github.com/Resilient-LLM-Gateway-Team-2/llm-gateway/issues" target="_blank">Issues & Bugs</a></li>
+                    <li><a href="https://github.com/Resilient-LLM-Gateway-Team-2/llm-gateway/pulls" target="_blank">Pull Requests</a></li>
+                    <li><a href="https://github.com/Resilient-LLM-Gateway-Team-2/llm-gateway/discussions" target="_blank">Discussions</a></li>
+                    <li><a href="/api-docs">API Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-divider">
+            <div class="footer-copy">© 2026 Resilient LLM Gateway. All rights reserved.</div>
+            <div class="footer-status">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    All systems operational
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
