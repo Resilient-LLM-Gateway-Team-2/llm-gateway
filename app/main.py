@@ -578,7 +578,7 @@ def generate_api_key(
             f"curl -X POST https://llm-gateway-api-og50.onrender.com/chat "
             f"-H 'X-API-Key: {api_key_value}' "
             f"-H 'Content-Type: application/json' "
-            f"-d '{{\"messages\": [{{\"role\": \"user\", \"content\": \"Hello\"}}], \"model\": \"gpt-4o\"}}'"
+            f"-d '{{\"messages\": [{{\"role\": \"user\", \"content\": \"Hello\"}}], \"model\": \"gpt-4o-mini\"}}'"
         )
         
         return {

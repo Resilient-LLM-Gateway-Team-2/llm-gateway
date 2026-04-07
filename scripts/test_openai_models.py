@@ -37,9 +37,8 @@ def test_openai_models():
     
     # List of models to test (in order of preference)
     models_to_test = [
-        "gpt-4o",
-        "gpt-4-turbo",
-        "gpt-4",
+        "gpt-4o-mini",
+        "gpt-4.1-mini",
         "gpt-3.5-turbo",
         "gpt-3.5-turbo-16k",
     ]

@@ -18,7 +18,7 @@ from app.schemas import ChatResponse, UsageStats
 # ---------------------------------------------------------------------------
 
 VALID_BODY = {
-    "model": "gpt-4",
+    "model": "gpt-4o-mini",
     "messages": [{"role": "user", "content": "Say hello"}],
     "temperature": 0.7,
     "max_tokens": 64,
@@ -27,7 +27,7 @@ VALID_BODY = {
 MOCK_RESPONSE = ChatResponse(
     content="Hello! How can I help you?",
     provider="openai",
-    model="gpt-4",
+    model="gpt-4o-mini",
     usage=UsageStats(prompt_tokens=10, completion_tokens=8, total_tokens=18),
 )
 
@@ -125,7 +125,7 @@ class TestValidation:
         client = TestClient(app)
         r = client.post(
             "/chat",
-            json={"model": "gpt-4"},
+            json={"model": "gpt-4o-mini"},
             headers={"X-API-Key": "test_key"},
         )
         assert r.status_code == 422

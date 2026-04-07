@@ -61,6 +61,7 @@ class MockProvider(BaseProvider):
 # ---------------------------------------------------------------------------
 MAX_RETRIES = 3
 BACKOFF_BASE = 1  # seconds
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
 
 class ProviderError(Exception):
@@ -111,10 +112,11 @@ def call_openai(request: ChatRequest) -> ChatResponse:
         raise ProviderError("openai", f"OpenAI client is not available: {exc}") from exc
 
     client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    model_name = OPENAI_MODEL
 
     def _call():
         response = client.chat.completions.create(
-            model=request.model,
+            model=model_name,
             messages=[{"role": m.role, "content": m.content} for m in request.messages],
             temperature=request.temperature,
             max_tokens=request.max_tokens,

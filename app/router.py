@@ -8,6 +8,7 @@ Routing Strategy:
 """
 
 import logging
+import os
 from typing import List, Tuple
 
 from app.schemas import ChatRequest, ChatResponse, RouteStep
@@ -105,7 +106,7 @@ def _select_provider_order(request: ChatRequest) -> List[str]:
 def _expected_model(provider: str, requested_model: str) -> str:
     if provider == "gemini":
         return requested_model if requested_model.startswith("gemini") else "gemini-1.5-flash"
-    return requested_model
+    return os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
 
 def route_request(request: ChatRequest) -> Tuple[ChatResponse, List[RouteStep]]:
