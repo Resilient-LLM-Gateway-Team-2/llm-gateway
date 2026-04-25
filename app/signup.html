@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        body {
+            background: #080810;
+            color: white;
+            font-family: Inter, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .box {
+            width: 380px;
+            background: #16161f;
+            padding: 30px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: #111;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #a78bfa;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .small-link {
+            margin-top: 14px;
+            text-align: center;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .small-link a {
+            color: #a78bfa;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Create Account</h2>
+
+        <form onsubmit="handleSignup(event)">
+            <input id="email" type="email" placeholder="Email" required>
+            <input id="confirmEmail" type="email" placeholder="Confirm Email" required>
+            <input id="username" type="text" placeholder="Username" required>
+            <input id="password" type="password" placeholder="Password" required>
+            <input id="confirmPassword" type="password" placeholder="Confirm Password" required>
+
+            <button type="submit">Sign Up</button>
+        </form>
+
+        <div class="small-link">
+            Already have an account? <a href="/login">Sign in</a>
+        </div>
+    </div>
+
+    <script>
+        function validatePassword(p) {
+            return /[A-Z]/.test(p) &&
+                   /[a-z]/.test(p) &&
+                   /[0-9]/.test(p) &&
+                   /[^A-Za-z0-9]/.test(p);
+        }
+
+        async function handleSignup(event) {
+            event.preventDefault();
+
+            const email = document.getElementById("email").value.trim();
+            const confirmEmail = document.getElementById("confirmEmail").value.trim();
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+
+            if (email !== confirmEmail) {
+                alert("Emails do not match");
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match");
+                return;
+            }
+
+            if (!validatePassword(password)) {
+                alert("Password must include uppercase, lowercase, number, and special character");
+                return;
+            }
+
+            const res = await fetch("/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ email, username, password })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                window.location.href = "/user-dashboard";
+            } else {
+                alert(data.detail || "Signup failed");
+            }
+        }
+    </script>
+</body>
+</html>

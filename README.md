@@ -1,3 +1,22 @@
+# 🚀 Resilient LLM Gateway
+
+Production-grade unified REST API middleware for multi-LLM routing, failover, caching, and cost tracking.
+
+---
+
+## ⚡ Quick Start (Run in 1 Command)
+
+### Prerequisites
+- Docker Desktop
+- Git
+
+### Run the Project
+
+```bash
+git clone https://github.com/Resilient-LLM-Gateway-Team-2/llm-gateway.git
+cd llm-gateway
+docker compose up --build
+
 **Resilient LLM Gateway - Team 2 - Pace University Capstone Project**
 
 **Project Description**

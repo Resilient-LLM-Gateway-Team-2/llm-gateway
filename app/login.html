@@ -506,11 +506,18 @@
 
                     <button type="submit" class="login-btn" id="loginBtn">Sign In</button>
                 </form>
-
-                <div class="demo-credentials">
-                    <strong>Demo Account:</strong><br>
-                    Username: <strong>admin</strong><br>
-                    Password: <strong>admin</strong>
+                <div style="margin-top: 20px; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+                    Don’t have an account?
+                    <button onclick="goToSignup()" style="
+                        background: none;
+                        border: none;
+                        color: var(--accent);
+                        font-weight: 600;
+                        cursor: pointer;
+                        padding-left: 5px;
+                    ">
+                        Sign up
+                    </button>
                 </div>
             </div>
         </div>
@@ -575,7 +582,7 @@
                     
                     // Redirect after toast is visible
                     setTimeout(() => {
-                        window.location.href = '/dashboard';
+                        window.location.href = '/user-dashboard';
                     }, 800);
                 } else {
                     const errorText = data.detail || 'Login failed. Please try again.';
@@ -593,6 +600,9 @@
                 loginBtn.disabled = false;
                 loginBtn.textContent = 'Sign In';
             }
+        }
+        function goToSignup() {
+            window.location.href = "/signup-page";
         }
 
         // Auto-focus first input
