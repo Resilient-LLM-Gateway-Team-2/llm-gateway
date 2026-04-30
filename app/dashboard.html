@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,37 +13,37 @@
             --bg-color: #080810;
             --panel-bg: #0f0f17;
             --card-bg: #16161f;
-            --border-color: rgba(255,255,255,0.08);
-            --border-hover: rgba(255,255,255,0.15);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.15);
             --text-main: #f0f0f8;
             --text-muted: #7a7a8e;
             --text-dim: #4a4a5e;
             --accent: #a78bfa;
-            --accent-glow: rgba(167,139,250,0.2);
+            --accent-glow: rgba(167, 139, 250, 0.2);
             --accent-bright: #c4b5fd;
             --user-msg: #7c3aed;
             --user-msg-hover: #8b5cf6;
             --bot-msg: #1f1f2e;
             --success: #10b981;
-            --success-glow: rgba(16,185,129,0.2);
-            --success-dim: rgba(16,185,129,0.12);
+            --success-glow: rgba(16, 185, 129, 0.2);
+            --success-dim: rgba(16, 185, 129, 0.12);
             --warning: #f59e0b;
-            --warning-glow: rgba(245,158,11,0.2);
-            --warning-dim: rgba(245,158,11,0.12);
+            --warning-glow: rgba(245, 158, 11, 0.2);
+            --warning-dim: rgba(245, 158, 11, 0.12);
             --error: #ef4444;
-            --error-glow: rgba(239,68,68,0.2);
-            --error-dim: rgba(239,68,68,0.12);
+            --error-glow: rgba(239, 68, 68, 0.2);
+            --error-dim: rgba(239, 68, 68, 0.12);
             --info: #06b6d4;
-            --info-glow: rgba(6,182,212,0.2);
-            --info-dim: rgba(6,182,212,0.12);
+            --info-glow: rgba(6, 182, 212, 0.2);
+            --info-dim: rgba(6, 182, 212, 0.12);
             --openai-color: #10a37f;
             --gemini-color: #8ab4f8;
             --mock-color: #f87171;
             --cache-color: #34d399;
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
-            --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
-            --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
-            --shadow-xl: 0 16px 48px rgba(0,0,0,0.6);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
         }
 
         * {
@@ -67,10 +68,10 @@
             align-items: center;
             justify-content: space-between;
             padding: 12px 28px;
-            background: linear-gradient(180deg, rgba(18,18,26,0.99) 0%, rgba(20,20,30,0.95) 100%);
-            border-bottom: 1px solid rgba(167,139,250,0.15);
+            background: linear-gradient(180deg, rgba(18, 18, 26, 0.99) 0%, rgba(20, 20, 30, 0.95) 100%);
+            border-bottom: 1px solid rgba(167, 139, 250, 0.15);
             backdrop-filter: blur(20px);
-            box-shadow: 0 4px 32px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 32px rgba(0, 0, 0, 0.4);
             z-index: 10;
             flex-shrink: 0;
         }
@@ -133,15 +134,15 @@
             gap: 14px;
             align-items: center;
             padding: 8px 14px;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
             transition: all 0.3s ease;
         }
 
         .health-indicators:hover {
-            background: rgba(0,0,0,0.4);
-            border-color: rgba(255,255,255,0.12);
+            background: rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.12);
         }
 
         .health-dot {
@@ -170,13 +171,13 @@
 
         .health-dot .dot.ok {
             background-color: var(--success);
-            box-shadow: 0 0 10px rgba(52,211,153,0.7);
+            box-shadow: 0 0 10px rgba(52, 211, 153, 0.7);
             animation: statusPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
 
         .health-dot .dot.err {
             background-color: var(--error);
-            box-shadow: 0 0 10px rgba(248,113,113,0.7);
+            box-shadow: 0 0 10px rgba(248, 113, 113, 0.7);
         }
 
         .api-key-wrapper {
@@ -186,8 +187,8 @@
         }
 
         .api-key-input {
-            background: linear-gradient(135deg, rgba(26,26,40,0.8), rgba(26,26,40,0.6));
-            border: 1px solid rgba(167,139,250,0.2);
+            background: linear-gradient(135deg, rgba(26, 26, 40, 0.8), rgba(26, 26, 40, 0.6));
+            border: 1px solid rgba(167, 139, 250, 0.2);
             color: var(--text-main);
             padding: 8px 14px;
             border-radius: 10px;
@@ -199,20 +200,20 @@
         }
 
         .api-key-input:hover {
-            background: linear-gradient(135deg, rgba(26,26,40,0.9), rgba(26,26,40,0.7));
-            border-color: rgba(167,139,250,0.3);
+            background: linear-gradient(135deg, rgba(26, 26, 40, 0.9), rgba(26, 26, 40, 0.7));
+            border-color: rgba(167, 139, 250, 0.3);
         }
 
         .api-key-input:focus {
             border-color: var(--accent);
-            background: linear-gradient(135deg, rgba(26,26,40,1), rgba(26,26,40,0.8));
+            background: linear-gradient(135deg, rgba(26, 26, 40, 1), rgba(26, 26, 40, 0.8));
             box-shadow: 0 0 0 3px var(--accent-glow);
         }
 
         .copy-btn {
             padding: 8px 12px;
-            background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.1));
-            border: 1px solid rgba(16,185,129,0.3);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.1));
+            border: 1px solid rgba(16, 185, 129, 0.3);
             color: var(--success);
             border-radius: 10px;
             font-size: 0.82rem;
@@ -223,10 +224,10 @@
         }
 
         .copy-btn:hover {
-            background: linear-gradient(135deg, rgba(16,185,129,0.25), rgba(16,185,129,0.15));
-            border-color: rgba(16,185,129,0.5);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(16, 185, 129, 0.15));
+            border-color: rgba(16, 185, 129, 0.5);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(16,185,129,0.2);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
         }
 
         .copy-btn:active {
@@ -235,8 +236,8 @@
 
         .logout-btn {
             padding: 8px 16px;
-            background: linear-gradient(135deg, rgba(167,139,250,0.15), rgba(139,92,246,0.1));
-            border: 1px solid rgba(167,139,250,0.3);
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.15), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(167, 139, 250, 0.3);
             color: var(--accent);
             border-radius: 10px;
             font-size: 0.82rem;
@@ -248,10 +249,10 @@
         }
 
         .logout-btn:hover {
-            background: linear-gradient(135deg, rgba(167,139,250,0.25), rgba(139,92,246,0.15));
-            border-color: rgba(167,139,250,0.5);
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.25), rgba(139, 92, 246, 0.15));
+            border-color: rgba(167, 139, 250, 0.5);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(167,139,250,0.2);
+            box-shadow: 0 4px 12px rgba(167, 139, 250, 0.2);
         }
 
         .logout-btn:active {
@@ -280,7 +281,9 @@
             font-size: 0.78rem;
         }
 
-        .stat-item:last-child { border-right: none; }
+        .stat-item:last-child {
+            border-right: none;
+        }
 
         .stat-label {
             color: var(--text-muted);
@@ -297,8 +300,13 @@
             transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .stat-value.accent { color: var(--accent); }
-        .stat-value.success { color: var(--success); }
+        .stat-value.accent {
+            color: var(--accent);
+        }
+
+        .stat-value.success {
+            color: var(--success);
+        }
 
         /* ═══════════ MAIN LAYOUT ═══════════ */
         .main-layout {
@@ -337,8 +345,15 @@
         }
 
         @keyframes msgIn {
-            from { opacity: 0; transform: translateY(12px) scale(0.97); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .user-message {
@@ -495,10 +510,21 @@
             font-weight: 700;
         }
 
-        .message-content h1 { font-size: 1.4em; }
-        .message-content h2 { font-size: 1.3em; }
-        .message-content h3 { font-size: 1.2em; }
-        .message-content h4 { font-size: 1.1em; }
+        .message-content h1 {
+            font-size: 1.4em;
+        }
+
+        .message-content h2 {
+            font-size: 1.3em;
+        }
+
+        .message-content h3 {
+            font-size: 1.2em;
+        }
+
+        .message-content h4 {
+            font-size: 1.1em;
+        }
 
         .message-content a {
             color: var(--accent);
@@ -539,7 +565,7 @@
             outline: none;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             backdrop-filter: blur(10px);
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
         }
 
         .chat-input::placeholder {
@@ -548,7 +574,7 @@
 
         .chat-input:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-glow), inset 0 1px 3px rgba(0,0,0,0.2);
+            box-shadow: 0 0 0 3px var(--accent-glow), inset 0 1px 3px rgba(0, 0, 0, 0.2);
             background: linear-gradient(135deg, rgba(25, 25, 35, 0.8) 0%, rgba(23, 23, 33, 0.6) 100%);
         }
 
@@ -566,7 +592,7 @@
         .btn-primary {
             background: linear-gradient(135deg, var(--accent-bright) 0%, var(--accent) 50%, #8b5cf6 100%);
             color: white;
-            box-shadow: 0 4px 16px var(--accent-glow), inset 1px 1px 0 rgba(255,255,255,0.2);
+            box-shadow: 0 4px 16px var(--accent-glow), inset 1px 1px 0 rgba(255, 255, 255, 0.2);
             font-weight: 700;
             letter-spacing: 0.3px;
         }
@@ -574,10 +600,13 @@
         .btn-primary:hover {
             opacity: 0.95;
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px var(--accent-glow), inset 1px 1px 0 rgba(255,255,255,0.2);
+            box-shadow: 0 8px 24px var(--accent-glow), inset 1px 1px 0 rgba(255, 255, 255, 0.2);
         }
 
-        .btn-primary:active { transform: scale(0.97) translateY(0); }
+        .btn-primary:active {
+            transform: scale(0.97) translateY(0);
+        }
+
         .btn-primary:disabled {
             background: linear-gradient(135deg, #333 0%, #222 100%);
             color: #666;
@@ -673,8 +702,13 @@
             background: linear-gradient(180deg, rgba(15, 15, 23, 0.4) 0%, rgba(12, 12, 20, 0.2) 100%);
         }
 
-        .tab-panel { display: none; }
-        .tab-panel.active { display: block; }
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
 
         /* Latest Metrics */
         .metrics-grid {
@@ -727,7 +761,10 @@
             opacity: 1;
         }
 
-        .metric-card > * { position: relative; z-index: 1; }
+        .metric-card>* {
+            position: relative;
+            z-index: 1;
+        }
 
         .metric-label {
             font-size: 0.68rem;
@@ -786,9 +823,9 @@
             left: 100%;
         }
 
-        .provider-openai { 
-            background: rgba(16, 163, 127, 0.18); 
-            color: var(--openai-color); 
+        .provider-openai {
+            background: rgba(16, 163, 127, 0.18);
+            color: var(--openai-color);
             border: 1px solid rgba(16, 163, 127, 0.4);
             box-shadow: 0 2px 8px rgba(16, 163, 127, 0.15);
         }
@@ -799,9 +836,9 @@
             transform: translateY(-2px);
         }
 
-        .provider-gemini { 
-            background: rgba(138, 180, 248, 0.18); 
-            color: var(--gemini-color); 
+        .provider-gemini {
+            background: rgba(138, 180, 248, 0.18);
+            color: var(--gemini-color);
             border: 1px solid rgba(138, 180, 248, 0.4);
             box-shadow: 0 2px 8px rgba(138, 180, 248, 0.15);
         }
@@ -812,9 +849,9 @@
             transform: translateY(-2px);
         }
 
-        .provider-mock { 
-            background: rgba(248, 113, 113, 0.18); 
-            color: var(--mock-color); 
+        .provider-mock {
+            background: rgba(248, 113, 113, 0.18);
+            color: var(--mock-color);
             border: 1px solid rgba(248, 113, 113, 0.4);
             box-shadow: 0 2px 8px rgba(248, 113, 113, 0.15);
         }
@@ -825,9 +862,9 @@
             transform: translateY(-2px);
         }
 
-        .provider-cache { 
-            background: rgba(52, 211, 153, 0.18); 
-            color: var(--cache-color); 
+        .provider-cache {
+            background: rgba(52, 211, 153, 0.18);
+            color: var(--cache-color);
             border: 1px solid rgba(52, 211, 153, 0.4);
             box-shadow: 0 2px 8px rgba(52, 211, 153, 0.15);
         }
@@ -838,9 +875,17 @@
             transform: translateY(-2px);
         }
 
-        .latency-fast { color: var(--success); }
-        .latency-medium { color: var(--warning); }
-        .latency-slow { color: var(--error); }
+        .latency-fast {
+            color: var(--success);
+        }
+
+        .latency-medium {
+            color: var(--warning);
+        }
+
+        .latency-slow {
+            color: var(--error);
+        }
 
         /* Request History */
         .history-filter-panel {
@@ -1243,12 +1288,25 @@
             animation: bounce 1.4s infinite ease-in-out both;
         }
 
-        .bounce-dot:nth-child(1) { animation-delay: -0.32s; }
-        .bounce-dot:nth-child(2) { animation-delay: -0.16s; }
+        .bounce-dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .bounce-dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
 
         @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1);
+            }
         }
 
         /* ═══════════ MCP ANIMATIONS ═══════════ */
@@ -1257,6 +1315,7 @@
                 opacity: 0;
                 transform: translateY(8px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -1264,8 +1323,13 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         @keyframes slideInLeft {
@@ -1273,6 +1337,7 @@
                 opacity: 0;
                 transform: translateX(-8px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
@@ -1280,22 +1345,37 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
         }
 
         @keyframes statusPulse {
-            0%, 100% { 
+
+            0%,
+            100% {
                 box-shadow: 0 0 0 0 currentColor;
             }
-            50% { 
+
+            50% {
                 box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.2);
             }
         }
 
         @keyframes shimmer {
-            0% { background-position: -1000px 0; }
-            100% { background-position: 1000px 0; }
+            0% {
+                background-position: -1000px 0;
+            }
+
+            100% {
+                background-position: 1000px 0;
+            }
         }
 
         @keyframes routeStepIn {
@@ -1303,6 +1383,7 @@
                 opacity: 0;
                 transform: translateX(-4px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
@@ -1310,10 +1391,22 @@
         }
 
         /* Scrollbars */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.14); }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.14);
+        }
 
         /* Placeholder state */
         .empty-state {
@@ -1349,7 +1442,7 @@
             padding: 16px 20px;
             border-radius: 12px;
             backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -1367,21 +1460,21 @@
         }
 
         .toast.success {
-            background: linear-gradient(135deg, rgba(16,185,129,0.15) 0%, rgba(16,185,129,0.08) 100%);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.08) 100%);
             color: #10b981;
-            border-color: rgba(16,185,129,0.3);
+            border-color: rgba(16, 185, 129, 0.3);
         }
 
         .toast.error {
-            background: linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(239,68,68,0.08) 100%);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.08) 100%);
             color: #ef4444;
-            border-color: rgba(239,68,68,0.3);
+            border-color: rgba(239, 68, 68, 0.3);
         }
 
         .toast.info {
-            background: linear-gradient(135deg, rgba(6,182,212,0.15) 0%, rgba(6,182,212,0.08) 100%);
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(6, 182, 212, 0.08) 100%);
             color: #06b6d4;
-            border-color: rgba(6,182,212,0.3);
+            border-color: rgba(6, 182, 212, 0.3);
         }
 
         .toast-icon {
@@ -1415,6 +1508,7 @@
                 opacity: 0;
                 transform: translateX(24px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
@@ -1426,6 +1520,7 @@
                 opacity: 1;
                 transform: translateX(0);
             }
+
             to {
                 opacity: 0;
                 transform: translateX(24px);
@@ -1435,9 +1530,540 @@
         .toast.removing {
             animation: slideOutRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
+
+        /* User Management Styles */
+        .user-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .user-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .user-card:hover {
+            border-color: rgba(167, 139, 250, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-role {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .user-date {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-delete-user {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-delete-user:hover:not(:disabled) {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .btn-delete-user:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .user-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            margin-bottom: 24px;
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        /* User Management Big Screen Styles */
+        .users-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #0a0a0f;
+            z-index: 10001;
+            display: none;
+            flex-direction: column;
+            color: #fff;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .users-overlay.active {
+            display: flex;
+        }
+
+        .users-header-big {
+            padding: 40px 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .users-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .users-title-row h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .users-controls {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .search-container {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-input-big {
+            width: 100%;
+            background: #16161f;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px 16px 12px 40px;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.5;
+        }
+
+        .bulk-btn {
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+            border: none;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .users-table-container {
+            padding: 0 60px 40px;
+            overflow-x: auto;
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .users-table th {
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.85rem;
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .users-table td {
+            padding: 20px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            vertical-align: middle;
+        }
+
+        .user-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .user-email {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .user-id-small {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            font-family: monospace;
+        }
+
+        .pill {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .pill-plan {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .pill-status {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .action-view {
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .action-view:hover {
+            opacity: 1;
+        }
+
+        /* Analytics Tab Styles */
+        .analytics-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 10px 4px;
+        }
+
+        .chart-wrapper {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .chart-wrapper:hover {
+            border-color: rgba(167, 139, 250, 0.3);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .chart-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .analytics-empty {
+            text-align: center;
+            color: var(--text-dim);
+            padding: 40px 20px;
+            font-size: 0.85rem;
+        }
+
+        /* Analytics Big Screen Styles */
+        .analytics-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow-y: auto;
+        }
+
+        .analytics-overlay.active {
+            display: flex;
+        }
+
+        .analytics-nav {
+            padding: 24px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .analytics-nav h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .close-analytics {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .close-analytics:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .analytics-grid-big {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 24px;
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .chart-card-big {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-height: 400px;
+            transition: all 0.3s;
+        }
+
+        .chart-card-big:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(167, 139, 250, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .chart-card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-card-title span {
+            font-size: 1.2rem;
+        }
+
+        .big-chart-container {
+            flex: 1;
+            position: relative;
+        }
+
+        /* Analytics Tab Styles */
+        .analytics-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 10px 4px;
+        }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
+    <!-- User Management Big Screen Overlay -->
+    <div id="usersOverlay" class="users-overlay">
+        <div class="users-header-big">
+            <div class="users-title-row">
+                <h1>User Management</h1>
+                <button class="close-analytics" onclick="closeUsers()">
+                    <span>✕</span> Close
+                </button>
+            </div>
+            <div class="users-controls">
+                <div class="search-container">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input-big" placeholder="Search by email or ID...">
+                </div>
+                <button class="bulk-btn">
+                    <span>🎁</span> Bulk Grant Promo
+                </button>
+                <button class="bulk-btn"
+                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);"
+                    onclick="openCreateUserModal()">
+                    <span>+</span> Add User
+                </button>
+            </div>
+        </div>
+
+        <div class="users-table-container">
+            <table class="users-table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Plan</th>
+                        <th>Status</th>
+                        <th>Messages (24h)</th>
+                        <th>Memories</th>
+                        <th>Last Active</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <!-- Loaded dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Create User Modal (Simple) -->
+    <div id="createUserModal" class="analytics-overlay"
+        style="z-index: 10002; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.8);">
+        <div class="chart-card-big" style="width: 400px; min-height: auto;">
+            <div class="chart-card-title">Create New User</div>
+            <div class="user-form" style="margin: 0; background: transparent; border: none;">
+                <input type="text" id="newUserNameBig" class="budget-input" placeholder="Username / Email"
+                    autocomplete="off" />
+                <input type="password" id="newUserPassBig" class="budget-input" placeholder="Password" />
+                <select id="newUserRoleBig" class="budget-input">
+                    <option value="user">Standard User</option>
+                    <option value="admin">Administrator</option>
+                </select>
+                <div style="display: flex; gap: 12px; margin-top: 12px;">
+                    <button class="budget-btn" style="flex: 1;" onclick="createUserBig()">Create</button>
+                    <button class="budget-btn" style="flex: 1; background: rgba(255,255,255,0.1);"
+                        onclick="closeCreateUserModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Big Screen Overlay -->
+    <div id="analyticsOverlay" class="analytics-overlay">
+        <nav class="analytics-nav">
+            <h1><span>📈</span> Advanced Gateway Analytics</h1>
+            <button class="close-analytics" onclick="closeAnalytics()">
+                <span>✕</span> Close Dashboard
+            </button>
+        </nav>
+
+        <div class="analytics-grid-big">
+            <div class="chart-card-big">
+                <div class="chart-card-title"><span>💰</span> Cost Trend (Last 7 Days)</div>
+                <div class="big-chart-container">
+                    <canvas id="costLineChartBig"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card-big">
+                <div class="chart-card-title"><span>🎫</span> Token Usage (Last 7 Days)</div>
+                <div class="big-chart-container">
+                    <canvas id="tokenLineChartBig"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card-big">
+                <div class="chart-card-title"><span>💬</span> Request Volume (Last 7 Days)</div>
+                <div class="big-chart-container">
+                    <canvas id="messageLineChartBig"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card-big">
+                <div class="chart-card-title"><span>🏥</span> Provider Reliability (Success/Fail)</div>
+                <div class="big-chart-container">
+                    <canvas id="statusBarChartBig"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card-big" style="grid-column: span 1;">
+                <div class="chart-card-title"><span>📊</span> Provider Cost/Token Distribution</div>
+                <div class="big-chart-container" style="display: flex; justify-content: center; align-items: center;">
+                    <canvas id="providerPieChartBig"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card-big"
+                style="justify-content: center; align-items: center; background: linear-gradient(135deg, rgba(167, 139, 250, 0.1) 0%, transparent 100%);">
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 16px;">🚀</div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 8px;">Optimizer Insight</h3>
+                    <p style="color: var(--text-muted); max-width: 300px; margin: 0 auto; line-height: 1.6;">
+                        Your most efficient provider is currently <strong id="efficientProvider">...</strong> with the
+                        lowest cost-per-token ratio.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
@@ -1447,21 +2073,21 @@
             <div class="logo-icon">
                 <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <!-- Left node -->
-                    <circle cx="6" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
+                    <circle cx="6" cy="16" r="2.5" fill="currentColor" opacity="0.8" />
                     <!-- Center node -->
-                    <circle cx="16" cy="16" r="3" fill="currentColor"/>
+                    <circle cx="16" cy="16" r="3" fill="currentColor" />
                     <!-- Right node -->
-                    <circle cx="26" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
+                    <circle cx="26" cy="16" r="2.5" fill="currentColor" opacity="0.8" />
                     <!-- Connecting lines -->
-                    <line x1="8.5" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
-                    <line x1="19" y1="16" x2="23.5" y2="16" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
+                    <line x1="8.5" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="1.5" opacity="0.6" />
+                    <line x1="19" y1="16" x2="23.5" y2="16" stroke="currentColor" stroke-width="1.5" opacity="0.6" />
                     <!-- Radiating paths (top) -->
-                    <line x1="16" y1="13" x2="16" y2="8" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+                    <line x1="16" y1="13" x2="16" y2="8" stroke="currentColor" stroke-width="1.2" opacity="0.5" />
                     <!-- Radiating paths (bottom) -->
-                    <line x1="16" y1="19" x2="16" y2="24" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+                    <line x1="16" y1="19" x2="16" y2="24" stroke="currentColor" stroke-width="1.2" opacity="0.5" />
                     <!-- Diagonal paths -->
-                    <line x1="20.5" y1="11.5" x2="24" y2="8" stroke="currentColor" stroke-width="1" opacity="0.4"/>
-                    <line x1="20.5" y1="20.5" x2="24" y2="24" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+                    <line x1="20.5" y1="11.5" x2="24" y2="8" stroke="currentColor" stroke-width="1" opacity="0.4" />
+                    <line x1="20.5" y1="20.5" x2="24" y2="24" stroke="currentColor" stroke-width="1" opacity="0.4" />
                 </svg>
             </div>
             <h1>Resilient <span>LLM Gateway</span></h1>
@@ -1473,8 +2099,7 @@
                 <div class="health-dot"><span class="dot" id="healthRedis"></span> Redis</div>
             </div>
             <div class="api-key-wrapper">
-                <input type="password" id="apiKey" class="api-key-input"
-                       placeholder="Enter X-API-Key" value="test_key">
+                <input type="password" id="apiKey" class="api-key-input" placeholder="Enter X-API-Key" value="test_key">
                 <button id="copyKeyBtn" class="copy-btn" title="Copy API Key">📋 Copy</button>
             </div>
             <button id="logoutBtn" class="logout-btn">Sign Out</button>
@@ -1507,7 +2132,8 @@
         <div class="chat-panel">
             <div class="messages" id="chatBox">
                 <div class="message bot-message">
-                    Welcome to the Resilient LLM Gateway. Type a message to test automatic provider routing and failover. The gateway will try OpenAI → Gemini → Mock automatically.
+                    Welcome to the Resilient LLM Gateway. Type a message to test automatic provider routing and
+                    failover. The gateway will try OpenAI → Gemini → Mock automatically.
                 </div>
             </div>
 
@@ -1521,8 +2147,7 @@
 
             <div class="input-area">
                 <input type="text" id="messageInput" class="chat-input"
-                       placeholder="Type a message and let the gateway route it..."
-                       autocomplete="off">
+                    placeholder="Type a message and let the gateway route it..." autocomplete="off">
                 <button id="clearBtn" class="btn btn-ghost" onclick="clearChat()">Clear</button>
                 <button id="sendBtn" class="btn btn-primary" onclick="sendMessage()">Send</button>
             </div>
@@ -1537,13 +2162,15 @@
                 <button class="obs-tab active" onclick="switchTab('latest')">Latest</button>
                 <button class="obs-tab" onclick="switchTab('history')">History</button>
                 <button class="obs-tab" onclick="switchTab('budget')">💰 Budget</button>
+                <button class="obs-tab" onclick="switchTab('analytics')">📈 Analytics</button>
+                <button class="obs-tab" onclick="switchTab('users')">👥 Users</button>
             </div>
             <div class="obs-content">
                 <!-- Latest Tab -->
                 <div class="tab-panel active" id="tabLatest">
                     <div class="empty-state" id="metricsEmpty">
                         <div class="empty-state-icon">📊</div>
-                        <p>Send a message to view<br/>live gateway metrics</p>
+                        <p>Send a message to view<br />live gateway metrics</p>
                     </div>
                     <div class="metrics-grid" id="metricsGrid" style="display:none;"></div>
                 </div>
@@ -1552,14 +2179,9 @@
                     <!-- Filter Panel -->
                     <div class="history-filter-panel">
                         <div class="filter-row">
-                            <input 
-                                type="text" 
-                                id="historySearchInput" 
-                                class="filter-input" 
-                                placeholder="🔍 Search by content..."
-                                onchange="updateHistoryDisplay()"
-                                oninput="updateHistoryDisplay()"
-                            />
+                            <input type="text" id="historySearchInput" class="filter-input"
+                                placeholder="🔍 Search by content..." onchange="updateHistoryDisplay()"
+                                oninput="updateHistoryDisplay()" />
                         </div>
                         <div class="filter-row">
                             <select id="filterProvider" class="filter-select" onchange="updateHistoryDisplay()">
@@ -1597,8 +2219,10 @@
                                 <option value="gemini">Gemini</option>
                                 <option value="all">All Providers</option>
                             </select>
-                            <input type="number" id="budgetAmount" class="budget-input" placeholder="Monthly Budget (USD)" min="0.01" step="0.01" />
-                            <input type="number" id="warningThreshold" class="budget-input" placeholder="Warning Threshold (%)" min="0" max="100" value="80" />
+                            <input type="number" id="budgetAmount" class="budget-input"
+                                placeholder="Monthly Budget (USD)" min="0.01" step="0.01" />
+                            <input type="number" id="warningThreshold" class="budget-input"
+                                placeholder="Warning Threshold (%)" min="0" max="100" value="80" />
                             <button class="budget-btn" onclick="saveBudget()">Set Budget</button>
                         </div>
                     </div>
@@ -1606,6 +2230,34 @@
                         <h3>Current Usage</h3>
                         <div class="budget-status-list" id="budgetStatusList">
                             <div class="budget-empty">No budgets configured</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Analytics Tab (Hidden in sidebar, used for trigger) -->
+                <div class="tab-panel" id="tabAnalytics">
+                    <div class="analytics-empty">
+                        Analytics dashboard is open in big screen view.
+                    </div>
+                </div>
+                <!-- Users Tab -->
+                <div class="tab-panel" id="tabUsers">
+                    <div class="budget-section">
+                        <h3>Create New User</h3>
+                        <div class="user-form">
+                            <input type="text" id="newUserName" class="budget-input" placeholder="Username"
+                                autocomplete="off" />
+                            <input type="password" id="newUserPass" class="budget-input" placeholder="Password" />
+                            <select id="newUserRole" class="budget-input">
+                                <option value="user">Standard User</option>
+                                <option value="admin">Administrator</option>
+                            </select>
+                            <button class="budget-btn" onclick="createUser()">Add User</button>
+                        </div>
+                    </div>
+                    <div class="budget-section">
+                        <h3>System Users</h3>
+                        <div class="user-list" id="userListContainer">
+                            <!-- Users will be loaded here -->
                         </div>
                     </div>
                 </div>
@@ -1619,21 +2271,21 @@
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            
+
             const icons = {
                 success: '✓',
                 error: '✕',
                 info: 'ℹ'
             };
-            
+
             toast.innerHTML = `
                 <span class="toast-icon">${icons[type]}</span>
                 <span class="toast-message">${message}</span>
                 <button class="toast-close" onclick="this.parentElement.remove();">×</button>
             `;
-            
+
             container.appendChild(toast);
-            
+
             if (duration > 0) {
                 setTimeout(() => {
                     toast.classList.add('removing');
@@ -1663,15 +2315,15 @@
                         showToast('No API key to copy', 'error', 3000);
                         return;
                     }
-                    
+
                     await navigator.clipboard.writeText(apiKey);
                     showToast('✓ API key copied to clipboard!', 'success', 3000);
-                    
+
                     // Visual feedback on button
                     const originalText = copyKeyBtn.textContent;
                     copyKeyBtn.textContent = '✓ Copied!';
                     copyKeyBtn.style.background = 'linear-gradient(135deg, rgba(16,185,129,0.25), rgba(16,185,129,0.15))';
-                    
+
                     setTimeout(() => {
                         copyKeyBtn.textContent = originalText;
                         copyKeyBtn.style.background = '';
@@ -1762,6 +2414,16 @@
                 document.querySelectorAll('.obs-tab')[2].classList.add('active');
                 document.getElementById('tabBudget').classList.add('active');
                 loadBudgetStatus(); // Load budget data when tab opens
+            } else if (tab === 'analytics') {
+                document.querySelectorAll('.obs-tab')[3].classList.add('active');
+                document.getElementById('tabAnalytics').classList.add('active');
+                document.getElementById('analyticsOverlay').classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent background scroll
+                loadAnalytics();
+            } else if (tab === 'users') {
+                document.getElementById('usersOverlay').classList.add('active');
+                document.body.style.overflow = 'hidden';
+                loadUsersBig();
             }
         }
 
@@ -1796,7 +2458,7 @@
         function formatMessage(content) {
             // Escape HTML special characters but preserve formatting
             let formatted = content;
-            
+
             // Process code blocks first (```language code ```)
             formatted = formatted.replace(/```([\s\S]*?)```/g, (match, code) => {
                 const lines = code.trim().split('\n');
@@ -1804,7 +2466,7 @@
                 const isLanguage = firstLine && !firstLine.includes(' ') && firstLine.length < 20;
                 const language = isLanguage ? firstLine : '';
                 const actualCode = isLanguage ? lines.slice(1).join('\n') : code.trim();
-                
+
                 // Escape code content
                 let escapedCode = actualCode
                     .replace(/&/g, '&amp;')
@@ -1812,27 +2474,27 @@
                     .replace(/>/g, '&gt;')
                     .replace(/"/g, '&quot;')
                     .replace(/'/g, '&#39;');
-                
+
                 return `<div class="code-block-header">${language || 'code'}<button class="code-copy-btn" onclick="copyCode(this)">📋 Copy</button></div><pre><code>${escapedCode}</code></pre>`;
             });
-            
+
             // Process inline code (single backticks)
             formatted = formatted.replace(/`([^`]+)`/g, '<code>$1</code>');
-            
+
             // Process bold (**text** or __text__)
             formatted = formatted.replace(/\*\*([^\*]+)\*\*/g, '<strong>$1</strong>');
             formatted = formatted.replace(/__([^_]+)__/g, '<strong>$1</strong>');
-            
+
             // Process italic (*text* or _text_)
             formatted = formatted.replace(/\*([^\*]+)\*/g, '<em>$1</em>');
             formatted = formatted.replace(/_([^_]+)_/g, '<em>$1</em>');
-            
+
             // Process headings (# ## ### #### on new lines)
             formatted = formatted.replace(/^#### (.*?)$/gm, '<h4>$1</h4>');
             formatted = formatted.replace(/^### (.*?)$/gm, '<h3>$1</h3>');
             formatted = formatted.replace(/^## (.*?)$/gm, '<h2>$1</h2>');
             formatted = formatted.replace(/^# (.*?)$/gm, '<h1>$1</h1>');
-            
+
             // Process unordered lists (- item or * item)
             formatted = formatted.replace(/(?:^|\n)((?:[\s]*[-*] .+(?:\n|$))+)/gm, (match) => {
                 const items = match.trim().split('\n').filter(l => l.trim());
@@ -1842,7 +2504,7 @@
                 }).join('');
                 return `<ul>${listItems}</ul>`;
             });
-            
+
             // Process ordered lists (1. 2. 3. etc)
             formatted = formatted.replace(/(?:^|\n)((?:[\s]*\d+\. .+(?:\n|$))+)/gm, (match) => {
                 const items = match.trim().split('\n').filter(l => l.trim());
@@ -1852,27 +2514,27 @@
                 }).join('');
                 return `<ol>${listItems}</ol>`;
             });
-            
+
             // Process blockquotes (> text)
             formatted = formatted.replace(/(?:^|\n)(?:> (.+?)(?:\n|$))+/gm, (match) => {
                 const lines = match.split('\n').filter(l => l.trim());
                 const quotes = lines.map(line => line.replace(/^>\s+/, '').trim()).join('\n');
                 return `<blockquote>${quotes}</blockquote>`;
             });
-            
+
             // Process horizontal rules (---, ***, ___)
             formatted = formatted.replace(/(?:^|\n)(?:---|\*\*\*|___)(?:\n|$)/g, '<hr>');
-            
+
             // Process line breaks (preserve new lines)
             formatted = formatted.replace(/\n\n+/g, '</p><p>');
-            
+
             return `<div class="message-content"><p>${formatted}</p></div>`;
         }
 
         function copyCode(btn) {
             const pre = btn.closest('.code-block-header').nextElementSibling;
             if (!pre || pre.tagName !== 'PRE') return;
-            
+
             const code = pre.querySelector('code').textContent;
             navigator.clipboard.writeText(code).then(() => {
                 const originalText = btn.textContent;
@@ -1892,7 +2554,7 @@
             let classes = `message ${role}-message`;
             if (isError) classes += ' error-msg';
             div.className = classes;
-            
+
             // Format content for bot messages
             if (role === 'bot' && !isError) {
                 div.innerHTML = formatMessage(content);
@@ -1900,7 +2562,7 @@
                 // User messages and errors displayed as plain text
                 div.textContent = content;
             }
-            
+
             chatBox.appendChild(div);
             chatBox.scrollTop = chatBox.scrollHeight;
         }
@@ -1931,7 +2593,7 @@
             }
 
             const latClass = getLatencyClass(latency);
-            
+
             // Build route visualization (MCP-style)
             let routeHTML = '';
             if (routePath && routePath.length > 0) {
@@ -1946,7 +2608,7 @@
                             ${successStep ? `<div style="color: var(--success); font-weight: 600; margin-bottom: 12px; font-size: 0.9rem; letter-spacing: 0.3px;">✓ Resolved via ${successStep.provider.toUpperCase()}</div>` : ''}
                             <div style="display: flex; flex-direction: column; gap: 8px;">
                 `;
-                
+
                 routePath.forEach((step, idx) => {
                     const statusColor = step.status === 'success' ? 'var(--success)' : 'var(--error)';
                     const statusIcon = step.status === 'success' ? '✓' : '✗';
@@ -1960,15 +2622,15 @@
                         </div>
                     `;
                 });
-                
+
                 routeHTML += `</div></div></div>`;
             }
-            
+
             // Build cost visualization (MCP-style with enhanced styling)
             let costHTML = '';
             if (costEstimate) {
                 const formatCost = (val) => val < 0.000001 ? '<0.000001' : val.toFixed(7);
-                
+
                 // Calculate savings
                 const openaiCost = costEstimate.openai_usd;
                 const geminiCost = costEstimate.gemini_usd;
@@ -1976,7 +2638,7 @@
                 const maxAlternative = Math.max(openaiCost, geminiCost);
                 const savings = maxAlternative - usedCost;
                 const savingsPercent = maxAlternative > 0 ? ((savings / maxAlternative) * 100).toFixed(1) : 0;
-                
+
                 costHTML = `
                     <div class="metric-card" style="grid-column: 1/-1; padding: 0; overflow: hidden; background: linear-gradient(135deg, rgba(52,211,153,0.05), rgba(167,139,250,0.05)); border: 1px solid rgba(52,211,153,0.2);">
                         <!-- Header -->
@@ -2101,7 +2763,7 @@
                 routePath: routePath,
                 costEstimate: costEstimate
             };
-            
+
             sessionStats.history.unshift(historyEntry); // Add to front
 
             let provClass = 'color:var(--mock-color)';
@@ -2116,14 +2778,14 @@
             // Build detailed history entry with expandable route/cost
             const entry = document.createElement('div');
             entry.className = 'history-item';
-            
-            const routeSummary = routePath && routePath.length > 0 
+
+            const routeSummary = routePath && routePath.length > 0
                 ? `${routePath.length} step${routePath.length > 1 ? 's' : ''}`
                 : 'N/A';
-            const costSummary = costEstimate 
+            const costSummary = costEstimate
                 ? `$${costEstimate.provider_used_usd.toFixed(7)}`
                 : 'N/A';
-            
+
             entry.innerHTML = `
                 <span class="history-time">${time}</span>
                 <span class="history-provider" style="${provClass}">${(provider || 'unknown').toUpperCase()}</span>
@@ -2139,10 +2801,10 @@
                 historyList.innerHTML = '';
             }
             historyList.prepend(entry);
-            
+
             // Update model dropdown
             updateModelDropdown();
-            
+
             // Apply current filters
             updateHistoryDisplay();
         }
@@ -2294,7 +2956,7 @@
 
             metricsGrid.style.display = 'none';
             metricsEmpty.style.display = 'flex';
-            
+
             // Clear filters and history display
             clearHistoryFilters();
             historyList.innerHTML = '<div class="history-empty">No requests yet</div>';
@@ -2338,11 +3000,11 @@
 
                 const data = await response.json();
                 console.log('Budget saved:', data);
-                
+
                 // Clear form
                 document.getElementById('budgetAmount').value = '';
                 document.getElementById('warningThreshold').value = '80';
-                
+
                 // Reload budget status
                 await loadBudgetStatus();
                 showToast(`✓ Budget set for ${provider}: $${amount.toFixed(2)}/month`, 'success', 4000);
@@ -2369,7 +3031,7 @@
 
                 const data = await response.json();
                 const statusList = document.getElementById('budgetStatusList');
-                
+
                 const status = data.status || {};
                 if (Object.keys(status).length === 0) {
                     statusList.innerHTML = '<div class="budget-empty">No budgets configured. Set a budget above to start tracking costs.</div>';
@@ -2381,7 +3043,7 @@
                     const percent = info.percent;
                     const statusClass = info.status;
                     const statusText = statusClass === 'critical' ? '🚨 CRITICAL' : (statusClass === 'warning' ? '⚠️  WARNING' : '✓ OK');
-                    
+
                     html += `
                         <div class="budget-card">
                             <div class="budget-card-header">
@@ -2389,9 +3051,8 @@
                                 <span class="budget-card-status ${statusClass}">${statusText}</span>
                             </div>
                             <div class="budget-progress-bar">
-                                <div class="budget-progress-fill" style="width: ${Math.min(percent, 100)}%; background: ${
-                                    statusClass === 'critical' ? 'var(--error)' : (statusClass === 'warning' ? '#fb923c' : 'var(--success)')
-                                };"></div>
+                                <div class="budget-progress-fill" style="width: ${Math.min(percent, 100)}%; background: ${statusClass === 'critical' ? 'var(--error)' : (statusClass === 'warning' ? '#fb923c' : 'var(--success)')
+                        };"></div>
                             </div>
                             <div class="budget-card-stats">
                                 <span>$${info.spent.toFixed(8)} / $${info.budget.toFixed(2)}</span>
@@ -2400,7 +3061,7 @@
                         </div>
                     `;
                 }
-                
+
                 statusList.innerHTML = html;
             } catch (err) {
                 console.error('Error loading budget status:', err);
@@ -2463,28 +3124,28 @@
                     chatHistory.push({ role: "assistant", content: data.content });
 
                     const totalTokens = data.usage ? data.usage.total_tokens : 0;
-                    
+
                     // Pass route_path and cost_estimate to updateMetrics
                     updateMetrics(
-                        data.provider, 
-                        latency, 
-                        totalTokens, 
+                        data.provider,
+                        latency,
+                        totalTokens,
                         data.model,
                         null,
                         data.route_path,
                         data.cost_estimate
                     );
-                    
+
                     // Pass route_path and cost_estimate to addHistoryEntry
                     addHistoryEntry(
-                        data.provider, 
-                        latency, 
-                        totalTokens, 
+                        data.provider,
+                        latency,
+                        totalTokens,
                         200,
                         data.route_path,
                         data.cost_estimate
                     );
-                    
+
                     updateSessionStats(latency, totalTokens, data.provider);
                 }
 
@@ -2501,6 +3162,346 @@
             sendBtn.disabled = false;
             messageInput.focus();
         }
+        function closeAnalytics() {
+            document.getElementById('analyticsOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+            switchTab('latest'); // Go back to latest tab
+        }
+
+        // ═══════════ ANALYTICS ═══════════
+        let costChart = null;
+        let tokenChart = null;
+        let messageChart = null;
+        let statusChart = null;
+        let providerChart = null;
+
+        async function loadAnalytics() {
+            const apiKey = apiKeyInput.value.trim();
+            if (!apiKey) {
+                showToast('Please enter an API key first', 'error');
+                closeAnalytics();
+                return;
+            }
+
+            try {
+                const r = await fetch('/analytics/costs', {
+                    headers: { 'X-API-Key': apiKey }
+                });
+
+                if (!r.ok) throw new Error('Failed to fetch analytics');
+                const data = await r.json();
+
+                if (!data.providers.length && !data.trends.length) {
+                    showToast('No data available for analytics yet', 'info');
+                    return;
+                }
+
+                updateCostCharts(data);
+
+                // Calculate efficiency
+                if (data.providers.length > 0) {
+                    const sorted = [...data.providers].sort((a, b) => (a.cost / a.tokens) - (b.cost / b.tokens));
+                    document.getElementById('efficientProvider').textContent = sorted[0].provider.toUpperCase();
+                }
+            } catch (err) {
+                console.error('Error loading analytics:', err);
+                showToast('Error loading analytics data', 'error');
+            }
+        }
+
+        function updateCostCharts(data) {
+            // Using "Big" chart IDs
+            const ctxLine = document.getElementById('costLineChartBig').getContext('2d');
+            const ctxToken = document.getElementById('tokenLineChartBig').getContext('2d');
+            const ctxMsg = document.getElementById('messageLineChartBig').getContext('2d');
+            const ctxStatus = document.getElementById('statusBarChartBig').getContext('2d');
+            const ctxPie = document.getElementById('providerPieChartBig').getContext('2d');
+
+            if (costChart) costChart.destroy();
+            if (tokenChart) tokenChart.destroy();
+            if (messageChart) messageChart.destroy();
+            if (statusChart) statusChart.destroy();
+            if (providerChart) providerChart.destroy();
+
+            Chart.defaults.color = 'rgba(255,255,255,0.5)';
+            Chart.defaults.font.family = "'Inter', sans-serif";
+
+            const trendLabels = data.trends.map(t => t.day.split('-').slice(1).join('/'));
+            const costValues = data.trends.map(t => t.cost);
+            const tokenValues = data.trends.map(t => t.tokens);
+            const messageValues = data.trends.map(t => t.messages);
+
+            // 1. Cost Trend
+            costChart = new Chart(ctxLine, {
+                type: 'line',
+                data: {
+                    labels: trendLabels,
+                    datasets: [{
+                        label: 'Daily Cost (USD)',
+                        data: costValues,
+                        borderColor: '#a78bfa',
+                        backgroundColor: 'rgba(167, 139, 250, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#a78bfa',
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#16161f',
+                            padding: 12,
+                            titleFont: { size: 14 },
+                            bodyFont: { size: 14 }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // 2. Token Trend
+            tokenChart = new Chart(ctxToken, {
+                type: 'line',
+                data: {
+                    labels: trendLabels,
+                    datasets: [{
+                        label: 'Tokens',
+                        data: tokenValues,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#10b981',
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { backgroundColor: '#16161f' }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // 3. Message Trend
+            messageChart = new Chart(ctxMsg, {
+                type: 'line',
+                data: {
+                    labels: trendLabels,
+                    datasets: [{
+                        label: 'Messages',
+                        data: messageValues,
+                        borderColor: '#06b6d4',
+                        backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#06b6d4',
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { backgroundColor: '#16161f' }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { stepSize: 1 } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // 4. Provider Status
+            const statusLabels = data.status_breakdown.map(s => s.provider.toUpperCase());
+            const successValues = data.status_breakdown.map(s => s.success);
+            const failureValues = data.status_breakdown.map(s => s.failure);
+
+            statusChart = new Chart(ctxStatus, {
+                type: 'bar',
+                data: {
+                    labels: statusLabels,
+                    datasets: [
+                        { label: 'Success', data: successValues, backgroundColor: 'rgba(16, 185, 129, 0.7)', borderRadius: 8 },
+                        { label: 'Failure', data: failureValues, backgroundColor: 'rgba(239, 68, 68, 0.7)', borderRadius: 8 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: { backgroundColor: '#16161f' }
+                    },
+                    scales: {
+                        x: { stacked: true, grid: { display: false } },
+                        y: { stacked: true, beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } }
+                    }
+                }
+            });
+
+            // 5. Provider Breakdown
+            const provLabels = data.providers.map(p => p.provider.toUpperCase());
+            const provCostValues = data.providers.map(p => p.cost);
+            const provTokenValues = data.providers.map(p => p.tokens);
+            const provColors = data.providers.map(p => {
+                const name = p.provider.toLowerCase();
+                if (name.includes('openai')) return '#10a37f';
+                if (name.includes('gemini')) return '#8ab4f8';
+                if (name.includes('cache')) return '#34d399';
+                return '#f87171';
+            });
+
+            providerChart = new Chart(ctxPie, {
+                type: 'doughnut',
+                data: {
+                    labels: provLabels,
+                    datasets: [
+                        { label: 'Cost (USD)', data: provCostValues, backgroundColor: provColors, borderColor: '#16161f', borderWidth: 2, hoverOffset: 20 },
+                        { label: 'Tokens', data: provTokenValues, backgroundColor: provColors, borderColor: '#16161f', borderWidth: 2, hoverOffset: 20, hidden: true }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 20, font: { size: 12 } } },
+                        tooltip: {
+                            backgroundColor: '#16161f',
+                            callbacks: {
+                                label: (ctx) => ctx.dataset.label === 'Cost (USD)' ? ` $${ctx.raw.toFixed(6)}` : ` ${ctx.raw.toLocaleString()} tokens`
+                            }
+                        }
+                    },
+                    cutout: '60%'
+                }
+            });
+        }
+
+        // ═══════════ USER MANAGEMENT ═══════════
+        function closeUsers() {
+            document.getElementById('usersOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+            switchTab('latest');
+        }
+
+        function openCreateUserModal() {
+            document.getElementById('createUserModal').style.display = 'flex';
+        }
+
+        function closeCreateUserModal() {
+            document.getElementById('createUserModal').style.display = 'none';
+        }
+
+        async function loadUsersBig() {
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 40px; opacity: 0.5;">Loading users...</td></tr>';
+
+            try {
+                const r = await fetch('/users');
+                if (!r.ok) throw new Error('Failed to load users');
+
+                const users = await r.json();
+                tbody.innerHTML = '';
+
+                users.forEach(u => {
+                    const tr = document.createElement('tr');
+
+                    // Simulated metrics for the UI requested
+                    const plan = u.role === 'admin' ? 'PRO' : 'FREE';
+                    const messages = Math.floor(Math.random() * 10);
+                    const memories = Math.floor(Math.random() * 5);
+                    const lastActive = new Date(u.created_at).toLocaleDateString();
+                    const fakeId = Math.random().toString(16).slice(2, 10) + '-' + Math.random().toString(16).slice(2, 6);
+
+                    tr.innerHTML = `
+                        <td>
+                            <div class="user-cell">
+                                <span class="user-email">${u.username}</span>
+                                <span class="user-id-small">${fakeId}</span>
+                            </div>
+                        </td>
+                        <td><span class="pill pill-plan">${plan}</span></td>
+                        <td><span class="pill pill-status">active</span></td>
+                        <td>${messages}</td>
+                        <td>${memories}</td>
+                        <td>${lastActive}</td>
+                        <td>
+                            <div style="display: flex; gap: 16px;">
+                                <a href="#" class="action-view">👁 View</a>
+                                ${u.username !== 'admin' ? `<a href="#" class="action-view" style="color: #ef4444;" onclick="deleteUserBig('${u.username}')">🗑 Delete</a>` : ''}
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                console.error('Error loading users:', err);
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#ef4444; padding: 40px;">Error loading users</td></tr>';
+            }
+        }
+
+        async function createUserBig() {
+            const username = document.getElementById('newUserNameBig').value.trim();
+            const password = document.getElementById('newUserPassBig').value;
+            const role = document.getElementById('newUserRoleBig').value;
+
+            if (!username || !password) {
+                showToast('Username and password are required', 'error');
+                return;
+            }
+
+            try {
+                const r = await fetch('/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password, role })
+                });
+
+                if (r.ok) {
+                    showToast(`User created successfully`, 'success');
+                    closeCreateUserModal();
+                    loadUsersBig();
+                } else {
+                    const data = await r.json();
+                    showToast(data.detail || 'Failed to create user', 'error');
+                }
+            } catch (err) {
+                showToast('Error creating user', 'error');
+            }
+        }
+
+        async function deleteUserBig(username) {
+            if (!confirm(`Delete user "${username}"?`)) return;
+            try {
+                const r = await fetch(`/users/${username}`, { method: 'DELETE' });
+                if (r.ok) {
+                    showToast(`User deleted`, 'success');
+                    loadUsersBig();
+                }
+            } catch (err) {
+                showToast('Error deleting user', 'error');
+            }
+        }
     </script>
 </body>
+
 </html>

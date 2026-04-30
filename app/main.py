@@ -3,7 +3,7 @@ import time
 import logging
 import secrets
 from typing import Optional
-from app.models import Chat, Message
+
 from fastapi import Depends, FastAPI, Header, HTTPException, Request, Form, Response
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session, declarative_base, sessionmaker
 
 from app.schemas import ChatRequest, ChatResponse, CostEstimate
 from app.providers import ProviderError
-from app.auth import authenticate_user, create_session, verify_session_token, logout_session, create_user
+from app.auth import User
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -298,18 +298,6 @@ def check_budget_allowed(
 
 
 # ---------- Auth helper (inline to avoid circular import) ----------
-def require_admin(request: Request):
-    session_token = request.cookies.get("session_token")
-    session_data = verify_session_token(session_token)
-
-    if not session_data:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-
-    if session_data.get("role") != "admin":
-        raise HTTPException(status_code=403, detail="Admin access required")
-
-    return session_data
-
 def verify_api_key(
     x_api_key: str = Header(None, alias="X-API-Key"),
     db: Session = Depends(get_db),
@@ -324,126 +312,20 @@ def verify_api_key(
 
     return api_key
 
-def get_or_create_user_api_key(
-    request: Request,
-    db: Session = Depends(get_db),
-) -> ApiKey:
+
+def verify_session(request: Request) -> Optional[str]:
+    """Extract and verify session token from cookie."""
     session_token = request.cookies.get("session_token")
-    session_data = verify_session_token(session_token)
-
-    if not session_data:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-
-    owner = str(session_data["user_id"])
-
-    api_key = db.query(ApiKey).filter(ApiKey.owner == owner).first()
-    if api_key:
-        return api_key
-
-    api_key_value = f"llm_key_{secrets.token_urlsafe(32)}"
-
-    api_key = ApiKey(
-        key=api_key_value,
-        owner=owner,
-    )
-    db.add(api_key)
-    db.commit()
-    db.refresh(api_key)
-
-    return api_key
+    if not session_token:
+        return None
+    
+    # Verify the session token
+    username = User.verify_session(session_token)
+    return username
 
 
 # ---------- Routes ----------
 # ---------- Authentication Routes ----------
-@app.get("/admin-login", response_class=HTMLResponse)
-async def serve_admin_login():
-    """Serve admin login page."""
-    try:
-        with open("app/admin_login.html", "r") as f:
-            return HTMLResponse(content=f.read())
-    except Exception as e:
-        logger.error("Failed to load admin login page: %s", e)
-        raise HTTPException(status_code=500, detail="Admin login page not found")
-
-@app.post("/admin-login")
-async def handle_admin_login(request: Request):
-    try:
-        content_type = request.headers.get("content-type", "")
-
-        if "json" in content_type:
-            data = await request.json()
-            username = data.get("username", "")
-            password = data.get("password", "")
-        else:
-            form_data = await request.form()
-            username = form_data.get("username", "")
-            password = form_data.get("password", "")
-
-        user = authenticate_user(username, password)
-
-        if not username or not password or not user or user.role != "admin":
-            if "json" in content_type:
-                return JSONResponse(
-                    status_code=401,
-                    content={"detail": "Invalid admin credentials"}
-                )
-            return RedirectResponse(
-                url="/admin-login?error=Invalid admin credentials",
-                status_code=303
-            )
-
-        session_token = create_session(user)
-
-        if "json" in content_type:
-            response = JSONResponse(
-                status_code=200,
-                content={
-                    "status": "success",
-                    "redirect": "/dashboard",
-                    "message": "Admin login successful"
-                }
-            )
-            response.set_cookie(
-                key="session_token",
-                value=session_token,
-                max_age=7 * 24 * 60 * 60,
-                httponly=True,
-                samesite="Lax",
-            )
-            return response
-        else:
-            response = RedirectResponse(url="/dashboard", status_code=303)
-            response.set_cookie(
-                key="session_token",
-                value=session_token,
-                max_age=7 * 24 * 60 * 60,
-                httponly=True,
-                samesite="Lax",
-            )
-            return response
-
-    except Exception as e:
-        logger.error("Admin login error: %s", e)
-        if "json" in request.headers.get("content-type", ""):
-            return JSONResponse(
-                status_code=400,
-                content={"detail": f"Admin login failed: {str(e)}"}
-            )
-        return RedirectResponse(
-            url="/admin-login?error=Admin login failed",
-            status_code=303
-        )
-
-@app.get("/signup-page", response_class=HTMLResponse)
-async def serve_signup():
-    """Serve signup page."""
-    try:
-        with open("app/signup.html", "r") as f:
-            return HTMLResponse(content=f.read())
-    except Exception as e:
-        logger.error("Failed to load signup page: %s", e)
-        raise HTTPException(status_code=500, detail="Signup page not found")
-
 @app.get("/login", response_class=HTMLResponse)
 async def serve_login():
     """Serve the login page."""
@@ -473,15 +355,7 @@ async def handle_login(request: Request):
             password = form_data.get("password", "")
         
         # Authenticate the user
-        user = authenticate_user(username, password)
-        # BLOCK admin login from normal login route
-        if user and user.role == "admin":
-            return RedirectResponse(
-                url="/admin-login?error=Use admin login page",
-                status_code=303
-            )
-
-        if not username or not password or not user:
+        if not username or not password or not User.authenticate(username, password):
             if "json" in content_type:
                 return JSONResponse(
                     status_code=401,
@@ -491,9 +365,9 @@ async def handle_login(request: Request):
                 url="/login?error=Invalid username or password",
                 status_code=303
             )
-
+        
         # Create a session token
-        session_token = create_session(user)
+        session_token = User.create_session(username)
         
         if "json" in content_type:
             # For JSON requests, return success with cookie
@@ -501,7 +375,7 @@ async def handle_login(request: Request):
                 status_code=200,
                 content={
                     "status": "success",
-                    "redirect": "/user-dashboard",
+                    "redirect": "/dashboard",
                     "message": "Login successful"
                 }
             )
@@ -515,7 +389,7 @@ async def handle_login(request: Request):
             return response
         else:
             # For form requests, redirect with cookie
-            response = RedirectResponse(url="/user-dashboard", status_code=303)
+            response = RedirectResponse(url="/dashboard", status_code=303)
             response.set_cookie(
                 key="session_token",
                 value=session_token,
@@ -536,73 +410,14 @@ async def handle_login(request: Request):
             status_code=303
         )
 
-@app.post("/signup")
-async def handle_signup(request: Request):
-    try:
-        content_type = request.headers.get("content-type", "")
-
-        if "json" in content_type:
-            data = await request.json()
-            email = data.get("email", "")
-            username = data.get("username", "")
-            password = data.get("password", "")
-        else:
-            form_data = await request.form()
-            email = form_data.get("email", "")
-            username = form_data.get("username", "")
-            password = form_data.get("password", "")
-
-        if not email or not username or not password:
-            return JSONResponse(
-                status_code=400,
-                content={"detail": "Missing fields"}
-            )
-
-        user = create_user(email, username, password)
-
-        if not user:
-            return JSONResponse(
-                status_code=400,
-                content={"detail": "User already exists"}
-            )
-
-        session_token = create_session(user)
-
-        response = JSONResponse(
-            status_code=200,
-            content={
-                "status": "success",
-                "redirect": "/user-dashboard",
-                "message": "Signup successful"
-            }
-        )
-
-        response.set_cookie(
-            key="session_token",
-            value=session_token,
-            max_age=7 * 24 * 60 * 60,
-            httponly=True,
-            samesite="Lax",
-        )
-
-        return response
-
-    except Exception as e:
-        logger.error("Signup error: %s", e)
-        return JSONResponse(
-            status_code=500,
-            content={"detail": "Signup failed"}
-        )
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_landing(request: Request):
     """Serve the landing page or redirect to dashboard if logged in."""
     session_token = request.cookies.get("session_token")
-    session_data = verify_session_token(session_token)
-    if session_data:
-        if session_data["role"] == "admin":
-            return RedirectResponse(url="/dashboard", status_code=303)
-        return RedirectResponse(url="/user-dashboard", status_code=303)
+    if session_token and User.verify_session(session_token):
+        # User is logged in, redirect to dashboard
+        return RedirectResponse(url="/dashboard", status_code=303)
     
     try:
         with open("app/landing.html", "r") as f:
@@ -704,12 +519,9 @@ async def serve_terms():
 async def serve_dashboard(request: Request):
     """Serve the dashboard. Requires valid session."""
     session_token = request.cookies.get("session_token")
-    session_data = verify_session_token(session_token)
-    if not session_data:
+    if not session_token or not User.verify_session(session_token):
+        # Not authenticated, redirect to login
         return RedirectResponse(url="/login", status_code=303)
-
-    if session_data["role"] != "admin":
-        raise HTTPException(status_code=403, detail="Access denied")
     
     try:
         with open("app/dashboard.html", "r") as f:
@@ -718,124 +530,14 @@ async def serve_dashboard(request: Request):
         logger.error("Failed to load dashboard: %s", e)
         raise HTTPException(status_code=500, detail="Dashboard not found")
 
-@app.get("/user-dashboard", response_class=HTMLResponse)
-async def serve_user_dashboard(request: Request):
-    """Serve user dashboard. Requires valid session."""
-    session_token = request.cookies.get("session_token")
-    session_data = verify_session_token(session_token)
-
-    if not session_data:
-        return RedirectResponse(url="/login", status_code=303)
-
-    try:
-        with open("app/user_dashboard.html", "r") as f:
-            return HTMLResponse(content=f.read())
-    except Exception as e:
-        logger.error("Failed to load user dashboard: %s", e)
-        raise HTTPException(status_code=500, detail="User dashboard not found")
-
-@app.get("/my-chats")
-def get_my_chats(request: Request, db: Session = Depends(get_db)):
-    session_token = request.cookies.get("session_token")
-    session_data = verify_session_token(session_token)
-
-    if not session_data:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-
-    user_id = session_data["user_id"]
-
-    chats = (
-        db.query(Chat)
-        .join(Message)
-        .filter(Chat.user_id == user_id)
-        .group_by(Chat.id)
-        .order_by(Chat.updated_at.desc())
-        .all()
-    )
-
-    return {
-        "chats": [
-            {
-                "id": chat.id,
-                "title": chat.title,
-                "created_at": chat.created_at,
-                "updated_at": chat.updated_at,
-            }
-            for chat in chats
-        ]
-    }
-
-@app.post("/my-chats")
-def create_new_chat(request: Request, db: Session = Depends(get_db)):
-    session_token = request.cookies.get("session_token")
-    session_data = verify_session_token(session_token)
-
-    if not session_data:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-
-    user_id = session_data["user_id"]
-
-    chat = Chat(
-        user_id=user_id,
-        title="New Chat",
-    )
-    db.add(chat)
-    db.commit()
-    db.refresh(chat)
-
-    return {
-        "id": chat.id,
-        "title": chat.title,
-        "created_at": chat.created_at,
-        "updated_at": chat.updated_at,
-    }
-
-@app.get("/my-chats/{chat_id}/messages")
-def get_chat_messages(chat_id: int, request: Request, db: Session = Depends(get_db)):
-    session_token = request.cookies.get("session_token")
-    session_data = verify_session_token(session_token)
-
-    if not session_data:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-
-    user_id = session_data["user_id"]
-
-    chat = db.query(Chat).filter(Chat.id == chat_id, Chat.user_id == user_id).first()
-    if not chat:
-        raise HTTPException(status_code=404, detail="Chat not found")
-
-    messages = (
-        db.query(Message)
-        .filter(Message.chat_id == chat_id)
-        .order_by(Message.created_at.asc())
-        .all()
-    )
-
-    return {
-        "chat_id": chat.id,
-        "title": chat.title,
-        "messages": [
-            {
-                "id": message.id,
-                "role": message.role,
-                "content": message.content,
-                "provider": message.provider,
-                "model": message.model,
-                "latency_ms": message.latency_ms,
-                "tokens": message.tokens,
-                "cost_usd": message.cost_usd,
-                "created_at": message.created_at,
-            }
-            for message in messages
-        ]
-    }
 
 @app.post("/logout")
 async def handle_logout(request: Request):
+    """Handle logout."""
     session_token = request.cookies.get("session_token")
     if session_token:
-        logout_session(session_token)
-
+        User.logout(session_token)
+    
     response = RedirectResponse(url="/login", status_code=303)
     response.delete_cookie(key="session_token")
     return response
@@ -843,7 +545,6 @@ async def handle_logout(request: Request):
 
 @app.post("/api-key")
 def generate_api_key(
-    request: Request,
     db: Session = Depends(get_db),
 ):
     """Generate a new API key for programmatic access.
@@ -857,12 +558,6 @@ def generate_api_key(
             "message": "Save this key securely. You won't see it again."
         }
     """
-    session_token = request.cookies.get("session_token")
-    session_data = verify_session_token(session_token)
-
-    if not session_data:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-    
     try:
         # Generate a random 32-byte key encoded as base64url
         random_bytes = secrets.token_urlsafe(32)
@@ -871,7 +566,7 @@ def generate_api_key(
         # Store in database
         new_key = ApiKey(
             key=api_key_value,
-            owner=str(session_data["user_id"]),
+            owner="user",  # Can be customized later if needed
         )
         db.add(new_key)
         db.commit()
@@ -931,8 +626,7 @@ def health_detailed():
 @app.post("/chat", response_model=ChatResponse)
 def chat(
     body: ChatRequest,
-    request: Request,
-    api_key: ApiKey = Depends(get_or_create_user_api_key),
+    api_key: ApiKey = Depends(verify_api_key),
     db: Session = Depends(get_db),
 ):
     """
@@ -947,65 +641,11 @@ def chat(
     7. Returns a standardised ChatResponse
     """
     # Lazy import to avoid circular dependency at module load time
-    session_token = request.cookies.get("session_token")
-    session_data = verify_session_token(session_token)
-
-    if not session_data:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-
-    user_id = session_data["user_id"]
-    
-    if body.chat_id:
-        chat = (
-            db.query(Chat)
-            .filter(Chat.id == body.chat_id, Chat.user_id == user_id)
-            .first()
-        )
-
-        if not chat:
-            raise HTTPException(status_code=404, detail="Chat not found")
-    else:
-        chat = (
-            db.query(Chat)
-            .filter(Chat.user_id == user_id)
-            .order_by(Chat.updated_at.desc())
-            .first()
-        )
-
-        if not chat:
-            chat = Chat(user_id=user_id, title="New Chat")
-            db.add(chat)
-            db.commit()
-            db.refresh(chat)
-
     from app.router import route_request
     from app.cache import get_cached_response, set_cached_response
     import hashlib
 
     start = time.perf_counter()
-
-    provider_name = "openai" if "gpt" in body.model else "gemini"
-
-    # Get current cost
-    current_cost = get_monthly_cost(api_key.id, provider_name, db)
-
-    # Rough estimate of next request (simple for now)
-    estimated_request_cost = 0.001
-
-    projected_cost = current_cost + estimated_request_cost
-
-    budget = db.query(BudgetConfig).filter(
-        BudgetConfig.api_key_id == api_key.id,
-        BudgetConfig.provider == provider_name,
-        BudgetConfig.is_enabled == "true"
-    ).first()
-
-    if budget:
-        if projected_cost >= budget.monthly_budget_usd:
-            raise HTTPException(
-                status_code=403,
-                detail=f"Budget exceeded: ${current_cost:.6f} used / ${budget.monthly_budget_usd:.6f} limit"
-            )
 
     # --- Two-layer cache key strategy ---
     import json
@@ -1027,22 +667,6 @@ def chat(
         if m.role == "user":
             last_user_msg = m.content
             break
-    if last_user_msg:
-        user_message = Message(
-            chat_id=chat.id,
-            role="user",
-            content=last_user_msg,
-        )
-        db.add(user_message)
-        db.commit()
-    
-        if chat.title == "New Chat":
-            chat.title = last_user_msg[:40]
-            db.commit()
-
-    chat.updated_at = func.now()
-    db.commit()
-
     prompt_cache_basis = f"{body.model}:{last_user_msg}"
     prompt_hash = hashlib.sha256(prompt_cache_basis.encode("utf-8")).hexdigest()
     prompt_key = f"prompt:{api_key.id}:{prompt_hash}"
@@ -1070,19 +694,6 @@ def chat(
             model=response.model,
             api_key_id=api_key.id,
         )
-        
-        assistant_message = Message(
-            chat_id=chat.id,
-            role="assistant",
-            content=response.content,
-            provider="redis_cache",
-            model=response.model,
-            latency_ms=latency_ms,
-            tokens=response.usage.total_tokens if response.usage else None,
-            cost_usd=response.cost_estimate.provider_used_usd if response.cost_estimate else None,
-        )
-        db.add(assistant_message)
-        db.commit()
         return response
 
     try:
@@ -1091,19 +702,7 @@ def chat(
         response.cost_estimate = _build_cost_estimate(response)
         status_code = 200
 
-        assistant_message = Message(
-            chat_id=chat.id,
-            role="assistant",
-            content=response.content,
-            provider=response.provider,
-            model=response.model,
-            latency_ms=None,
-            tokens=response.usage.total_tokens if response.usage else None,
-            cost_usd=response.cost_estimate.provider_used_usd if response.cost_estimate else None,
-        )
-        db.add(assistant_message)
-        db.commit()
-
+        
         # Cache the successful response under both keys
         response_dict = response.model_dump() if hasattr(response, 'model_dump') else response.dict()
         set_cached_response(exact_key, response_dict)
@@ -1158,7 +757,7 @@ class BudgetConfigRequest:
 
 @app.get("/budget/status")
 def get_budget_status_endpoint(
-    api_key: ApiKey = Depends(get_or_create_user_api_key),
+    api_key: ApiKey = Depends(verify_api_key),
     db: Session = Depends(get_db),
 ):
     """Get budget usage status for all configured providers."""
@@ -1172,7 +771,7 @@ def get_budget_status_endpoint(
 
 @app.get("/budget")
 def get_budgets(
-    api_key: ApiKey = Depends(get_or_create_user_api_key),
+    api_key: ApiKey = Depends(verify_api_key),
     db: Session = Depends(get_db),
 ):
     """Get all budget configurations for this API key."""
@@ -1205,7 +804,7 @@ def set_budget(
     monthly_budget_usd: float,
     warning_threshold_percent: float = 80.0,
     hard_limit_percent: float = 100.0,
-    api_key: ApiKey = Depends(get_or_create_user_api_key),
+    api_key: ApiKey = Depends(verify_api_key),
     db: Session = Depends(get_db),
 ):
     """Set or update a budget for a provider."""
@@ -1251,10 +850,11 @@ def set_budget(
         raise HTTPException(status_code=500, detail="Failed to set budget")
 
 
+
 @app.delete("/budget/{provider}")
 def delete_budget(
     provider: str,
-    api_key: ApiKey = Depends(get_or_create_user_api_key),
+    api_key: ApiKey = Depends(verify_api_key),
     db: Session = Depends(get_db),
 ):
     """Disable/delete a budget for a provider."""
@@ -1279,3 +879,127 @@ def delete_budget(
         db.rollback()
         logger.error(f"Error deleting budget: {e}")
         raise HTTPException(status_code=500, detail="Failed to delete budget")
+
+
+@app.get("/analytics/costs")
+def get_cost_analytics(
+    api_key: ApiKey = Depends(verify_api_key),
+    db: Session = Depends(get_db),
+):
+    """Get cost data for analytics visualization."""
+    from sqlalchemy import func
+    from datetime import datetime, timedelta
+    
+    try:
+        # Provider breakdown (Total cost per provider)
+        provider_data = db.query(
+            CostLog.provider, 
+            func.sum(CostLog.cost_usd).label("total_cost"),
+            func.sum(CostLog.tokens_used).label("total_tokens")
+        ).filter(CostLog.api_key_id == api_key.id).group_by(CostLog.provider).all()
+        
+        # Recent daily trends (Last 7 days) - Cost, Tokens, and Messages
+        seven_days_ago = datetime.now() - timedelta(days=7)
+        daily_data = db.query(
+            func.date(CostLog.created_at).label("day"),
+            func.sum(CostLog.cost_usd).label("daily_cost"),
+            func.sum(CostLog.tokens_used).label("daily_tokens"),
+            func.count(CostLog.id).label("daily_messages")
+        ).filter(
+            CostLog.api_key_id == api_key.id,
+            CostLog.created_at >= seven_days_ago
+        ).group_by(func.date(CostLog.created_at)).order_by(func.date(CostLog.created_at)).all()
+        
+        # Provider status breakdown (Success vs Failure)
+        status_data = db.query(
+            RequestLog.provider,
+            RequestLog.status_code,
+            func.count(RequestLog.id).label("count")
+        ).filter(
+            RequestLog.api_key_id == api_key.id,
+            RequestLog.created_at >= seven_days_ago
+        ).group_by(RequestLog.provider, RequestLog.status_code).all()
+        
+        # Format status data
+        statuses = {}
+        for s in status_data:
+            prov = s.provider or "unknown"
+            if prov not in statuses:
+                statuses[prov] = {"success": 0, "failure": 0}
+            
+            if s.status_code == 200:
+                statuses[prov]["success"] += s.count
+            else:
+                statuses[prov]["failure"] += s.count
+
+        return {
+            "providers": [
+                {"provider": p.provider, "cost": round(p.total_cost or 0.0, 8), "tokens": p.total_tokens or 0} 
+                for p in provider_data
+            ],
+            "trends": [
+                {
+                    "day": str(d.day), 
+                    "cost": round(d.daily_cost or 0.0, 8),
+                    "tokens": int(d.daily_tokens or 0),
+                    "messages": int(d.daily_messages or 0)
+                } 
+                for d in daily_data
+            ],
+            "status_breakdown": [
+                {"provider": k, "success": v["success"], "failure": v["failure"]}
+                for k, v in statuses.items()
+            ]
+        }
+    except Exception as e:
+        logger.error(f"Error getting cost analytics: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get cost analytics")
+
+
+# ---------- User Management Routes ----------
+@app.get("/users")
+def get_users(username: str = Depends(verify_session)):
+    if not username:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    if username != "admin":
+        raise HTTPException(status_code=403, detail="Forbidden: Only admin can manage users")
+    return User.get_all_users()
+
+@app.post("/users")
+async def create_user(
+    request: Request,
+    username: str = Depends(verify_session)
+):
+    if not username or username != "admin":
+        raise HTTPException(status_code=403, detail="Forbidden")
+    
+    try:
+        data = await request.json()
+        new_user = data.get("username")
+        password = data.get("password")
+        role = data.get("role", "user")
+        
+        if not new_user or not password:
+            raise HTTPException(status_code=400, detail="Missing username or password")
+            
+        if User.create_user(new_user, password, role):
+            return {"status": "success", "username": new_user}
+        else:
+            raise HTTPException(status_code=400, detail="User already exists")
+    except Exception as e:
+        logger.error(f"Error creating user: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@app.delete("/users/{target_username}")
+def delete_user(
+    target_username: str,
+    username: str = Depends(verify_session)
+):
+    if not username or username != "admin":
+        raise HTTPException(status_code=403, detail="Forbidden")
+    
+    if User.delete_user(target_username):
+        return {"status": "success"}
+    else:
+        raise HTTPException(status_code=400, detail="Cannot delete user (might be admin or not exist)")
+
