@@ -1776,6 +1776,73 @@
             opacity: 1;
         }
 
+
+
+        .user-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 10px;
+        }
+
+        .user-detail-item {
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 14px;
+        }
+
+        .user-detail-label {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .user-detail-value {
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-weight: 700;
+            word-break: break-word;
+        }
+
+        .user-detail-wide {
+            grid-column: 1 / -1;
+        }
+
+        .user-detail-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 8px;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .user-detail-list-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 0.82rem;
+        }
+
+        .user-detail-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .modal-muted {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
         /* Analytics Tab Styles */
         .analytics-container {
             display: flex;
@@ -1950,7 +2017,7 @@
             <div class="users-controls">
                 <div class="search-container">
                     <span class="search-icon">🔍</span>
-                    <input type="text" class="search-input-big" placeholder="Search by email or ID...">
+                    <input type="text" id="userSearchInput" class="search-input-big" placeholder="Search by username, email, role, or ID..." oninput="renderUsersTable()">
                 </div>
                 <button class="bulk-btn">
                     <span>🎁</span> Bulk Grant Promo
@@ -1968,10 +2035,12 @@
                 <thead>
                     <tr>
                         <th>User</th>
+                        <th>Role</th>
                         <th>Plan</th>
                         <th>Status</th>
-                        <th>Messages (24h)</th>
-                        <th>Memories</th>
+                        <th>Chats</th>
+                        <th>Messages</th>
+                        <th>API Keys</th>
                         <th>Last Active</th>
                         <th>Actions</th>
                     </tr>
@@ -1989,18 +2058,41 @@
         <div class="chart-card-big" style="width: 400px; min-height: auto;">
             <div class="chart-card-title">Create New User</div>
             <div class="user-form" style="margin: 0; background: transparent; border: none;">
-                <input type="text" id="newUserNameBig" class="budget-input" placeholder="Username / Email"
-                    autocomplete="off" />
+                <input type="text" id="newUserNameBig" class="budget-input" placeholder="Username" autocomplete="off" />
+                <input type="email" id="newUserEmailBig" class="budget-input" placeholder="Email address" autocomplete="off" />
                 <input type="password" id="newUserPassBig" class="budget-input" placeholder="Password" />
                 <select id="newUserRoleBig" class="budget-input">
                     <option value="user">Standard User</option>
                     <option value="admin">Administrator</option>
+                </select>
+                <select id="newUserPlanBig" class="budget-input">
+                    <option value="basic">Basic Plan</option>
+                    <option value="pro">Pro Plan</option>
+                    <option value="team">Team Plan</option>
+                    <option value="enterprise">Enterprise Plan</option>
                 </select>
                 <div style="display: flex; gap: 12px; margin-top: 12px;">
                     <button class="budget-btn" style="flex: 1;" onclick="createUserBig()">Create</button>
                     <button class="budget-btn" style="flex: 1; background: rgba(255,255,255,0.1);"
                         onclick="closeCreateUserModal()">Cancel</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="userDetailModal" class="analytics-overlay"
+        style="z-index: 10003; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.82);">
+        <div class="chart-card-big" style="width: min(760px, 92vw); min-height: auto; max-height: 88vh; overflow-y: auto;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom: 8px;">
+                <div>
+                    <div class="chart-card-title">User Details</div>
+                    <div id="userDetailSubtitle" class="modal-muted">Loading user profile...</div>
+                </div>
+                <button class="close-analytics" onclick="closeUserDetailModal()"><span>✕</span> Close</button>
+            </div>
+            <div id="userDetailContent">
+                <div class="analytics-empty">Loading user details...</div>
             </div>
         </div>
     </div>
@@ -2099,7 +2191,7 @@
                 <div class="health-dot"><span class="dot" id="healthRedis"></span> Redis</div>
             </div>
             <div class="api-key-wrapper">
-                <input type="password" id="apiKey" class="api-key-input" placeholder="Enter X-API-Key" value="test_key">
+                <input type="password" id="apiKey" class="api-key-input" placeholder="Session API key optional" value="">
                 <button id="copyKeyBtn" class="copy-btn" title="Copy API Key">📋 Copy</button>
             </div>
             <button id="logoutBtn" class="logout-btn">Sign Out</button>
@@ -2366,6 +2458,42 @@
             cacheHits: 0,
             history: []
         };
+
+        let adminUsersCache = [];
+        let generatedSessionApiKey = null;
+
+        function escapeHtml(value) {
+            const div = document.createElement('div');
+            div.textContent = value === null || value === undefined ? '' : String(value);
+            return div.innerHTML;
+        }
+
+        function formatDateTime(value) {
+            if (!value) return 'Never';
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return 'N/A';
+            return date.toLocaleString([], { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+        }
+
+        async function ensureDashboardApiKey() {
+            const existing = apiKeyInput.value.trim();
+            if (existing) return existing;
+            if (generatedSessionApiKey) return generatedSessionApiKey;
+
+            const response = await fetch('/api-key', {
+                method: 'POST',
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error('Unable to create API key for this session');
+            }
+
+            const data = await response.json();
+            generatedSessionApiKey = data.api_key;
+            apiKeyInput.value = generatedSessionApiKey;
+            return generatedSessionApiKey;
+        }
 
         // ═══════════ KEYBOARD HANDLER ═══════════
         messageInput.addEventListener('keydown', (e) => {
@@ -2967,19 +3095,14 @@
             const provider = document.getElementById('budgetProvider').value;
             const amount = parseFloat(document.getElementById('budgetAmount').value);
             const threshold = parseFloat(document.getElementById('warningThreshold').value) || 80;
-            const apiKey = apiKeyInput.value.trim();
 
             if (!amount || amount <= 0) {
                 showToast('❌ Please enter a valid budget amount', 'error', 4000);
                 return;
             }
 
-            if (!apiKey) {
-                showToast('❌ Please enter your X-API-Key', 'error', 4000);
-                return;
-            }
-
             try {
+                const apiKey = await ensureDashboardApiKey();
                 // Build query string for POST request
                 const params = new URLSearchParams({
                     provider: provider,
@@ -3015,10 +3138,8 @@
         }
 
         async function loadBudgetStatus() {
-            const apiKey = apiKeyInput.value.trim();
-            if (!apiKey) return;
-
             try {
+                const apiKey = await ensureDashboardApiKey();
                 const response = await fetch('/budget/status', {
                     headers: {
                         'X-API-Key': apiKey,
@@ -3072,14 +3193,8 @@
         // ═══════════ SEND MESSAGE ═══════════
         async function sendMessage() {
             const content = messageInput.value.trim();
-            const apiKey = apiKeyInput.value.trim();
 
             if (!content) return;
-            if (!apiKey) {
-                showToast('❌ Please enter your X-API-Key', 'error', 4000);
-                apiKeyInput.focus();
-                return;
-            }
 
             // Disable UI
             messageInput.value = '';
@@ -3098,8 +3213,7 @@
                 const response = await fetch('/chat', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'X-API-Key': apiKey
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         messages: chatHistory,
@@ -3176,32 +3290,29 @@
         let providerChart = null;
 
         async function loadAnalytics() {
-            const apiKey = apiKeyInput.value.trim();
-            if (!apiKey) {
-                showToast('Please enter an API key first', 'error');
-                closeAnalytics();
-                return;
-            }
-
             try {
                 const r = await fetch('/analytics/costs', {
-                    headers: { 'X-API-Key': apiKey }
+                    credentials: 'include'
                 });
 
                 if (!r.ok) throw new Error('Failed to fetch analytics');
                 const data = await r.json();
 
                 if (!data.providers.length && !data.trends.length) {
-                    showToast('No data available for analytics yet', 'info');
+                    showToast('No data available for analytics yet. Send real requests first.', 'info');
                     return;
                 }
 
                 updateCostCharts(data);
 
-                // Calculate efficiency
                 if (data.providers.length > 0) {
-                    const sorted = [...data.providers].sort((a, b) => (a.cost / a.tokens) - (b.cost / b.tokens));
-                    document.getElementById('efficientProvider').textContent = sorted[0].provider.toUpperCase();
+                    const usable = data.providers.filter(p => Number(p.tokens || 0) > 0);
+                    if (usable.length > 0) {
+                        const sorted = [...usable].sort((a, b) => (a.cost / a.tokens) - (b.cost / b.tokens));
+                        document.getElementById('efficientProvider').textContent = sorted[0].provider.toUpperCase();
+                    } else {
+                        document.getElementById('efficientProvider').textContent = data.providers[0].provider.toUpperCase();
+                    }
                 }
             } catch (err) {
                 console.error('Error loading analytics:', err);
@@ -3226,7 +3337,7 @@
             Chart.defaults.color = 'rgba(255,255,255,0.5)';
             Chart.defaults.font.family = "'Inter', sans-serif";
 
-            const trendLabels = data.trends.map(t => t.day.split('-').slice(1).join('/'));
+            const trendLabels = data.trends.map(t => String(t.day).includes('-') ? String(t.day).split('-').slice(1).join('/') : String(t.day));
             const costValues = data.trends.map(t => t.cost);
             const tokenValues = data.trends.map(t => t.tokens);
             const messageValues = data.trends.map(t => t.messages);
@@ -3413,71 +3524,207 @@
 
         async function loadUsersBig() {
             const tbody = document.getElementById('usersTableBody');
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 40px; opacity: 0.5;">Loading users...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding: 40px; opacity: 0.5;">Loading users...</td></tr>';
 
             try {
-                const r = await fetch('/users');
+                const r = await fetch('/users', { credentials: 'include' });
                 if (!r.ok) throw new Error('Failed to load users');
 
-                const users = await r.json();
-                tbody.innerHTML = '';
-
-                users.forEach(u => {
-                    const tr = document.createElement('tr');
-
-                    // Simulated metrics for the UI requested
-                    const plan = u.role === 'admin' ? 'PRO' : 'FREE';
-                    const messages = Math.floor(Math.random() * 10);
-                    const memories = Math.floor(Math.random() * 5);
-                    const lastActive = new Date(u.created_at).toLocaleDateString();
-                    const fakeId = Math.random().toString(16).slice(2, 10) + '-' + Math.random().toString(16).slice(2, 6);
-
-                    tr.innerHTML = `
-                        <td>
-                            <div class="user-cell">
-                                <span class="user-email">${u.username}</span>
-                                <span class="user-id-small">${fakeId}</span>
-                            </div>
-                        </td>
-                        <td><span class="pill pill-plan">${plan}</span></td>
-                        <td><span class="pill pill-status">active</span></td>
-                        <td>${messages}</td>
-                        <td>${memories}</td>
-                        <td>${lastActive}</td>
-                        <td>
-                            <div style="display: flex; gap: 16px;">
-                                <a href="#" class="action-view">👁 View</a>
-                                ${u.username !== 'admin' ? `<a href="#" class="action-view" style="color: #ef4444;" onclick="deleteUserBig('${u.username}')">🗑 Delete</a>` : ''}
-                            </div>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
+                adminUsersCache = await r.json();
+                renderUsersTable();
             } catch (err) {
                 console.error('Error loading users:', err);
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#ef4444; padding: 40px;">Error loading users</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#ef4444; padding: 40px;">Error loading users</td></tr>';
             }
+        }
+
+        function renderUsersTable() {
+            const tbody = document.getElementById('usersTableBody');
+            const search = (document.getElementById('userSearchInput')?.value || '').toLowerCase().trim();
+
+            const users = adminUsersCache.filter(user => {
+                if (!search) return true;
+                return [user.id, user.username, user.email, user.role, user.plan]
+                    .map(v => String(v || '').toLowerCase())
+                    .some(v => v.includes(search));
+            });
+
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding: 40px; opacity: 0.55;">No users found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = '';
+
+            users.forEach(u => {
+                const tr = document.createElement('tr');
+                const statusClass = u.is_active ? 'pill-status' : '';
+                const statusStyle = u.is_active ? '' : 'background: rgba(239, 68, 68, 0.12); color: #ef4444;';
+                const lastActive = formatDateTime(u.last_active_at || u.last_login_at || u.created_at);
+
+                tr.innerHTML = `
+                    <td>
+                        <div class="user-cell">
+                            <span class="user-email">${escapeHtml(u.email || u.username)}</span>
+                            <span class="user-id-small">ID ${escapeHtml(u.id)} · ${escapeHtml(u.username)}</span>
+                        </div>
+                    </td>
+                    <td><span class="pill pill-plan">${escapeHtml(u.role || 'user')}</span></td>
+                    <td><span class="pill pill-plan">${escapeHtml(u.plan || 'basic')}</span></td>
+                    <td><span class="pill ${statusClass}" style="${statusStyle}">${u.is_active ? 'active' : 'disabled'}</span></td>
+                    <td>${Number(u.chat_count || 0).toLocaleString()}</td>
+                    <td>${Number(u.message_count || 0).toLocaleString()}</td>
+                    <td>${Number(u.api_key_count || 0).toLocaleString()}</td>
+                    <td>${escapeHtml(lastActive)}</td>
+                    <td>
+                        <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                            <button class="action-view" style="background:none;border:none;cursor:pointer;" onclick="openUserDetail(${Number(u.id)})">👁 View</button>
+                            ${u.role !== 'admin' ? `<button class="action-view" style="background:none;border:none;cursor:pointer;color:#ef4444;" onclick="deactivateUserBig(${Number(u.id)}, '${escapeHtml(u.username)}')">🗑 Disable</button>` : ''}
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function openUserDetail(userId) {
+            const modal = document.getElementById('userDetailModal');
+            const content = document.getElementById('userDetailContent');
+            const subtitle = document.getElementById('userDetailSubtitle');
+
+            modal.style.display = 'flex';
+            content.innerHTML = '<div class="analytics-empty">Loading user details...</div>';
+            subtitle.textContent = 'Fetching profile, usage, and recent activity';
+
+            try {
+                const r = await fetch(`/users/${userId}`, { credentials: 'include' });
+                if (!r.ok) throw new Error('Failed to load user details');
+                const user = await r.json();
+
+                subtitle.textContent = `${user.username} · ${user.email}`;
+
+                const providers = (user.provider_usage || []).map(row => `
+                    <div class="user-detail-list-row">
+                        <span>${escapeHtml(row.provider)}</span>
+                        <span>${Number(row.tokens || 0).toLocaleString()} tokens · $${Number(row.cost || 0).toFixed(7)}</span>
+                    </div>
+                `).join('') || '<div class="modal-muted">No provider usage recorded yet.</div>';
+
+                const chats = (user.recent_chats || []).map(chat => `
+                    <div class="user-detail-list-row">
+                        <span>${escapeHtml(chat.title || 'Untitled Chat')}</span>
+                        <span>${escapeHtml(formatDateTime(chat.updated_at || chat.created_at))}</span>
+                    </div>
+                `).join('') || '<div class="modal-muted">No recent chats yet.</div>';
+
+                content.innerHTML = `
+                    <div class="user-detail-grid">
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Username</div>
+                            <div class="user-detail-value">${escapeHtml(user.username)}</div>
+                        </div>
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Email</div>
+                            <div class="user-detail-value">${escapeHtml(user.email)}</div>
+                        </div>
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Role</div>
+                            <div class="user-detail-value">${escapeHtml(user.role)}</div>
+                        </div>
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Plan</div>
+                            <div class="user-detail-value">${escapeHtml(user.plan)}</div>
+                        </div>
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Preferred Model</div>
+                            <div class="user-detail-value">${escapeHtml(user.preferred_model || 'N/A')}</div>
+                        </div>
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Status</div>
+                            <div class="user-detail-value">${user.is_active ? 'Active' : 'Disabled'}</div>
+                        </div>
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Chats</div>
+                            <div class="user-detail-value">${Number(user.chat_count || 0).toLocaleString()}</div>
+                        </div>
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Messages</div>
+                            <div class="user-detail-value">${Number(user.message_count || 0).toLocaleString()}</div>
+                        </div>
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Requests</div>
+                            <div class="user-detail-value">${Number(user.request_count || 0).toLocaleString()}</div>
+                        </div>
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">API Keys</div>
+                            <div class="user-detail-value">${Number(user.api_key_count || 0).toLocaleString()}</div>
+                        </div>
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Total Tokens</div>
+                            <div class="user-detail-value">${Number(user.total_tokens || 0).toLocaleString()}</div>
+                        </div>
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Total Cost</div>
+                            <div class="user-detail-value">$${Number(user.total_cost_usd || 0).toFixed(7)}</div>
+                        </div>
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Last Login</div>
+                            <div class="user-detail-value">${escapeHtml(formatDateTime(user.last_login_at))}</div>
+                        </div>
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Last Active</div>
+                            <div class="user-detail-value">${escapeHtml(formatDateTime(user.last_active_at))}</div>
+                        </div>
+                        <div class="user-detail-item user-detail-wide">
+                            <div class="user-detail-label">Provider Usage</div>
+                            <div class="user-detail-list">${providers}</div>
+                        </div>
+                        <div class="user-detail-item user-detail-wide">
+                            <div class="user-detail-label">Recent Chats</div>
+                            <div class="user-detail-list">${chats}</div>
+                        </div>
+                    </div>
+                    <div class="user-detail-actions">
+                        <button class="budget-btn" onclick="updateUserStatus(${Number(user.id)}, ${!user.is_active})">${user.is_active ? 'Disable User' : 'Enable User'}</button>
+                        <button class="budget-btn" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.16); color: #fff;" onclick="closeUserDetailModal()">Close</button>
+                    </div>
+                `;
+            } catch (err) {
+                console.error(err);
+                content.innerHTML = '<div class="analytics-empty" style="color:#ef4444;">Unable to load user details.</div>';
+                subtitle.textContent = 'Request failed';
+            }
+        }
+
+        function closeUserDetailModal() {
+            document.getElementById('userDetailModal').style.display = 'none';
         }
 
         async function createUserBig() {
             const username = document.getElementById('newUserNameBig').value.trim();
+            const email = document.getElementById('newUserEmailBig').value.trim();
             const password = document.getElementById('newUserPassBig').value;
             const role = document.getElementById('newUserRoleBig').value;
+            const plan = document.getElementById('newUserPlanBig').value;
 
-            if (!username || !password) {
-                showToast('Username and password are required', 'error');
+            if (!username || !email || !password) {
+                showToast('Username, email, and password are required', 'error');
                 return;
             }
 
             try {
                 const r = await fetch('/users', {
                     method: 'POST',
+                    credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password, role })
+                    body: JSON.stringify({ username, email, password, role, plan })
                 });
 
                 if (r.ok) {
-                    showToast(`User created successfully`, 'success');
+                    showToast('User created successfully', 'success');
+                    document.getElementById('newUserNameBig').value = '';
+                    document.getElementById('newUserEmailBig').value = '';
+                    document.getElementById('newUserPassBig').value = '';
                     closeCreateUserModal();
                     loadUsersBig();
                 } else {
@@ -3489,16 +3736,41 @@
             }
         }
 
-        async function deleteUserBig(username) {
-            if (!confirm(`Delete user "${username}"?`)) return;
+        async function updateUserStatus(userId, isActive) {
             try {
-                const r = await fetch(`/users/${username}`, { method: 'DELETE' });
+                const r = await fetch(`/users/${userId}`, {
+                    method: 'PATCH',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ is_active: isActive })
+                });
+
+                if (!r.ok) throw new Error('Failed to update user status');
+                showToast(isActive ? 'User enabled' : 'User disabled', 'success');
+                await loadUsersBig();
+                await openUserDetail(userId);
+            } catch (err) {
+                console.error(err);
+                showToast('Error updating user status', 'error');
+            }
+        }
+
+        async function deactivateUserBig(userId, username) {
+            if (!confirm(`Disable user "${username}"? This will block future login but keep historical data.`)) return;
+            try {
+                const r = await fetch(`/users/${userId}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
                 if (r.ok) {
-                    showToast(`User deleted`, 'success');
+                    showToast('User disabled', 'success');
                     loadUsersBig();
+                } else {
+                    const data = await r.json();
+                    showToast(data.detail || 'Failed to disable user', 'error');
                 }
             } catch (err) {
-                showToast('Error deleting user', 'error');
+                showToast('Error disabling user', 'error');
             }
         }
     </script>

@@ -12,3 +12,4 @@ openai
 google-generativeai
 pydantic
 python-multipart
+email-validator

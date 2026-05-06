@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Settings - Resilient LLM Gateway</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      background: #0f172a;
+      color: white;
+      font-family: Inter, sans-serif;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+    }
+
+    .input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: white;
+      outline: none;
+    }
+
+    .input:focus {
+      border-color: #6366f1;
+    }
+
+    .btn {
+      background: linear-gradient(to right, #6366f1, #8b5cf6);
+      transition: 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.95;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-8">
+
+  <div class="max-w-4xl mx-auto">
+
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="text-4xl font-bold">Account Settings</h1>
+        <p class="text-gray-400 mt-2">
+          Manage your account preferences and profile settings.
+        </p>
+      </div>
+
+      <button
+        onclick="window.location.href='/user-dashboard'"
+        class="px-5 py-3 rounded-xl bg-gray-800 hover:bg-gray-700 transition"
+      >
+        ← Back
+      </button>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="card rounded-3xl p-8 mb-8">
+      <h2 class="text-2xl font-semibold mb-6">Profile Information</h2>
+
+      <div class="grid md:grid-cols-2 gap-6">
+
+        <div>
+          <label class="block text-sm text-gray-400 mb-2">Username</label>
+          <input id="username" class="input" type="text"/>
+        </div>
+
+        <div>
+          <label class="block text-sm text-gray-400 mb-2">Email</label>
+          <input id="email" class="input" type="email"/>
+        </div>
+
+        <div>
+          <label class="block text-sm text-gray-400 mb-2">Subscription Plan</label>
+          <input id="plan" class="input" type="text" disabled/>
+        </div>
+
+        <div>
+          <label class="block text-sm text-gray-400 mb-2">Preferred Model</label>
+
+          <select id="preferred_model" class="input">
+            <option value="gpt-4o-mini">GPT-4o Mini</option>
+            <option value="gpt-4o">GPT-4o</option>
+            <option value="gemini-1.5-flash">Gemini Flash</option>
+            <option value="gemini-1.5-pro">Gemini Pro</option>
+          </select>
+        </div>
+
+      </div>
+
+      <button
+        onclick="saveProfile()"
+        class="btn mt-8 px-6 py-3 rounded-xl font-semibold"
+      >
+        Save Changes
+      </button>
+    </div>
+
+    <!-- PASSWORD -->
+    <div class="card rounded-3xl p-8 mb-8">
+      <h2 class="text-2xl font-semibold mb-6">Change Password</h2>
+
+      <div class="grid md:grid-cols-2 gap-6">
+
+        <div>
+          <label class="block text-sm text-gray-400 mb-2">Current Password</label>
+          <input id="current_password" class="input" type="password"/>
+        </div>
+
+        <div>
+          <label class="block text-sm text-gray-400 mb-2">New Password</label>
+          <input id="new_password" class="input" type="password"/>
+        </div>
+
+      </div>
+
+      <button
+        onclick="changePassword()"
+        class="btn mt-8 px-6 py-3 rounded-xl font-semibold"
+      >
+        Update Password
+      </button>
+    </div>
+
+    <!-- API -->
+    <div class="card rounded-3xl p-8">
+      <h2 class="text-2xl font-semibold mb-6">API Access</h2>
+
+      <div class="flex gap-4 mb-6">
+        <button
+          onclick="generateApiKey()"
+          class="btn px-6 py-3 rounded-xl font-semibold"
+        >
+          Generate API Key
+        </button>
+      </div>
+
+      <div id="api_key_container" class="hidden">
+        <label class="block text-sm text-gray-400 mb-2">Your API Key</label>
+
+        <div class="flex gap-3">
+          <input id="api_key" class="input" readonly />
+
+          <button
+            onclick="copyApiKey()"
+            class="px-5 rounded-xl bg-gray-700 hover:bg-gray-600"
+          >
+            Copy
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+
+    async function loadProfile() {
+      try {
+        const response = await fetch('/me');
+
+        if (!response.ok) {
+          window.location.href = '/login';
+          return;
+        }
+
+        const user = await response.json();
+
+        document.getElementById('username').value = user.username || '';
+        document.getElementById('email').value = user.email || '';
+        document.getElementById('plan').value = user.plan || 'free';
+        document.getElementById('preferred_model').value =
+          user.preferred_model || 'gpt-4o-mini';
+
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function saveProfile() {
+      try {
+
+        const payload = {
+          username: document.getElementById('username').value,
+          email: document.getElementById('email').value,
+          preferred_model: document.getElementById('preferred_model').value
+        };
+
+        const response = await fetch('/me', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert(data.detail || 'Failed to save profile');
+          return;
+        }
+
+        alert('Profile updated successfully');
+
+      } catch (err) {
+        console.error(err);
+        alert('Something went wrong');
+      }
+    }
+
+    async function changePassword() {
+
+      try {
+
+        const payload = {
+          current_password:
+            document.getElementById('current_password').value,
+
+          new_password:
+            document.getElementById('new_password').value
+        };
+
+        const response = await fetch('/change-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert(data.detail || 'Failed to update password');
+          return;
+        }
+
+        alert('Password updated successfully');
+
+        document.getElementById('current_password').value = '';
+        document.getElementById('new_password').value = '';
+
+      } catch (err) {
+        console.error(err);
+        alert('Something went wrong');
+      }
+    }
+
+    async function generateApiKey() {
+
+      try {
+
+        const response = await fetch('/api-key', {
+          method: 'POST'
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert(data.detail || 'Failed to generate API key');
+          return;
+        }
+
+        document.getElementById('api_key_container')
+          .classList.remove('hidden');
+
+        document.getElementById('api_key').value = data.api_key;
+
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function copyApiKey() {
+
+      const apiKey = document.getElementById('api_key');
+
+      apiKey.select();
+      apiKey.setSelectionRange(0, 99999);
+
+      navigator.clipboard.writeText(apiKey.value);
+
+      alert('API key copied');
+    }
+
+    loadProfile();
+
+  </script>
+
+</body>
+</html>

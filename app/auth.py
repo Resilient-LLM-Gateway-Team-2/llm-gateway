@@ -1,93 +1,171 @@
-"""Authentication and user management module."""
 import hashlib
 import secrets
 from datetime import datetime, timedelta
 from typing import Optional
 
+from sqlalchemy.orm import Session
+
+from app.models import User as DbUser
+
+
 class User:
-    """Simple in-memory user storage for demo."""
-    users = {
-        "admin": {
-            "username": "admin",
-            "password_hash": hashlib.sha256(b"admin").hexdigest(),
-            "role": "admin",
-            "created_at": datetime.now(),
-        }
-    }
-    
-    sessions = {}  # {session_token: {username, expires}}
+    """Authentication manager backed by PostgreSQL."""
+
+    sessions = {}
 
     @classmethod
     def create_session(cls, username: str) -> str:
-        """Create a new session token for a user."""
         token = secrets.token_urlsafe(32)
+
         cls.sessions[token] = {
             "username": username,
             "expires": datetime.now() + timedelta(days=7),
             "created_at": datetime.now(),
         }
+
         return token
 
     @classmethod
     def verify_session(cls, token: str) -> Optional[str]:
-        """Verify session token and return username if valid."""
         if token not in cls.sessions:
             return None
+
         session = cls.sessions[token]
+
         if session["expires"] < datetime.now():
             del cls.sessions[token]
             return None
+
         return session["username"]
 
     @classmethod
-    def authenticate(cls, username: str, password: str) -> bool:
-        """Authenticate user with username and password."""
-        if username not in cls.users:
+    def logout(cls, token: str):
+        if token in cls.sessions:
+            del cls.sessions[token]
+
+    @classmethod
+    def authenticate(cls, db: Session, username: str, password: str) -> bool:
+        user = db.query(DbUser).filter(DbUser.username == username).first()
+
+        if not user:
             return False
+
+        if not user.is_active:
+            return False
+
         password_hash = hashlib.sha256(password.encode()).hexdigest()
-        return cls.users[username]["password_hash"] == password_hash
 
-    @classmethod
-    def get_all_users(cls):
-        """Get all users (excluding password hashes)."""
-        return [
-            {
-                "username": u["username"],
-                "role": u["role"],
-                "created_at": u["created_at"].isoformat() if isinstance(u["created_at"], datetime) else u["created_at"]
-            }
-            for u in cls.users.values()
-        ]
-
-    @classmethod
-    def create_user(cls, username: str, password: str, role: str = "user") -> bool:
-        """Create a new user."""
-        if username in cls.users:
+        if user.password_hash != password_hash:
             return False
-        cls.users[username] = {
-            "username": username,
-            "password_hash": hashlib.sha256(password.encode()).hexdigest(),
-            "role": role,
-            "created_at": datetime.now(),
-        }
+
+        user.last_login_at = datetime.utcnow()
+        user.last_active_at = datetime.utcnow()
+
+        db.commit()
+
         return True
 
     @classmethod
-    def delete_user(cls, username: str) -> bool:
-        """Delete a user."""
-        if username == "admin":  # Protect primary admin
-            return False
-        if username in cls.users:
-            del cls.users[username]
-            # Also clear any active sessions for this user
-            sessions_to_del = [t for t, s in cls.sessions.items() if s["username"] == username]
-            for t in sessions_to_del:
-                del cls.sessions[t]
-            return True
-        return False
+    def create_user(
+        cls,
+        db: Session,
+        *,
+        email: str,
+        username: str,
+        password: str,
+        role: str = "user",
+        plan: str = "basic",
+    ) -> DbUser:
+        existing_user = db.query(DbUser).filter(
+            (DbUser.username == username) |
+            (DbUser.email == email)
+        ).first()
+
+        if existing_user:
+            raise ValueError("User already exists")
+
+        password_hash = hashlib.sha256(password.encode()).hexdigest()
+
+        user = DbUser(
+            email=email,
+            username=username,
+            password_hash=password_hash,
+            role=role,
+            plan=plan,
+            preferred_model="gpt-3.5-turbo",
+            is_active=True,
+            last_login_at=datetime.utcnow(),
+            last_active_at=datetime.utcnow(),
+        )
+
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+
+        return user
 
     @classmethod
-    def logout(cls, token: str):
-        """Log out a user by removing their session."""
-        if token in cls.sessions:
-            del cls.sessions[token]
+    def get_user_by_username(cls, db: Session, username: str):
+        return db.query(DbUser).filter(DbUser.username == username).first()
+
+    @classmethod
+    def get_user_by_id(cls, db: Session, user_id: int):
+        return db.query(DbUser).filter(DbUser.id == user_id).first()
+
+    @classmethod
+    def get_all_users(cls, db: Session):
+        users = db.query(DbUser).order_by(DbUser.created_at.desc()).all()
+
+        result = []
+
+        for user in users:
+            result.append({
+                "id": user.id,
+                "email": user.email,
+                "username": user.username,
+                "role": user.role,
+                "plan": user.plan,
+                "preferred_model": user.preferred_model,
+                "total_tokens": user.total_tokens,
+                "total_cost_usd": user.total_cost_usd,
+                "is_active": user.is_active,
+                "last_login_at": user.last_login_at.isoformat() if user.last_login_at else None,
+                "last_active_at": user.last_active_at.isoformat() if user.last_active_at else None,
+                "created_at": user.created_at.isoformat() if user.created_at else None,
+            })
+
+        return result
+
+    @classmethod
+    def update_last_active(cls, db: Session, username: str):
+        user = db.query(DbUser).filter(DbUser.username == username).first()
+
+        if not user:
+            return
+
+        user.last_active_at = datetime.utcnow()
+        db.commit()
+
+    @classmethod
+    def deactivate_user(cls, db: Session, user_id: int):
+        user = db.query(DbUser).filter(DbUser.id == user_id).first()
+
+        if not user:
+            return False
+
+        user.is_active = False
+        db.commit()
+
+        return True
+
+    @classmethod
+    def activate_user(cls, db: Session, user_id: int):
+        user = db.query(DbUser).filter(DbUser.id == user_id).first()
+
+        if not user:
+            return False
+
+        user.is_active = True
+        db.commit()
+
+        return True

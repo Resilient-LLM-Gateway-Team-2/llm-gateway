@@ -582,7 +582,7 @@
                     
                     // Redirect after toast is visible
                     setTimeout(() => {
-                        window.location.href = '/user-dashboard';
+                        window.location.href = data.redirect || "/user-dashboard";
                     }, 800);
                 } else {
                     const errorText = data.detail || 'Login failed. Please try again.';
